@@ -1,8 +1,8 @@
-const WorkoutSchema = require('../models/WorkoutSchema.js');
+const WorkoutSchema = require('../db/schema/WorkoutSchema');
 
 const getWorkout = async (req, res) => {
   try {
-    const result = await WorkoutSchema.find({}).limit(1000);
+    const result = await WorkoutSchema.find({}).limit(10000);
     return res.status(200).json(result);
   } catch (error) {
     return res.json(error.message);
@@ -38,7 +38,7 @@ const postWorkout = async (req, res) => {
 const patchWorkoutById = async (req, res) => {
   try {
     const { body } = req;
-    const result = await WorkoutSchema.findOneAndUpdate({ _id: req.params.workoutId }, { $set: body });
+    const result = await WorkoutSchema.findOneAndUpdate({ _id: req.params.workoutId }, { $set: body }, {new: true});
     return res.status(200).json(result);
   } catch (error) {
     return res.json(error.message);
@@ -49,7 +49,6 @@ const deleteWorkoutById = async (req, res) => {
   try {
     const result = await WorkoutSchema.findByIdAndDelete({ _id: req.params.workoutId });
     return res.status(200).json(result);
-    // res.json(result);
   } catch (error) {
     return res.json(error.message);
   }
@@ -59,5 +58,9 @@ const deleteWorkoutById = async (req, res) => {
 // 5ee293f614368832c4f17be9
 
 module.exports = {
-  getWorkout, getWorkoutById, postWorkout, patchWorkoutById, deleteWorkoutById,
+  getWorkout, 
+  getWorkoutById, 
+  postWorkout, 
+  patchWorkoutById, 
+  deleteWorkoutById,
 };
