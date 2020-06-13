@@ -57,7 +57,7 @@ const WorkoutSchema = mongoose.Schema({
         maxlength: 50,
         lowercase: true,
       },
-      SecondaryMuscles: [{
+      secondaryMuscles: [{
         type: String,
         trim: true,
         maxlength: 50,

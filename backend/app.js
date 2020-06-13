@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const db = require('./db/index');
 
 const app = express();
 const index = require('./api/routes');
@@ -21,8 +21,6 @@ app.get('/', (req, res) => {
   res.send('starting page yolo');
 });
 
-mongoose.connect(process.env.DB_CON, { useUnifiedTopology: true, useNewUrlParser: true }, () => console.log('connected to DB!'));
-// { useNewUrlParser: true },
-
-
-app.listen(port, host, () => console.log('App running!'));
+db.connect().then(() => {
+  app.listen(port, host, () => console.log('App running!'));
+});
