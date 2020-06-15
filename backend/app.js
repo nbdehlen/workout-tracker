@@ -17,8 +17,15 @@ app.use(express.json()); // Parse incoming JSON
 /* API */
 app.use('/api/v1', index);
 
-app.get('/', (req, res) => {
-  res.send('starting page yolo');
+// app.get('/', (req, res) => {
+//   res.send('starting page yolo');
+// });
+
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'not found' });
+});
+app.use((req, res, next, e) => {
+  res.status(500).json({ error: e.message });
 });
 
 db.connect().then(() => {

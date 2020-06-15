@@ -59,7 +59,7 @@ describe('POST /workout', () => {
       .catch((error) => done(error));
   });
 
-  it('OK, creating a new entry works', (done) => {
+  it('OK, creating a new entry workout works', (done) => {
     request(app).post('/api/v1/workout')
       .send(postTest)
       .expect('Content-Type', /json/)
@@ -79,38 +79,58 @@ describe('POST /workout', () => {
         /* Exercises */
         expect(body).to.contain.property('exercises').to.be.an('array');
 
-        body.exercises.map((obj) => {
+        body.exercises.map((obj, i) => {
           expect(obj).to.be.an('object');
           expect(obj).to.contain.property('_id').to.be.a('string');
           expect(obj).to.contain.property('unilateral', false);
           expect(obj).to.contain.property('secondaryMuscles').to.be.an('array');
           expect(obj).to.contain.property('sets').to.be.an('array');
 
-          obj.secondaryMuscles.map((val, i) => {
-            if (i === 0) {
-              expect(val).to.equal('triceps');
-            } else if (i === 1) {
-              expect(val).to.equal('front delt');
-            }
-          });
+          if (i === 0) {
+            obj.secondaryMuscles.map((val, i) => {
+              if (i === 0) {
+                expect(val).to.equal('triceps');
+              } else if (i === 1) {
+                expect(val).to.equal('front delt');
+              }
+            });
 
-          /* Sets */
-          obj.sets.map((set, i) => {
-            expect(set).to.be.an('object');
-            expect(set).to.contain.property('weight', 26);
+            /* Sets */
+            obj.sets.map((set, i) => {
+              expect(set).to.be.an('object');
+              expect(set).to.contain.property('weight', 26);
 
-            if (i === 0) {
-              expect(set).to.contain.property('reps', 10);
-              expect(set).to.contain.property('rest', '120');
-              expect(set).to.contain.property('time', '720');
-            } else if (i === 1) {
-              expect(set).to.contain.property('reps', 7);
-              expect(set).to.contain.property('rest', '2');
-              expect(set).to.contain.property('time', '4');
-            }
-          });
+              if (i === 0) {
+                expect(set).to.contain.property('reps', 10);
+                expect(set).to.contain.property('rest', '120');
+                expect(set).to.contain.property('time', '720');
+              } else if (i === 1) {
+                expect(set).to.contain.property('reps', 7);
+                expect(set).to.contain.property('rest', '2');
+                expect(set).to.contain.property('time', '4');
+              }
+            });
+          }
         });
 
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  it('Fail, start requires a value', (done) => {
+    request(app).post('/api/v1/workout')
+      .send({
+        type: 'Run',
+        // start: '2019-04-12T20:50:40.000Z',
+        end: '2019-04-12T21:41:29.000Z',
+      })
+      .expect('Content-Type', /json/)
+      .expect(500)
+      .then((res) => {
+        const { body } = res;
+        console.log(body);
+        expect(body).to.contain('Workout validation failed: start: Path `start` is required.');
         done();
       })
       .catch((err) => done(err));

@@ -14,10 +14,11 @@ const WorkoutSchema = mongoose.Schema({
 
   start: {
     type: Date,
-    default: Date.now,
     required: true,
+    // default: Date.now,
     trim: true,
     maxlength: 50,
+    minLength: 1,
   },
 
   grade: {
