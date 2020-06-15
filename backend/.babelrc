@@ -1,0 +1,17 @@
+{
+    "env": {
+      "test": {
+        "plugins": [
+          ["istanbul", {
+            "exclude": [
+                "**/*.get.js",
+                "**/*.post.js",
+                "**/*.patch.js",
+                "**/*.delete.js",
+                "**/*.dummyData.js"
+            ]
+          }]
+        ]
+      }
+    }
+  }

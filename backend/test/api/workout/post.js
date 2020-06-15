@@ -4,48 +4,16 @@ const request = require('supertest');
 const express = require('express');
 const index = require('../../../api/routes');
 
-const app = express();
-app.use(express.json());
-// const app = require('../../../app');
+// const app = express();
+// app.use(express.json());
+const app = require('../../../app');
 // const { postWorkout } = require('../../../controllers/Workout');
 const db = require('../../../db/index');
+const { largePost, missingDataPost } = require('../../utils/dummyData');
 
-app.use(express.json());
-app.use('/api/v1', index);
+// app.use(express.json());
+// app.use('/api/v1', index);
 
-const postTest = {
-  type: 'crossfit',
-  start: '2020-04-12T20:50:40.000Z',
-  end: '2020-04-12T21:41:29.000Z',
-  grade: 8,
-  exercises: [
-    {
-      secondaryMuscles: ['triceps', 'front delt'],
-      unilateral: false,
-      sets: [
-        {
-          weight: 26,
-          reps: 10,
-          rest: '120',
-          time: '720',
-        },
-        {
-          weight: 26,
-          reps: 7,
-          rest: '2',
-          time: '4',
-        },
-      ],
-      exerciseType: 'strength',
-      name: 'db press',
-      compound: true,
-      mainMuscle: 'chest',
-      tool: 'dumbbell',
-      length: '42',
-      calories: 471,
-    },
-  ],
-};
 
 describe('POST /workout', () => {
   before((done) => {
@@ -62,7 +30,7 @@ describe('POST /workout', () => {
 
   it('OK, creating a new entry workout works', (done) => {
     request(app).post('/api/v1/workout')
-      .send(postTest)
+      .send(largePost)
       .expect('Content-Type', /json/)
       .expect(200)
       .then((res) => {
@@ -76,6 +44,7 @@ describe('POST /workout', () => {
         expect(body).to.contain.property('start').to.equal('2020-04-12T20:50:40.000Z');
         expect(body).to.contain.property('end').to.equal('2020-04-12T21:41:29.000Z');
         expect(body).to.contain.property('grade').to.equal(8);
+        expect(body).to.not.contain.property('bogusData');
 
         /* Exercises */
         expect(body).to.contain.property('exercises').to.be.an('array');
@@ -121,17 +90,14 @@ describe('POST /workout', () => {
 
   it('Fail, start requires a value', (done) => {
     request(app).post('/api/v1/workout')
-      .send({
-        type: 'Run',
-        // start: '2019-04-12T20:50:40.000Z',
-        end: '2019-04-12T21:41:29.000Z',
-      })
+      .send(missingDataPost)
       .expect('Content-Type', /json/)
       .expect(500)
       .then((res) => {
         const { body } = res;
         // console.log(body);
         expect(body).to.contain('Workout validation failed: start: Path `start` is required.');
+        expect(body).to.not.contain.property('bogusData');
         done();
       })
       .catch((err) => done(err));

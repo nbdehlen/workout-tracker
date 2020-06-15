@@ -31,3 +31,5 @@ app.use('/api/v1', index);
 db.connect().then(() => {
   app.listen(port, host, () => console.log('App running!'));
 });
+
+module.exports = app;

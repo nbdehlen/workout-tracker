@@ -17,14 +17,14 @@ const getWorkoutById = async (req, res, next) => {
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error.message);
-    // next(error);
+    // return next(error);
   }
 };
 
 const postWorkout = async (req, res, next) => {
   try {
     const {
-      type, start, grade, end,
+      type, start, grade, end, exercises,
     } = req.body;
 
     const workout = new WorkoutSchema({
@@ -32,7 +32,7 @@ const postWorkout = async (req, res, next) => {
       start,
       grade,
       end,
-      exercises: req.body.exercises,
+      exercises,
     });
 
     await workout.save();
@@ -41,7 +41,7 @@ const postWorkout = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json(error.message);
-    // next(error);
+    // return next(error);
   }
 };
 
@@ -52,7 +52,7 @@ const patchWorkoutById = async (req, res, next) => {
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error.message);
-    // next(error);
+    // return next(error);
   }
 };
 
@@ -62,7 +62,7 @@ const deleteWorkoutById = async (req, res, next) => {
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error.message);
-    // next(error);
+    // return next(error);
   }
 };
 
