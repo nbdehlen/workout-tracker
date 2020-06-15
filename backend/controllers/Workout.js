@@ -5,7 +5,7 @@ const getWorkout = async (req, res) => {
     const result = await WorkoutSchema.find({}).limit(10000);
     return res.status(200).json(result);
   } catch (error) {
-    return res.json(error.message);
+    return res.status(500).json(error.message);
   }
 };
 
@@ -14,34 +14,40 @@ const getWorkoutById = async (req, res) => {
     const result = await WorkoutSchema.findById(req.params.workoutId);
     return res.status(200).json(result);
   } catch (error) {
-    return res.json(error.message);
+    return res.status(500).json(error.message);
   }
 };
 
 const postWorkout = async (req, res) => {
   try {
-    const { type, start, end } = req.body;
+    const {
+      type, start, grade, end,
+    } = req.body;
+
     const workout = new WorkoutSchema({
       type,
       start,
+      grade,
       end,
+      exercises: req.body.exercises,
     });
 
     await workout.save();
 
     return res.status(200).json(workout);
   } catch (error) {
-    return res.json(error.message);
+    console.log(error);
+    return res.status(500).json(error.message);
   }
 };
 
 const patchWorkoutById = async (req, res) => {
   try {
     const { body } = req;
-    const result = await WorkoutSchema.findOneAndUpdate({ _id: req.params.workoutId }, { $set: body }, {new: true});
+    const result = await WorkoutSchema.findOneAndUpdate({ _id: req.params.workoutId }, { $set: body }, { new: true });
     return res.status(200).json(result);
   } catch (error) {
-    return res.json(error.message);
+    return res.status(500).json(error.message);
   }
 };
 
@@ -50,7 +56,7 @@ const deleteWorkoutById = async (req, res) => {
     const result = await WorkoutSchema.findByIdAndDelete({ _id: req.params.workoutId });
     return res.status(200).json(result);
   } catch (error) {
-    return res.json(error.message);
+    return res.status(500).json(error.message);
   }
 };
 
@@ -58,9 +64,9 @@ const deleteWorkoutById = async (req, res) => {
 // 5ee293f614368832c4f17be9
 
 module.exports = {
-  getWorkout, 
-  getWorkoutById, 
-  postWorkout, 
-  patchWorkoutById, 
+  getWorkout,
+  getWorkoutById,
+  postWorkout,
+  patchWorkoutById,
   deleteWorkoutById,
 };
