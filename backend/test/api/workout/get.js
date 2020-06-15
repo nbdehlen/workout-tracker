@@ -65,7 +65,7 @@ describe('GET /workout', () => {
       .expect(200)
       .then((res) => {
         const { body } = res;
-        console.log(body);
+        // console.log(body);
         expect(body).to.length(0);
         done();
       })
@@ -85,7 +85,7 @@ describe('GET /workout', () => {
           .expect(200)
           .then((res) => {
             const { body } = res;
-            console.log(body);
+            // console.log(body);
 
             expect(body).length(1);
             expect(body[0]).to.contain.property('_id').to.be.a('string').length.within(15, 100);

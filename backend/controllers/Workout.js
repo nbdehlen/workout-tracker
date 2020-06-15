@@ -6,8 +6,8 @@ const getWorkout = async (req, res, next) => {
     const result = await WorkoutSchema.find({}).limit(10000);
     return res.status(200).json(result);
   } catch (error) {
-    // return res.status(500).json(error.message);
-    next(error);
+    return res.status(500).json(error.message);
+    // next(error);
   }
 };
 
@@ -16,8 +16,8 @@ const getWorkoutById = async (req, res, next) => {
     const result = await WorkoutSchema.findById(req.params.workoutId);
     return res.status(200).json(result);
   } catch (error) {
-    // return res.status(500).json(error.message);
-    next(error);
+    return res.status(500).json(error.message);
+    // next(error);
   }
 };
 
@@ -40,8 +40,8 @@ const postWorkout = async (req, res, next) => {
     return res.status(200).json(workout);
   } catch (error) {
     console.log(error);
-    // return res.status(500).json(e.message);
-    next(error);
+    return res.status(500).json(error.message);
+    // next(error);
   }
 };
 
@@ -51,8 +51,8 @@ const patchWorkoutById = async (req, res, next) => {
     const result = await WorkoutSchema.findOneAndUpdate({ _id: req.params.workoutId }, { $set: body }, { new: true });
     return res.status(200).json(result);
   } catch (error) {
-    // return res.status(500).json(error.message);
-    next(error);
+    return res.status(500).json(error.message);
+    // next(error);
   }
 };
 
@@ -61,8 +61,8 @@ const deleteWorkoutById = async (req, res, next) => {
     const result = await WorkoutSchema.findByIdAndDelete({ _id: req.params.workoutId });
     return res.status(200).json(result);
   } catch (error) {
-    // return res.status(500).json(error.message);
-    next(error);
+    return res.status(500).json(error.message);
+    // next(error);
   }
 };
 

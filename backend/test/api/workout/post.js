@@ -5,6 +5,7 @@ const express = require('express');
 const index = require('../../../api/routes');
 
 const app = express();
+app.use(express.json());
 // const app = require('../../../app');
 // const { postWorkout } = require('../../../controllers/Workout');
 const db = require('../../../db/index');
@@ -67,7 +68,7 @@ describe('POST /workout', () => {
       .then((res) => {
         const { body } = res;
 
-        console.log(body);
+        // console.log(body);
 
         /* Workout */
         expect(body).to.contain.property('_id').to.be.a('string').length.within(15, 100);
@@ -129,7 +130,7 @@ describe('POST /workout', () => {
       .expect(500)
       .then((res) => {
         const { body } = res;
-        console.log(body);
+        // console.log(body);
         expect(body).to.contain('Workout validation failed: start: Path `start` is required.');
         done();
       })
