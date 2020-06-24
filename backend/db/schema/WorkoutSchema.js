@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const strTrimLcLen50 = require('./utils/defSchemaObjects');
+
+// use mongoDBs version of `findOneAndUpdate`
+mongoose.set('useFindAndModify', false);
 
 
 const WorkoutSchema = mongoose.Schema({
@@ -9,7 +13,7 @@ const WorkoutSchema = mongoose.Schema({
     required: true,
     lowercase: true,
     trim: true,
-    maxlength: 50,
+    maxlength: [50, 'Max char length is 50'],
   },
 
   start: {
@@ -17,8 +21,8 @@ const WorkoutSchema = mongoose.Schema({
     required: true,
     // default: Date.now,
     trim: true,
-    maxlength: 50,
-    minLength: 1,
+    maxlength: [50, 'Max char length is 50'],
+    minLength: [1, 'Min char length is 1'],
   },
 
   grade: {
@@ -34,40 +38,15 @@ const WorkoutSchema = mongoose.Schema({
 
   exercises: [
     {
-      exerciseType: {
-        type: String,
-        trim: true,
-        maxlength: 50,
-        lowercase: true,
-      },
-      name: {
-        type: String,
-        trim: true,
-        maxlength: 50,
-        lowercase: true,
-      },
+      exerciseType: strTrimLcLen50,
+      name: strTrimLcLen50,
       compound: {
         type: Boolean,
         default: true,
       },
-      mainMuscle: {
-        type: String,
-        trim: true,
-        maxlength: 50,
-        lowercase: true,
-      },
-      secondaryMuscles: [{
-        type: String,
-        trim: true,
-        maxlength: 50,
-        lowercase: true,
-      }],
-      tool: {
-        type: String,
-        trim: true,
-        maxlength: 50,
-        lowercase: true,
-      },
+      mainMuscle: strTrimLcLen50,
+      secondaryMuscles: [strTrimLcLen50],
+      tool: strTrimLcLen50,
       unilateral: {
         type: Boolean,
         default: false,
@@ -83,26 +62,11 @@ const WorkoutSchema = mongoose.Schema({
           max: [1000, 'You didn\'t do {VALUE} reps. Why you always lying'],
           min: [1, 'You did 0 reps? so it\'s almost like you shouldnt log it?'],
         },
-        rest: {
-          type: String,
-          trim: true,
-          maxlength: 50,
-          lowercase: true,
-        },
-        time: {
-          type: String,
-          trim: true,
-          maxlength: 50,
-          lowercase: true,
-        },
+        rest: strTrimLcLen50,
+        time: strTrimLcLen50,
       }],
 
-      length: {
-        type: String,
-        trim: true,
-        maxlength: 50,
-        lowercase: true,
-      },
+      length: strTrimLcLen50,
       calories: {
         type: Number,
         max: [10000, 'Come on dude, you didn\'t just burn {VALUE} calories in a single workout.'],
@@ -118,8 +82,16 @@ const WorkoutSchema = mongoose.Schema({
   end: {
     type: Date,
     trim: true,
-    maxlength: 50,
+    maxlength: [50, 'Max char length is 50'],
   },
+});
+
+// const workoutModel = mongoose.model('Workout', WorkoutSchema);
+
+// Pre hook for `findOneAndUpdate`
+WorkoutSchema.pre('findOneAndUpdate', function (next) {
+  this.options.runValidators = true;
+  next();
 });
 
 module.exports = mongoose.model('Workout', WorkoutSchema);

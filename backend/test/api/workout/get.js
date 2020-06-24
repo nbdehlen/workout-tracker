@@ -37,7 +37,7 @@ describe('GET /workout', () => {
       .catch((err) => done(err));
   });
 
-  it('OK, getting 1 workout', (done) => {
+  it('OK, getting all workouts', (done) => {
     request(app).post('/api/v1/workout')
       .send(smallPost)
       .then((res) => {
@@ -53,6 +53,47 @@ describe('GET /workout', () => {
             expect(body[0]).to.contain.property('type', 'strength');
             expect(body[0]).to.contain.property('start', '2020-04-12T20:50:40.000Z');
             expect(body[0]).to.contain.property('end', '2020-04-14T11:50:40.000Z');
+            done();
+          })
+          .catch((err) => done(err));
+      })
+      .catch((err) => done(err));
+  });
+
+  it('OK, getting 1 workout by id', (done) => {
+    request(app).post('/api/v1/workout')
+      .send(smallPost)
+      .then((res) => {
+        // console.log(res.body._id);
+        request(app).get(`/api/v1/workout/${res.body._id}`)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .then((res) => {
+            const { body } = res;
+
+
+            expect(body).to.contain.property('_id').to.be.a('string').length.within(15, 100);
+            expect(body).to.contain.property('type', 'strength');
+            expect(body).to.contain.property('start', '2020-04-12T20:50:40.000Z');
+            expect(body).to.contain.property('end', '2020-04-14T11:50:40.000Z');
+            done();
+          })
+          .catch((err) => done(err));
+      })
+      .catch((err) => done(err));
+  });
+
+  it('OK, id not found', (done) => {
+    request(app).post('/api/v1/workout')
+      .send(smallPost)
+      .then((res) => {
+        request(app).get('/api/v1/workout/5ee7f9a85afec24630b33987')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .then((res) => {
+            const { body } = res;
+            console.log(body);
+            expect(body).to.be.null;
             done();
           })
           .catch((err) => done(err));

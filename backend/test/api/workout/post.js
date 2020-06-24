@@ -28,11 +28,11 @@ describe('POST /workout', () => {
       .catch((error) => done(error));
   });
 
-  it('OK, creating a new entry workout works', (done) => {
+  it('OK, creating a new entry workout', (done) => {
     request(app).post('/api/v1/workout')
       .send(largePost)
       .expect('Content-Type', /json/)
-      .expect(200)
+      .expect(201)
       .then((res) => {
         const { body } = res;
 

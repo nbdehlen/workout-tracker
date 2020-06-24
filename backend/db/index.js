@@ -20,7 +20,6 @@ const connect = async () => {
         reconnectInterval: 1000,
       };
 
-
       mongoose.connect(mongoUri, mongooseOpts);
 
       mongoose.connection.on('error', (e) => {
@@ -32,7 +31,8 @@ const connect = async () => {
       });
 
       mongoose.connection.once('open', () => {
-        console.log(`MongoDB successfully connected to ${mongoUri}`);
+        // console.log(`MongoDB successfully connected to ${mongoUri}`);
+        console.log('Connected to mock DB!');
       });
     });
   } else {

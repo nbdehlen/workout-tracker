@@ -7,7 +7,8 @@ const getWorkout = async (req, res, next) => {
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error.message);
-    // next(error);
+    //  next(error);
+    // return next(res.status(500).json(error.message));
   }
 };
 
@@ -17,6 +18,7 @@ const getWorkoutById = async (req, res, next) => {
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error.message);
+    // return next(res.status(500).json(error.message));
     // return next(error);
   }
 };
@@ -37,11 +39,12 @@ const postWorkout = async (req, res, next) => {
 
     await workout.save();
 
-    return res.status(200).json(workout);
+    return res.status(201).json(workout);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).json(error.message);
     // return next(error);
+    // return next(res.status(500).json(error.message));
   }
 };
 
@@ -53,6 +56,7 @@ const patchWorkoutById = async (req, res, next) => {
   } catch (error) {
     return res.status(500).json(error.message);
     // return next(error);
+    // return next(res.status(500).json(error.message));
   }
 };
 
@@ -63,6 +67,7 @@ const deleteWorkoutById = async (req, res, next) => {
   } catch (error) {
     return res.status(500).json(error.message);
     // return next(error);
+    // return next(res.status(500).json(error.message));
   }
 };
 
