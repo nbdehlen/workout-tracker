@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const createError = require('http-errors');
 const db = require('./db/index');
 
 const app = express();
@@ -19,17 +20,22 @@ app.use(morgan('dev')); // logger
 /* API */
 app.use('/api/v1', index);
 
-// app.get('/', (req, res) => {
-//   res.send('starting page yolo');
-// });
-
-
 db.connect().then(() => {
   app.listen(port, host, () => console.log('App running!'));
 });
 
 app.use((req, res, next) => {
-  res.status(404).json({ error: 'not found' });
+  next(createError(404, 'Not found'));
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  res.json({
+    error: {
+      status: error.status || 500,
+      message: error.message,
+    },
+  });
 });
 
 

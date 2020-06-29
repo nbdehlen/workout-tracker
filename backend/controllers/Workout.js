@@ -1,25 +1,34 @@
-const app = require('express')();
+const createError = require('http-errors');
+const mongoose = require('mongoose');
 const WorkoutSchema = require('../db/schema/WorkoutSchema');
+// const protoChain = require('../utils/protoChain');
 
 const getWorkout = async (req, res, next) => {
   try {
     const result = await WorkoutSchema.find({}).limit(10000);
-    return res.status(200).json(result);
+
+    return res.status(200).json(result.map((entry) => (entry.toObject({ getters: true }))));
   } catch (error) {
-    return res.status(500).json(error.message);
-    //  next(error);
-    // return next(res.status(500).json(error.message));
+    next(error);
   }
 };
 
 const getWorkoutById = async (req, res, next) => {
+  const { workoutId } = req.params;
+
   try {
-    const result = await WorkoutSchema.findById(req.params.workoutId);
-    return res.status(200).json(result);
+    const result = await WorkoutSchema.findById(workoutId);
+
+    if (!result) {
+      throw createError(404, `Workout ID ${workoutId} does not exist`);
+    }
+    // protoChain(result);
+    return res.status(200).json(result.toObject({ getters: true }));
   } catch (error) {
-    return res.status(500).json(error.message);
-    // return next(res.status(500).json(error.message));
-    // return next(error);
+    if (error instanceof mongoose.CastError) {
+      return next(createError(400, `Workout ID ${workoutId} is invalid`));
+    }
+    next(error);
   }
 };
 
@@ -39,45 +48,65 @@ const postWorkout = async (req, res, next) => {
 
     await workout.save();
 
-    return res.status(201).json(workout);
+    return res.status(201).json(workout.toObject({ getters: true }));
   } catch (error) {
-    // console.log(error);
-    return res.status(500).json(error.message);
-    // return next(error);
-    // return next(res.status(500).json(error.message));
+    if (error.name === 'ValidationError') {
+      return next(createError(422, error.message));
+    }
+    next(error);
   }
 };
 
 const patchWorkoutById = async (req, res, next) => {
+  const { body } = req;
+  const { workoutId } = req.params;
+
   try {
-    const { body } = req;
-    const result = await WorkoutSchema.findOneAndUpdate({ _id: req.params.workoutId }, { $set: body }, { new: true });
-    return res.status(200).json(result);
+    const result = await WorkoutSchema.findOneAndUpdate(
+      { _id: workoutId },
+      { $set: body },
+      { new: true },
+    );
+
+    if (!result) {
+      throw createError(404, `Workout ID ${workoutId} does not exist`);
+    }
+
+    return res.status(200).json(result.toObject({ getters: true }));
   } catch (error) {
-    return res.status(500).json(error.message);
-    // return next(error);
-    // return next(res.status(500).json(error.message));
+    console.log(error.name);
+    if (error instanceof mongoose.CastError) {
+      // build custom error handler for CastErrors?
+      // Need standardized error messages for the repeating errors.
+
+      return next(createError(400, `Parameters or workout ID ${workoutId} is invalid`));
+    }
+    next(error);
   }
 };
 
 const deleteWorkoutById = async (req, res, next) => {
+  const { workoutId } = req.params;
+
   try {
-    const result = await WorkoutSchema.findByIdAndDelete({ _id: req.params.workoutId });
-    return res.status(200).json(result);
+    const result = await WorkoutSchema.findByIdAndDelete({
+      _id: workoutId,
+    });
+
+    if (!result) {
+      throw (createError(404, `Workout ID ${workoutId} does not exist`));
+    }
+
+    return res.status(200).json({
+      message: `Deleted workout ${workoutId}`,
+    });
   } catch (error) {
-    return res.status(500).json(error.message);
-    // return next(error);
-    // return next(res.status(500).json(error.message));
+    if (error instanceof mongoose.CastError) {
+      return next(createError(400, `Workout ID ${workoutId} is invalid`));
+    }
+    next(error);
   }
 };
-
-
-// app.use((req, res, next) => {
-//   res.status(404).json({ error: 'not found' });
-// });
-// app.use((req, res, next, e) => {
-//   res.status(500).json({ error: e.message });
-// });
 
 // "2020-06-11T14:50:40Z"
 // 5ee293f614368832c4f17be9

@@ -1,10 +1,9 @@
 process.env.NODE_ENV = 'test';
 const { expect } = require('chai');
 const request = require('supertest');
-const express = require('express');
-const index = require('../../../api/routes');
-const db = require('../../../db/index');
 const app = require('../../../app');
+const db = require('../../../db/index');
+
 const { smallPost, faultyPost, patchData } = require('../../utils/dummyData');
 
 describe('PATCH /workout', () => {
@@ -39,14 +38,14 @@ describe('PATCH /workout', () => {
       .catch((err) => done(err));
   });
 
-  it('Fail, id not found', (done) => {
+  it('Fail, faulty id value', (done) => {
     request(app).post('/api/v1/workout')
       .send(smallPost)
       .then((res) => {
         request(app).patch('/api/v1/workout/incorrectId')
           .send(patchData)
           .expect('Content-Type', /json/)
-          .expect(500)
+          .expect(400)
           .then((res) => {
             done();
           })
@@ -55,14 +54,14 @@ describe('PATCH /workout', () => {
       .catch((err) => done(err));
   });
 
-  it('Fail, faulty values', (done) => {
+  it('Fail, id does not exist', (done) => {
     request(app).post('/api/v1/workout')
       .send(smallPost)
       .then((res) => {
-        request(app).patch('/api/v1/workout/fail')
+        request(app).patch('/api/v1/workout/5ee6531987797c35b81f5704')
           .send(faultyPost)
           .expect('Content-Type', /json/)
-          .expect(500)
+          .expect(404)
           .then((res) => {
             done();
           })

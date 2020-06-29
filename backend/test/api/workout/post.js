@@ -1,19 +1,9 @@
 process.env.NODE_ENV = 'test';
 const { expect } = require('chai');
 const request = require('supertest');
-const express = require('express');
-const index = require('../../../api/routes');
-
-// const app = express();
-// app.use(express.json());
 const app = require('../../../app');
-// const { postWorkout } = require('../../../controllers/Workout');
 const db = require('../../../db/index');
 const { largePost, missingDataPost } = require('../../utils/dummyData');
-
-// app.use(express.json());
-// app.use('/api/v1', index);
-
 
 describe('POST /workout', () => {
   before((done) => {
@@ -88,15 +78,15 @@ describe('POST /workout', () => {
       .catch((err) => done(err));
   });
 
-  it('Fail, start requires a value', (done) => {
+  it('Fail, missing start value', (done) => {
     request(app).post('/api/v1/workout')
       .send(missingDataPost)
       .expect('Content-Type', /json/)
-      .expect(500)
+      .expect(422)
       .then((res) => {
         const { body } = res;
-        // console.log(body);
-        expect(body).to.contain('Workout validation failed: start: Path `start` is required.');
+        console.log(body);
+        // expect(body).to.contain('Workout validation failed: start: Path `start` is required.');
         expect(body).to.not.contain.property('bogusData');
         done();
       })

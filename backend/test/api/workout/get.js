@@ -1,15 +1,10 @@
 process.env.NODE_ENV = 'test';
 const { expect } = require('chai');
 const request = require('supertest');
-const express = require('express');
-const index = require('../../../api/routes');
+const app = require('../../../app');
 const db = require('../../../db/index');
 const { smallPost } = require('../../utils/dummyData');
 
-// const app = express();
-const app = require('../../../app');
-// app.use(express.json());
-// app.use('/api/v1', index);
 
 describe('GET /workout', () => {
   before((done) => {
@@ -76,24 +71,6 @@ describe('GET /workout', () => {
             expect(body).to.contain.property('type', 'strength');
             expect(body).to.contain.property('start', '2020-04-12T20:50:40.000Z');
             expect(body).to.contain.property('end', '2020-04-14T11:50:40.000Z');
-            done();
-          })
-          .catch((err) => done(err));
-      })
-      .catch((err) => done(err));
-  });
-
-  it('OK, id not found', (done) => {
-    request(app).post('/api/v1/workout')
-      .send(smallPost)
-      .then((res) => {
-        request(app).get('/api/v1/workout/5ee7f9a85afec24630b33987')
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .then((res) => {
-            const { body } = res;
-            console.log(body);
-            expect(body).to.be.null;
             done();
           })
           .catch((err) => done(err));
