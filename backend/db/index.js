@@ -1,13 +1,11 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-
 const connect = async () => {
-// function connect() {
+  // function connect() {
   // return new Promise((resolve, reject) => {
   if (process.env.NODE_ENV === 'test') {
     // const mongoUri = process.env.DB_CON;
-
 
     const { MongoMemoryServer } = require('mongodb-memory-server');
     const mongoServer = new MongoMemoryServer(mongoose);
@@ -37,8 +35,9 @@ const connect = async () => {
     });
   } else {
     try {
-      await mongoose.connect(process.env.DB_CON, { useUnifiedTopology: true, useNewUrlParser: true },
-        () => console.log('connected to DB!'));
+      await mongoose.connect(process.env.DB_CON, { useUnifiedTopology: true, useNewUrlParser: true }, () =>
+        console.log('connected to DB!')
+      );
     } catch (error) {
       console.log(error.message);
     }

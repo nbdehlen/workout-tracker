@@ -4,14 +4,17 @@ const strTrimLcLen50 = require('./utils/defSchemaObjects');
 // use mongoDBs version of `findOneAndUpdate`
 mongoose.set('useFindAndModify', false);
 
-
 const WorkoutSchema = mongoose.Schema({
+  author: {
+    ref: 'User',
+    type: mongoose.Schema.Types.ObjectId,
+  },
 
   type: {
     type: String,
     default: 'General',
     required: true,
-    lowercase: true,
+    // lowercase: true,
     trim: true,
     maxlength: [50, 'Max char length is 50'],
   },
@@ -35,7 +38,6 @@ const WorkoutSchema = mongoose.Schema({
     max: [10, 'Value neeeds to be on a scale between 0 and 10'],
   },
 
-
   exercises: [
     {
       exerciseType: strTrimLcLen50,
@@ -51,26 +53,34 @@ const WorkoutSchema = mongoose.Schema({
         type: Boolean,
         default: false,
       },
-      sets: [{
-        weight: {
-          type: Number,
-          max: [1000, 'You didn\'t lift {VALUE} KGs. Why you always lying'],
-          min: [-200, 'So your lift was assisted by {VALUE} KGs? lowest acceptable number is -200'],
+      sets: [
+        {
+          weight: {
+            type: Number,
+            max: [1000, "You didn't lift {VALUE} KGs. Why you always lying"],
+            min: [
+              -200,
+              'So your lift was assisted by {VALUE} KGs? lowest acceptable number is -200',
+            ],
+          },
+          reps: {
+            type: Number,
+            max: [1000, "You didn't do {VALUE} reps. Why you always lying"],
+            min: [1, "You did 0 reps? so it's almost like you shouldnt log it?"],
+          },
+          rest: strTrimLcLen50,
+          time: strTrimLcLen50,
         },
-        reps: {
-          type: Number,
-          max: [1000, 'You didn\'t do {VALUE} reps. Why you always lying'],
-          min: [1, 'You did 0 reps? so it\'s almost like you shouldnt log it?'],
-        },
-        rest: strTrimLcLen50,
-        time: strTrimLcLen50,
-      }],
+      ],
 
       length: strTrimLcLen50,
       calories: {
         type: Number,
-        max: [10000, 'Come on dude, you didn\'t just burn {VALUE} calories in a single workout.'],
-        min: [0, 'So you stuffed your face while working out and want to put a negative number? Just mark it zero'],
+        max: [10000, "Come on dude, you didn't just burn {VALUE} calories in a single workout."],
+        min: [
+          0,
+          'So you stuffed your face while working out and want to put a negative number? Just mark it zero',
+        ],
         validate: {
           validator: Number.isInteger,
           message: '{VALUE} is not an integer value',
@@ -88,7 +98,7 @@ const WorkoutSchema = mongoose.Schema({
 
 // const workoutModel = mongoose.model('Workout', WorkoutSchema);
 
-// Pre hook for `findOneAndUpdate`
+// Pre hook for `findOneAndUpdate`. (arrow func doesnt work)
 WorkoutSchema.pre('findOneAndUpdate', function (next) {
   this.options.runValidators = true;
   next();

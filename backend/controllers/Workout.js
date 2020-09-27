@@ -7,7 +7,7 @@ const getWorkout = async (req, res, next) => {
   try {
     const result = await WorkoutSchema.find({}).limit(10000);
 
-    return res.status(200).json(result.map((entry) => (entry.toObject({ getters: true }))));
+    return res.status(200).json(result.map((entry) => entry.toObject({ getters: true })));
   } catch (error) {
     next(error);
   }
@@ -34,11 +34,10 @@ const getWorkoutById = async (req, res, next) => {
 
 const postWorkout = async (req, res, next) => {
   try {
-    const {
-      type, start, grade, end, exercises,
-    } = req.body;
+    const { author, type, start, grade, end, exercises } = req.body;
 
     const workout = new WorkoutSchema({
+      author,
       type,
       start,
       grade,
@@ -94,7 +93,7 @@ const deleteWorkoutById = async (req, res, next) => {
     });
 
     if (!result) {
-      throw (createError(404, `Workout ID ${workoutId} does not exist`));
+      throw createError(404, `Workout ID ${workoutId} does not exist`);
     }
 
     return res.status(200).json({
@@ -108,6 +107,40 @@ const deleteWorkoutById = async (req, res, next) => {
   }
 };
 
+// WORKS!!
+/*
+Need to restructure a lot though.
+I think I can only check for req.userId and dont need to send in req.params.userid and compare
+
+*/
+const testGetWorkout = async (req, res, next) => {
+  const { userid } = req.params;
+
+  console.log('in testgetworkout');
+  console.log(req.params);
+  console.log(req.headers);
+  console.log(`req.userId: ${req.userId}`);
+
+  if (userid !== req.userId) {
+    return res.status(500).json({ Error: 'Incorrect user id' });
+  }
+
+  try {
+    const result = await WorkoutSchema.find({ author: userid });
+
+    if (!result) {
+      return res.status(404).json({
+        Error: `User ${userid} does not exist`,
+      });
+    }
+    // protoChain(result);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 // "2020-06-11T14:50:40Z"
 // 5ee293f614368832c4f17be9
 
@@ -117,4 +150,5 @@ module.exports = {
   postWorkout,
   patchWorkoutById,
   deleteWorkoutById,
+  testGetWorkout,
 };

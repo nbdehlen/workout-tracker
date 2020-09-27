@@ -1,12 +1,20 @@
 const express = require('express');
+const { verifyToken } = require('../../middlewares/authJwt');
 
 const router = express.Router();
-const workout = require('../../controllers/Workout');
+const {
+  getWorkout,
+  postWorkout,
+  getWorkoutById,
+  deleteWorkoutById,
+  patchWorkoutById,
+  testGetWorkout,
+} = require('../../controllers/Workout');
 
-router.get('/workout', workout.getWorkout(req, res));
-router.post('/workout', workout.postWorkout(req, res));
-router.get('/workout/:workoutId', workout.getWorkoutById(req, res));
-router.patch('/workout/:workoutId', workout.patchWorkoutById(req, res));
-router.delete('/workout/:workoutId', workout.deleteWorkoutById(req, res));
-
+router.get('/workout', getWorkout);
+router.post('/workout', postWorkout);
+router.get('/workout/:workoutId', getWorkoutById);
+router.patch('/workout/:workoutId', patchWorkoutById);
+router.delete('/workout/:workoutId', deleteWorkoutById);
+router.get('/user/:userid', [verifyToken, testGetWorkout]);
 module.exports = router;
