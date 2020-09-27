@@ -1,27 +1,7 @@
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
 const Role = require('../db/schema/RoleSchema');
 const User = require('../db/schema/UserSchema');
 
-const verifyToken = (req, res, next) => {
-  const token = req.headers['x-access-token'];
-
-  if (!token) {
-    return res.status(403).send({ message: 'No token provided!' });
-  }
-
-  jwt.verify(token, process.env.SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({ message: 'Unauthorized!' });
-    }
-    req.userId = decoded.id;
-    next();
-  });
-};
-
-// Need func to get userId from token
-
-const isAdmin = (req, res, next) => {
+const admin = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -51,7 +31,7 @@ const isAdmin = (req, res, next) => {
   });
 };
 
-const isModerator = (req, res, next) => {
+const moderator = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -82,7 +62,6 @@ const isModerator = (req, res, next) => {
 };
 
 module.exports = {
-  verifyToken,
-  isAdmin,
-  isModerator,
+  admin,
+  moderator,
 };

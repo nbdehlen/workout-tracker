@@ -4,8 +4,12 @@ const bcrypt = require('bcryptjs');
 const User = require('../db/schema/UserSchema');
 const Role = require('../db/schema/RoleSchema');
 
+// make sure signUp gives 'user' role only.
+
 const postSignUp = (req, res) => {
-  const { username, email, password, roles } = req.body;
+  const {
+    username, email, password, roles,
+  } = req.body;
 
   const user = new User({
     username,
@@ -62,7 +66,7 @@ const postSignUp = (req, res) => {
   });
 };
 
-const postSignIn = (req, res) => {
+const postLogin = (req, res) => {
   const { username, password } = req.body;
 
   User.findOne({
@@ -107,4 +111,4 @@ const postSignIn = (req, res) => {
     });
 };
 
-module.exports = { postSignUp, postSignIn };
+module.exports = { postSignUp, postLogin };
