@@ -5,7 +5,10 @@ const {
   getWorkoutById,
   patchWorkoutById,
   deleteWorkoutById,
-  testGetWorkout,
+  getUserWorkouts,
+  patchUserWorkoutById,
+  deleteUserWorkoutById,
+  postUserWorkout,
 } = require('../../controllers/Workout');
 // const exercise = require('../../controllers/Exercise');
 const {
@@ -32,5 +35,8 @@ router.get('/test/all', allAccess);
 router.get('/test/user', [verifyToken], userBoard);
 router.get('/test/mod', [verifyToken, isModerator], moderatorBoard);
 router.get('/test/admin', [verifyToken, isAdmin], adminBoard);
-router.get('/user/:userid', [verifyToken, testGetWorkout]);
+router.get('/user/workouts', [verifyToken, getUserWorkouts]);
+router.patch('/user/workout/:workoutId', [verifyToken, patchUserWorkoutById]);
+router.delete('/user/workout/:workoutId', [verifyToken, deleteUserWorkoutById]);
+router.post('/user/workout', [verifyToken, postUserWorkout]);
 module.exports = router;

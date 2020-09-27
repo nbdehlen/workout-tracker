@@ -81,10 +81,6 @@ const isModerator = (req, res, next) => {
   });
 };
 
-// const isSaidUser = (req, res, next) => {
-
-// }
-
 module.exports = {
   verifyToken,
   isAdmin,

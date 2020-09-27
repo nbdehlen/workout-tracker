@@ -107,36 +107,106 @@ const deleteWorkoutById = async (req, res, next) => {
   }
 };
 
-// WORKS!!
-/*
-Need to restructure a lot though.
-I think I can only check for req.userId and dont need to send in req.params.userid and compare
-
-*/
-const testGetWorkout = async (req, res, next) => {
-  const { userid } = req.params;
-
-  console.log('in testgetworkout');
-  console.log(req.params);
-  console.log(req.headers);
-  console.log(`req.userId: ${req.userId}`);
-
-  if (userid !== req.userId) {
-    return res.status(500).json({ Error: 'Incorrect user id' });
-  }
+const getUserWorkouts = async (req, res, next) => {
+  // const { userid } = req.params;
+  const { userId } = req;
+  console.log(userId);
 
   try {
-    const result = await WorkoutSchema.find({ author: userid });
+    const result = await WorkoutSchema.find({ author: userId });
 
     if (!result) {
       return res.status(404).json({
-        Error: `User ${userid} does not exist`,
+        Error: `User ${userId} does not exist`,
       });
     }
-    // protoChain(result);
     return res.status(200).json(result);
   } catch (error) {
     console.log(error);
+    next(error);
+  }
+};
+
+const patchUserWorkoutById = async (req, res, next) => {
+  const { body } = req;
+  const { workoutId } = req.params;
+  const { userId } = req;
+  console.log(userId);
+
+  try {
+    const result = await WorkoutSchema.findOneAndUpdate(
+      { _id: workoutId, author: userId },
+      { $set: body },
+      { new: true },
+    );
+
+    if (!result) {
+      throw createError(404, `Workout ID ${workoutId} does not exist`);
+    }
+
+    return res.status(200).json(result.toObject({ getters: true }));
+  } catch (error) {
+    console.log(error.name);
+    if (error instanceof mongoose.CastError) {
+      // build custom error handler for CastErrors?
+      // Need standardized error messages for the repeating errors.
+
+      return next(createError(400, `Parameters or workout ID ${workoutId} is invalid`));
+    }
+    next(error);
+  }
+};
+
+const deleteUserWorkoutById = async (req, res, next) => {
+  const { workoutId } = req.params;
+  const { userId } = req;
+
+  try {
+    const result = await WorkoutSchema.findByIdAndDelete({
+      _id: workoutId,
+      author: userId,
+    });
+
+    if (!result) {
+      throw createError(404, `Workout ID ${workoutId} does not exist`);
+    }
+
+    return res.status(200).json({
+      message: `Deleted workout ${workoutId}`,
+    });
+  } catch (error) {
+    if (error instanceof mongoose.CastError) {
+      return next(createError(400, `Workout ID ${workoutId} is invalid`));
+    }
+    next(error);
+  }
+};
+
+const postUserWorkout = async (req, res, next) => {
+  try {
+    const { type, start, grade, end, exercises } = req.body;
+
+    if (req.userId === undefined) {
+      return next(createError(504, 'User not logged in'));
+    }
+    const { userId } = req;
+
+    const workout = new WorkoutSchema({
+      author: userId,
+      type,
+      start,
+      grade,
+      end,
+      exercises,
+    });
+
+    await workout.save();
+
+    return res.status(201).json(workout.toObject({ getters: true }));
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return next(createError(422, error.message));
+    }
     next(error);
   }
 };
@@ -150,5 +220,8 @@ module.exports = {
   postWorkout,
   patchWorkoutById,
   deleteWorkoutById,
-  testGetWorkout,
+  getUserWorkouts,
+  patchUserWorkoutById,
+  deleteUserWorkoutById,
+  postUserWorkout,
 };

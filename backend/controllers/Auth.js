@@ -5,10 +5,12 @@ const User = require('../db/schema/UserSchema');
 const Role = require('../db/schema/RoleSchema');
 
 const postSignUp = (req, res) => {
+  const { username, email, password, roles } = req.body;
+
   const user = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
+    username,
+    email,
+    password: bcrypt.hashSync(password, 8),
   });
 
   user.save((err, user) => {
@@ -17,18 +19,18 @@ const postSignUp = (req, res) => {
       return;
     }
 
-    if (req.body.roles) {
+    if (roles) {
       Role.find(
         {
-          name: { $in: req.body.roles },
+          name: { $in: roles },
         },
-        (err, roles) => {
+        (err, userRoles) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
           }
 
-          user.roles = roles.map((role) => role._id);
+          user.roles = userRoles.map((role) => role._id);
           user.save((err) => {
             if (err) {
               res.status(500).send({ message: err });
@@ -61,8 +63,10 @@ const postSignUp = (req, res) => {
 };
 
 const postSignIn = (req, res) => {
+  const { username, password } = req.body;
+
   User.findOne({
-    username: req.body.username,
+    username,
   })
     .populate('roles', '-__v')
     .exec((err, user) => {
@@ -75,7 +79,7 @@ const postSignIn = (req, res) => {
         return res.status(404).send({ message: 'User Not found.' });
       }
 
-      const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+      const passwordIsValid = bcrypt.compareSync(password, user.password);
 
       if (!passwordIsValid) {
         return res.status(401).send({
