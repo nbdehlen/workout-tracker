@@ -10,32 +10,32 @@ const db = require('../../../db/index');
 const { smallPost, faultyPost, patchData } = require('../../utils/dummyData');
 
 describe('DELETE /workout', () => {
-  before((done) => {
+  before(done => {
     db.connect()
       .then(() => done())
-      .catch((error) => done(error));
+      .catch(error => done(error));
   });
 
-  after((done) => {
+  after(done => {
     db.disconnect()
       .then(() => done())
-      .catch((error) => done(error));
+      .catch(error => done(error));
   });
 
-  it('OK, deleting workout', (done) => {
+  it('OK, deleting workout', done => {
     request(app).post('/api/v1/workout')
       .send(smallPost)
-      .then((res) => {
+      .then(res => {
         request(app).delete(`/api/v1/workout/${res.body._id}`)
           .expect('Content-Type', /json/)
           .expect(200)
-          .then((res) => {
+          .then(res => {
             const { body } = res;
             // console.log(res);
             done();
           })
-          .catch((err) => done(err));
+          .catch(err => done(err));
       })
-      .catch((err) => done(err));
+      .catch(err => done(err));
   });
 });
