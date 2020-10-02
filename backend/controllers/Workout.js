@@ -7,9 +7,9 @@ const getWorkout = async (req, res, next) => {
   try {
     const result = await WorkoutSchema.find({}).limit(10000);
 
-    return res.status(200).json(result.map((entry) => entry.toObject({ getters: true })));
+    return res.status(200).json(result.map(entry => entry.toObject({ getters: true })));
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -28,13 +28,15 @@ const getWorkoutById = async (req, res, next) => {
     if (error instanceof mongoose.CastError) {
       return next(createError(400, `Workout ID ${workoutId} is invalid`));
     }
-    next(error);
+    return next(error);
   }
 };
 
 const postWorkout = async (req, res, next) => {
   try {
-    const { author, type, start, grade, end, exercises } = req.body;
+    const {
+      author, type, start, grade, end, exercises,
+    } = req.body;
 
     const workout = new WorkoutSchema({
       author,
@@ -52,7 +54,7 @@ const postWorkout = async (req, res, next) => {
     if (error.name === 'ValidationError') {
       return next(createError(422, error.message));
     }
-    next(error);
+    return next(error);
   }
 };
 
@@ -73,14 +75,12 @@ const patchWorkoutById = async (req, res, next) => {
 
     return res.status(200).json(result.toObject({ getters: true }));
   } catch (error) {
-    console.log(error.name);
     if (error instanceof mongoose.CastError) {
       // build custom error handler for CastErrors?
       // Need standardized error messages for the repeating errors.
-
       return next(createError(400, `Parameters or workout ID ${workoutId} is invalid`));
     }
-    next(error);
+    return next(error);
   }
 };
 
@@ -103,14 +103,12 @@ const deleteWorkoutById = async (req, res, next) => {
     if (error instanceof mongoose.CastError) {
       return next(createError(400, `Workout ID ${workoutId} is invalid`));
     }
-    next(error);
+    return next(error);
   }
 };
 
 const getUserWorkouts = async (req, res, next) => {
-  // const { userid } = req.params;
   const { userId } = req;
-  console.log(userId);
 
   try {
     const result = await WorkoutSchema.find({ author: userId });
@@ -122,8 +120,7 @@ const getUserWorkouts = async (req, res, next) => {
     }
     return res.status(200).json(result);
   } catch (error) {
-    console.log(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -131,7 +128,6 @@ const patchUserWorkoutById = async (req, res, next) => {
   const { body } = req;
   const { workoutId } = req.params;
   const { userId } = req;
-  console.log(userId);
 
   try {
     const result = await WorkoutSchema.findOneAndUpdate(
@@ -146,14 +142,13 @@ const patchUserWorkoutById = async (req, res, next) => {
 
     return res.status(200).json(result.toObject({ getters: true }));
   } catch (error) {
-    console.log(error.name);
     if (error instanceof mongoose.CastError) {
       // build custom error handler for CastErrors?
       // Need standardized error messages for the repeating errors.
 
       return next(createError(400, `Parameters or workout ID ${workoutId} is invalid`));
     }
-    next(error);
+    return next(error);
   }
 };
 
@@ -178,13 +173,15 @@ const deleteUserWorkoutById = async (req, res, next) => {
     if (error instanceof mongoose.CastError) {
       return next(createError(400, `Workout ID ${workoutId} is invalid`));
     }
-    next(error);
+    return next(error);
   }
 };
 
 const postUserWorkout = async (req, res, next) => {
   try {
-    const { type, start, grade, end, exercises } = req.body;
+    const {
+      type, start, grade, end, exercises,
+    } = req.body;
 
     if (req.userId === undefined) {
       return next(createError(504, 'User not logged in'));
@@ -207,7 +204,7 @@ const postUserWorkout = async (req, res, next) => {
     if (error.name === 'ValidationError') {
       return next(createError(422, error.message));
     }
-    next(error);
+    return next(error);
   }
 };
 

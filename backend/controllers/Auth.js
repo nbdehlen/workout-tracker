@@ -6,7 +6,7 @@ const Role = require('../db/schema/RoleSchema');
 
 // make sure signUp gives 'user' role only.
 
-const postSignUp = (req, res) => {
+const postSignUp = async (req, res) => {
   const {
     username, email, password, roles,
   } = req.body;
@@ -17,98 +17,56 @@ const postSignUp = (req, res) => {
     password: bcrypt.hashSync(password, 8),
   });
 
-  user.save((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
-
+  try {
     if (roles) {
-      Role.find(
-        {
-          name: { $in: roles },
-        },
-        (err, userRoles) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          user.roles = userRoles.map((role) => role._id);
-          user.save((err) => {
-            if (err) {
-              res.status(500).send({ message: err });
-              return;
-            }
-
-            res.send({ message: 'User was registered successfully!' });
-          });
-        },
-      );
-    } else {
-      Role.findOne({ name: 'user' }, (err, role) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        user.roles = [role._id];
-        user.save((err) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          res.send({ message: 'User was registered successfully!' });
-        });
-      });
+      const assignedRoles = await Role.find({ name: { $in: roles } });
+      user.roles = assignedRoles.map(role => role._id);
+      await user.save();
+      return res.json({ message: 'User was registered successfully!' });
     }
-  });
+    const assignRoleUser = await Role.findOne({ name: 'user' });
+    user.roles = [assignRoleUser._id];
+    await user.save();
+    return res.json({ message: 'User was registered successfully!' });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
 };
 
-const postLogin = (req, res) => {
+const postLogin = async (req, res) => {
   const { username, password } = req.body;
+  try {
+    const user = await User.findOne({ username }).populate('roles', '-__v');
 
-  User.findOne({
-    username,
-  })
-    .populate('roles', '-__v')
-    .exec((err, user) => {
-      if (err) {
-        res.status(500).send({ message: err });
-        return;
-      }
+    // if (!user) {
+    //   return res.status(404).json({ message: 'User Not found.' });
+    // }
 
-      if (!user) {
-        return res.status(404).send({ message: 'User Not found.' });
-      }
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
 
-      const passwordIsValid = bcrypt.compareSync(password, user.password);
-
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: 'Invalid Password!',
-        });
-      }
-
-      const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-        expiresIn: 86400, // 24 hours
+    if (!passwordIsValid) {
+      return res.status(401).json({
+        accessToken: null,
+        message: 'Invalid Password!',
       });
+    }
 
-      const authorities = [];
-
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push(`ROLE_${user.roles[i].name.toUpperCase()}`);
-      }
-      res.status(200).send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        roles: authorities,
-        accessToken: token,
-      });
+    const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+      expiresIn: 86400, // 24 hours
     });
+
+    const authorities = user.roles.map(role => `ROLE_${role.name.toUpperCase()}`);
+    return res.status(200).json({
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      roles: authorities,
+      accessToken: token,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(404).json({ message: 'User Not found.' });
+  }
 };
 
 module.exports = { postSignUp, postLogin };

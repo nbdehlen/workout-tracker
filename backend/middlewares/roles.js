@@ -1,64 +1,37 @@
 const Role = require('../db/schema/RoleSchema');
 const User = require('../db/schema/UserSchema');
 
-const admin = (req, res, next) => {
-  User.findById(req.userId).exec((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
+const admin = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    const roles = await Role.find({ _id: { $in: user.roles } });
+
+    const isAdmin = roles.some(role => role.name === 'admin');
+
+    if (isAdmin) {
+      return next();
     }
 
-    Role.find(
-      {
-        _id: { $in: user.roles },
-      },
-      (err, roles) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === 'admin') {
-            next();
-            return;
-          }
-        }
-
-        res.status(403).send({ message: 'Require Admin Role!' });
-      },
-    );
-  });
+    return res.status(403).json({ message: 'Require Admin Role!' });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
 };
 
-const moderator = (req, res, next) => {
-  User.findById(req.userId).exec((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
+const moderator = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    const roles = await Role.find({ _id: { $in: user.roles } });
+
+    const isModerator = roles.some(role => role.name === 'moderator');
+    if (isModerator) {
+      return next();
     }
 
-    Role.find(
-      {
-        _id: { $in: user.roles },
-      },
-      (err, roles) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === 'moderator') {
-            next();
-            return;
-          }
-        }
-
-        res.status(403).send({ message: 'Require Moderator Role!' });
-      },
-    );
-  });
+    return res.status(403).json({ message: 'Require Moderator Role!' });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
 };
 
 module.exports = {

@@ -1,55 +1,46 @@
 const User = require('../db/schema/UserSchema');
 const ROLES = require('../db/constants');
 
-const usernameExists = (req, res, next) => {
+const usernameExists = async (req, res, next) => {
   const { username } = req.body;
-  // Username
-  User.findOne({
-    username,
-  }).exec((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
+  try {
+    const user = await User.findOne({ username });
 
     if (user) {
       res.status(400).send({ message: 'Failed! Username is already in use!' });
       return;
     }
     next();
-  });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 };
 
-const emailExists = (req, res, next) => {
+const emailExists = async (req, res, next) => {
   const { email } = req.body;
-  // Email
-  User.findOne({
-    email,
-  }).exec((err, userEmail) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
+  try {
+    const userEmail = await User.findOne({ email });
 
     if (userEmail) {
       res.status(400).send({ message: 'Failed! Email is already in use!' });
       return;
     }
     next();
-  });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 };
 
 const rolesExists = (req, res, next) => {
   const { roles } = req.body;
   if (roles) {
-    for (let i = 0; i < roles.length; i++) {
-      if (!ROLES.includes(roles[i])) {
-        res.status(400).send({
-          message: `Failed! Role ${roles[i]} does not exist!`,
+    roles.forEach(role => {
+      if (!ROLES.includes(role)) {
+        res.status(400).json({
+          message: `Failed! Role ${role} does not exist!`,
         });
-        return;
       }
-    }
+    });
   }
   next();
 };

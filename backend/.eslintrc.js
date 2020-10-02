@@ -8,5 +8,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 11,
   },
-  rules: {},
+  rules: {
+    "arrow-parens": [1, "as-needed"],
+    "no-underscore-dangle": 0
+  },
 };
