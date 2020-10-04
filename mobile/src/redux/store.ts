@@ -1,6 +1,8 @@
 import { createStore } from 'redux'
 import rootReducer from './rootReducer'
+import Reactotron from '../ReactotronConfig'
+// import Reactotron from 'reactotron-react-native'
 
-const store = createStore(rootReducer)
+export const store = createStore(rootReducer, Reactotron.createEnhancer())
 
 export default store

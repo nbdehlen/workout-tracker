@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { View } from 'react-native'
 import { Text, CircleView } from 'styled-native-kit'
+import Login from '../../components/Login'
 
 type OwnProps = {}
 
@@ -14,6 +15,7 @@ const LoginScreen: FunctionComponent<Props> = () => {
           Login screen!
         </Text>
       </CircleView>
+      <Login />
     </View>
   )
 }
