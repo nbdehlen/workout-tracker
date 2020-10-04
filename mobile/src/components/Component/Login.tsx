@@ -6,12 +6,12 @@ type OwnProps = {}
 
 type Props = OwnProps
 
-export const PLACEHOLDER: FunctionComponent<Props> = () => {
+export const Login: FunctionComponent<Props> = () => {
   return (
     <S.Container>
-      <Text>PLACEHOLDER</Text>
+      <Text>Login Component</Text>
     </S.Container>
   )
 }
 
-export default PLACEHOLDER
+export default Login
