@@ -1,5 +1,6 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import { persistStore } from 'redux-persist'
-import rootReducer from './reducers'
-export const store = createStore(rootReducer, middleware)
-export const persistor = persistStore(store)
+import { createStore } from 'redux'
+import rootReducer from './rootReducer'
+
+const store = createStore(rootReducer)
+
+export default store

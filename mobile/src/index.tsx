@@ -8,19 +8,19 @@ import App from './App'
 type Props = {}
 
 class AppWrapper extends Component<Props> {
-    onBeforeLift() {
-        // change things such as language before app loads
-    }
+  // onBeforeLift() {
+  // change things such as language before app loads
+  // }
 
-    render() {
-        return (
-            <Provider store={store}>
-                <PersistGate persistor={persistor} onBeforeLift={this.onBeforeLift}>
-                    <App />
-                </PersistGate>
-            </Provider>
-        )
-    }
+  render() {
+    return (
+      <Provider store={store}>
+        {/* <PersistGate persistor={persistor} onBeforeLift={this.onBeforeLift}> */}
+        <App />
+        {/* </PersistGate> */}
+      </Provider>
+    )
+  }
 }
 
 export default AppWrapper
