@@ -3,9 +3,11 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import 'react-native-gesture-handler'
 // import { store, persistor } from './redux/store'
-import store from './redux/store'
+import configureStore from './redux/store'
 import App from './App'
 import('./ReactotronConfig').then(() => console.log('Reactotron Configured'))
+
+const store = configureStore()
 
 type Props = {}
 

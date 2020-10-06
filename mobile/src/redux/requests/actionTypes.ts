@@ -1,0 +1,1 @@
+export const FETCH_WORKOUTS = 'FETCH_WORKOUTS'
