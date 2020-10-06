@@ -5,13 +5,14 @@ import { Query, Mutation } from '@redux-requests/react'
 import { fetchWorkouts } from '../../redux/requests/actions'
 import axios from 'axios'
 import { Text, TextInput, TouchableOpacity, Button } from 'react-native'
-import ListItem from '../atoms/ListItem'
+import WorkoutsList from '../WorkoutsList/WorkoutsList'
 
 type OwnProps = {}
 
 type Props = OwnProps
 
 const RequestError = () => (
+  //replace with global component
   <Text>There was some error during fetching. Please try again.</Text>
 )
 
@@ -31,7 +32,7 @@ export const Workouts: FunctionComponent<Props> = () => {
         errorComponent={RequestError}
         noDataMessage={<Text>There is no entity currently.</Text>}
       >
-        {({ data }) => <ListItem data={data} />}
+        {({ data }) => <WorkoutsList data={data} />}
       </Query>
       {/* <Text> query goes here </Text> */}
     </>

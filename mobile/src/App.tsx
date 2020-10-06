@@ -14,6 +14,9 @@ type Props = OwnProps
 
 const Tab = createBottomTabNavigator()
 
+// Login Stack
+// Workout Stack
+
 const App: FunctionComponent<Props> = () => {
   return (
     <View style={{ flex: 1, position: 'relative' }}>

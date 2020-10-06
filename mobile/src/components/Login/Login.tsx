@@ -15,6 +15,11 @@ export const Login: FunctionComponent<Props> = () => {
   const [password, setPassword] = useState('')
   // const user = useSelector((state) => state.user)
 
+  const bypassLogin = () => {
+    setUsername('modera')
+    setPassword('12345678')
+  }
+
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
@@ -43,9 +48,9 @@ export const Login: FunctionComponent<Props> = () => {
       <Text> Password </Text>
       <TextInput value={password} onChangeText={setPassword} />
 
-      {/* <TouchableOpacity> */}
-      <Button title="Login" onPress={postSubmit} />
-      {/* </TouchableOpacity> */}
+      <TouchableOpacity onPress={postSubmit} onLongPress={bypassLogin}>
+        <Text>Login</Text>
+      </TouchableOpacity>
     </S.Container>
   )
 }
