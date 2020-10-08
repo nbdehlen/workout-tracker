@@ -1,3 +1,4 @@
+// import { useNavigation } from '@react-navigation/native'
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import {
   View,
@@ -8,6 +9,7 @@ import {
   GestureResponderEvent,
 } from 'react-native'
 // import { View } from 'styled-native-kit'
+import { useNavigation } from '@react-navigation/native'
 
 type OwnProps = {
   data: WorkoutData[]
@@ -16,7 +18,10 @@ type OwnProps = {
 type Props = OwnProps
 
 export const WorkoutsList: FunctionComponent<Props> = ({ data }) => {
+  const navigation = useNavigation()
+
   const workoutDetails = (workout: WorkoutData) => {
+    navigation.navigate('workoutDetails', workout)
     // navigate in stack to workout details page
     console.log(workout)
   }
