@@ -26,8 +26,18 @@ export const WorkoutsList: FunctionComponent<Props> = ({ data }) => {
     console.log(workout)
   }
 
+  const addWorkout = () => {
+    navigation.navigate('workoutAdd')
+    // navigate in stack to workout details page
+    // console.log(workout)
+  }
+
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
+      <TouchableOpacity onPress={addWorkout}>
+        <Text> ADD </Text>
+      </TouchableOpacity>
+
       {data.map((workout) => (
         <TouchableOpacity
           key={workout._id}

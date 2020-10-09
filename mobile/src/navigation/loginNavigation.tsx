@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import LoginScreen from '../../screens/LoginScreen'
+import LoginScreen from '../screens/LoginScreen'
 
 type OwnProps = {}
 

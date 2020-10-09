@@ -34,7 +34,6 @@ export const Workouts: FunctionComponent<Props> = () => {
       >
         {({ data }) => <WorkoutsList data={data} />}
       </Query>
-      {/* <Text> query goes here </Text> */}
     </>
   )
 }

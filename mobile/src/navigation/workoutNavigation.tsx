@@ -1,7 +1,9 @@
 import React, { FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import WorkoutsScreen from '../../screens/WorkoutsScreen'
-import WorkoutDetails from '../../components/WorkoutDetails'
+import WorkoutsScreen from '../screens/WorkoutsScreen'
+import WorkoutDetails from '../components/WorkoutDetails'
+import WorkoutEdit from '../components/WorkoutEdit'
+import WorkoutAdd from '../components/WorkoutAdd'
 type OwnProps = {}
 
 type Props = OwnProps
@@ -19,6 +21,16 @@ export const WorkoutNavigation: FunctionComponent<Props> = () => {
       <Stack.Screen
         name="workoutDetails"
         component={WorkoutDetails}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="workoutEdit"
+        component={WorkoutEdit}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="workoutAdd"
+        component={WorkoutAdd}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

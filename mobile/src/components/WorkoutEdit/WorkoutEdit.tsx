@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 type OwnProps = WorkoutData
 type Props = OwnProps
 
-export const WorkoutDetails: FunctionComponent<Props> = () => {
+export const WorkoutEdit: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const route = useRoute()
@@ -17,11 +17,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
 
   const addWorkoutHandler = () => {}
 
-  const editWorkout = () => {
-    navigation.navigate('workoutEdit', workout)
-    // navigate in stack to workout details page
-    console.log(workout)
-  }
+  const editWorkout = () => {}
 
   return (
     <View>
@@ -71,4 +67,4 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   )
 }
 
-export default WorkoutDetails
+export default WorkoutEdit
