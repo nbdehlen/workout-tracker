@@ -44,6 +44,7 @@ export const exercisesTemplate = {
       exerciseType: 'faaaaaaaaaaaaat',
       name: '',
       compound: false,
+      sets: [{ weight: '1000', reps: '0', rest: '', time: '' }],
     },
   ],
 }
