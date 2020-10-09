@@ -77,7 +77,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
       exercises: [
         ...prevState.exercises.slice(0, i),
         { ...prevState.exercises[i], [name]: e.nativeEvent.text },
-        ...prevState.exercises.slice(i, +1),
+        ...prevState.exercises.slice(i + 1, +2),
       ],
     }))
     console.log(postExercises)
