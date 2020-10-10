@@ -6,9 +6,11 @@ const admin = async (req, res, next) => {
     const user = await User.findById(req.userId);
     const roles = await Role.find({ _id: { $in: user.roles } });
 
-    const isAdmin = roles.some((role) => role.name === 'admin');
+    const hasAdminPriv = roles.some(
+      (role) => role.name === 'admin' || role.name === 'super_admin',
+    );
 
-    if (isAdmin) {
+    if (hasAdminPriv) {
       return next();
     }
 

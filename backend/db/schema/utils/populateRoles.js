@@ -4,6 +4,8 @@ const Role = require('../RoleSchema');
 // should have migrations and seed instead
 
 const initial = () => {
+  console.log('populating roles');
+
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new Role({

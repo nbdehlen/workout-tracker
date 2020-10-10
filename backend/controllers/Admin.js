@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../db/schema/UserSchema');
 const Role = require('../db/schema/RoleSchema');
-
-// make sure signUp gives 'user' role only.
+const createError = require('http-errors');
+const mongoose = require('mongoose');
 
 const createUser = async (req, res) => {
   const { username, email, password, roles } = req.body;
@@ -37,6 +37,8 @@ const createUser = async (req, res) => {
         .status(201)
         .json({ message: 'User was registered successfully!' });
     }
+
+    //gives user role if no roles given
     const assignRoleUser = await Role.findOne({ name: 'user' });
     user.roles = [assignRoleUser._id];
     await user.save();
@@ -48,42 +50,69 @@ const createUser = async (req, res) => {
   }
 };
 
-const postLogin = async (req, res) => {
-  const { username, password } = req.body;
+const deleteUser = async (req, res) => {
+  const { userId } = req.params;
+  const adminId = req.userId;
+
+  // console.log('req:', req);
+  console.log(userId);
+  console.log(adminId);
+
+  //check role of user before deleting
+
   try {
-    const user = await User.findOne({ username }).populate('roles', '-__v');
+    const user = await User.findOne({ _id: userId });
 
-    // if (!user) {
-    //   return res.status(404).json({ message: 'User Not found.' });
-    // }
+    // const result = await User.findByIdAndDelete({
+    //   _id: userId,
+    // });
 
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-
-    if (!passwordIsValid) {
-      return res.status(401).json({
-        accessToken: null,
-        message: 'Invalid Password!',
-      });
+    if (!user) {
+      // return createError(404, `User ID ${userId} does not exist`);
+      return res.status(404).json({ message: 'User does not exist!' });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-      expiresIn: 86400, // 24 hours
-    });
+    const userRoles = await Role.find({ _id: { $in: user.roles } });
 
-    const authorities = user.roles.map(
-      (role) => `ROLE_${role.name.toUpperCase()}`,
+    const userIsSuperAdmin = userRoles.some(
+      (role) => role.name === 'super_admin',
     );
+
+    if (userIsSuperAdmin) {
+      // throw createError(400, `Not authorized to delete user ID ${userId}`);
+      return res
+        .status(400)
+        .json({ message: `Not authorized to delete user ID ${userId}` });
+    }
+
+    const userIsAdmin = userRoles.some((role) => role.name === 'admin');
+
+    const admin = await User.findOne({ _id: adminId });
+    const adminRoles = await Role.find({ _id: { $in: admin.roles } });
+    const adminIsSuperAdmin = adminRoles.some(
+      (role) => role.name === 'super_admin',
+    );
+
+    if (admin && !adminIsSuperAdmin) {
+      // throw createError(400, `Not authorized to delete user ID ${userId}`);
+      return res
+        .status(400)
+        .json({ message: `Not authorized to delete user ID ${userId}` });
+    }
+
+    await user.deleteOne();
+
     return res.status(200).json({
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      roles: authorities,
-      accessToken: token,
+      message: `Deleted user ${userId}`,
     });
-  } catch (err) {
-    console.log(err);
-    return res.status(404).json({ message: 'User Not found.' });
+  } catch (error) {
+    if (error instanceof mongoose.CastError) {
+      // throw createError(400, `User ID ${userId} is invalid`);
+      return res.status(400).json({ message: `User ID ${userId} is invalid` });
+    }
+    // throw createError(500, error);
+    return res.status(500).json({ message: error });
   }
 };
 
-module.exports = { createUser, postLogin };
+module.exports = { createUser, deleteUser };

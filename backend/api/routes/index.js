@@ -21,9 +21,9 @@ const {
   userBoard,
   adminBoard,
   superAdminBoard,
-} = require('../../controllers/User');
+} = require('../../controllers/Test');
 
-const { createUser } = require('../../controllers/Admin');
+const { createUser, deleteUser } = require('../../controllers/Admin');
 
 const router = express.Router();
 
@@ -52,6 +52,8 @@ router.post(
   [verifyToken, admin, emailExists, usernameExists],
   createUser,
 );
+router.delete('/admin/:userId', [verifyToken, admin], deleteUser);
+
 router.get('/admin');
 
 module.exports = router;

@@ -16,13 +16,6 @@ const postSignUp = async (req, res) => {
   });
 
   try {
-    // if (roles) {
-    //   const assignedRoles = await Role.find({ name: { $in: roles } });
-    //   console.log('assignedRoles', assignedRoles);
-    //   user.roles = assignedRoles.map((role) => role._id);
-    //   await user.save();
-    //   return res.json({ message: 'User was registered successfully!' });
-    // }
     const assignRoleUser = await Role.findOne({ name: 'user' });
     user.roles = [assignRoleUser._id];
     await user.save();

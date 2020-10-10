@@ -6,7 +6,7 @@ const {
   userBoard,
   adminBoard,
   superAdminBoard,
-} = require('../../controllers/User');
+} = require('../../controllers/Test');
 
 const router = express.Router();
 
