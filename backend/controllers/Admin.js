@@ -6,8 +6,8 @@ const Role = require('../db/schema/RoleSchema');
 
 // make sure signUp gives 'user' role only.
 
-const postSignUp = async (req, res) => {
-  const { username, email, password } = req.body;
+const createUser = async (req, res) => {
+  const { username, email, password, roles } = req.body;
 
   const user = new User({
     username,
@@ -16,17 +16,33 @@ const postSignUp = async (req, res) => {
   });
 
   try {
-    // if (roles) {
-    //   const assignedRoles = await Role.find({ name: { $in: roles } });
-    //   console.log('assignedRoles', assignedRoles);
-    //   user.roles = assignedRoles.map((role) => role._id);
-    //   await user.save();
-    //   return res.json({ message: 'User was registered successfully!' });
-    // }
+    if (roles) {
+      console.log(roles);
+
+      if (roles.includes('super_admin')) {
+        return res.status(401).json({ message: 'Not authorized!' });
+      }
+
+      const assignedRoles = await Role.find({ name: { $in: roles } });
+      console.log(assignedRoles);
+      console.log('assignedRoles.length:', assignedRoles.length);
+      if (assignedRoles.length === 0) {
+        return res.status(400).json({ message: 'No valid roles found!' });
+      }
+
+      user.roles = assignedRoles.map((role) => role._id);
+
+      await user.save();
+      return res
+        .status(201)
+        .json({ message: 'User was registered successfully!' });
+    }
     const assignRoleUser = await Role.findOne({ name: 'user' });
     user.roles = [assignRoleUser._id];
     await user.save();
-    return res.json({ message: 'User was registered successfully!' });
+    return res
+      .status(201)
+      .json({ message: 'User was registered successfully!' });
   } catch (err) {
     return res.status(500).json({ message: err });
   }
@@ -70,4 +86,4 @@ const postLogin = async (req, res) => {
   }
 };
 
-module.exports = { postSignUp, postLogin };
+module.exports = { createUser, postLogin };
