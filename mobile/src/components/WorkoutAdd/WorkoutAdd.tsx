@@ -41,14 +41,14 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   //     exercises.push({
   //       exerciseType: '',
   //       name: '',
-  //       compound: false,
+  //       compound: 'false',
   //       mainMuscle: '',
   //       secondaryMuscles: [''],
   //       tool: '',
-  //       unilateral: false,
-  //       sets: [{ weight: 0, reps: 0, rest: '', time: '' }],
+  //       unilateral: 'false',
+  //       sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
   //       length: '',
-  //       calories: 0,
+  //       calories: '0',
   //     })
   //   } else {
   //     for (let i = previousNumber; i >= exercisesCount; i--) {
@@ -58,6 +58,9 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   // }
 
   //  Object.keys(exercises[i]).find((val) => val === 'exerciseType')
+
+  //main muscle -> list single choice
+  //secondary muscles array -> list multiple choice
 
   const handlePostWorkout = (e, name) => {
     console.log(name)
@@ -139,12 +142,38 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     <KeyboardAvoidingView>
       <ScrollView>
         <S.ContainerRow>
-          <Text> Workout type </Text>
-          <S.TextInput
-            value={postWorkout.type}
-            name="type"
-            onChange={(e) => handlePostWorkout(e, 'type')}
-          />
+          <S.ContainerRow>
+            <Text> Workout type </Text>
+            <S.TextInput
+              value={postWorkout.type}
+              name="type"
+              onChange={(e) => handlePostWorkout(e, 'type')}
+            />
+          </S.ContainerRow>
+          <S.ContainerRow>
+            <Text> Grade </Text>
+            <S.TextInput
+              value={postWorkout.grade}
+              name="grade"
+              onChange={(e) => handlePostWorkout(e, 'grade')}
+            />
+          </S.ContainerRow>
+          <S.ContainerRow>
+            <Text> Start </Text>
+            <S.TextInput
+              value={postWorkout.start}
+              name="type"
+              onChange={(e) => handlePostWorkout(e, 'start')}
+            />
+          </S.ContainerRow>
+          <S.ContainerRow>
+            <Text> End </Text>
+            <S.TextInput
+              value={postWorkout.end}
+              name="type"
+              onChange={(e) => handlePostWorkout(e, 'end')}
+            />
+          </S.ContainerRow>
         </S.ContainerRow>
         <View>
           {exercises.map((exercise, i) => (

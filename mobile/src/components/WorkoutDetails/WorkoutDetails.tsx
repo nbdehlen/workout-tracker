@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { useRoute } from '@react-navigation/native'
 import { Text, TextInput, TouchableOpacity, Button, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 
 type OwnProps = WorkoutData

@@ -8,20 +8,20 @@ export const workoutTemplate = {
   type: '',
   start: '',
   grade: '',
-  exercises: [
-    {
-      exerciseType: '',
-      name: '',
-      compound: false,
-      mainMuscle: '',
-      secondaryMuscles: [''],
-      tool: '',
-      unilateral: false,
-      sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
-      length: '',
-      calories: '0',
-    },
-  ],
+  // exercises: [
+  //   {
+  //     exerciseType: '',
+  //     name: '',
+  //     compound: false,
+  //     mainMuscle: '',
+  //     secondaryMuscles: [''],
+  //     tool: '',
+  //     unilateral: false,
+  //     sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
+  //     length: '',
+  //     calories: '0',
+  //   },
+  // ],
   end: '',
 }
 
