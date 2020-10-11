@@ -19,7 +19,7 @@ export const userReducer = (state = initialState, action) => {
       // console.log(state);
       console.log('action.payload userReducer', action.payload);
       return {
-        ...action.payload,
+        // ...action.payload,
         isEditing: false,
       };
     default:

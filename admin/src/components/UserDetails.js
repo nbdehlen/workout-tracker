@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Input, Label } from '../styles/input';
 import { isEditing, cancelEditing } from '../redux/users/action';
-import { fetchUsers } from '../redux/requests/action';
-import { deleteUser } from '../redux/requests/action';
+import { fetchUsers, deleteUser, editUser } from '../redux/requests/action';
 import { BtnTiny } from '../styles/btn';
 
 export const UserDetails = () => {
@@ -22,6 +21,8 @@ export const UserDetails = () => {
   const editUserHandler = (e, user) => {
     e.preventDefault();
     dispatch(cancelEditing(user));
+    dispatch(editUser(auth.xAccessToken, user._id, username, email));
+    dispatch(fetchUsers(auth.xAccessToken));
   };
 
   const deleteUserHandler = (e, user) => {
@@ -39,7 +40,9 @@ export const UserDetails = () => {
           <Input
             type='text'
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => (
+              console.log(e.target.value), setUsername(e.target.value)
+            )}
           />
           <Label> Email: </Label>
           <Input
