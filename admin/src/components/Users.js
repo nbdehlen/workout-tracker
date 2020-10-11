@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Input, Label } from '../styles/input';
 import { isEditing } from '../redux/users/action';
+import { ContainerTwo } from '../styles/wrapper';
+import { BtnTiny } from '../styles/btn';
 
 export const Users = ({ data }) => {
   // const [curUser, setCurUser] = useState();
@@ -22,14 +24,16 @@ export const Users = ({ data }) => {
   return (
     <div>
       <div>
-        <h1> Users </h1>
+        <h1 style={{ color: 'white' }}> Users </h1>
 
         {data.map((user) => (
-          <div>
-            <div key={user._id}> {user.username} </div>
+          <ContainerTwo>
+            <div key={user._id} style={{ color: 'white', fontSize: '20px' }}>
+              {user.username}
+            </div>
 
-            <button onClick={(e) => editUserHandler(e, user)}> Edit </button>
-          </div>
+            <BtnTiny onClick={(e) => editUserHandler(e, user)}> EDIT </BtnTiny>
+          </ContainerTwo>
         ))}
       </div>
     </div>

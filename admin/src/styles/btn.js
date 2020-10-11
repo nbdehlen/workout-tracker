@@ -63,9 +63,8 @@ export const BtnTiny = styled.button`
     ${(props) =>
     props.cancel &&
     css`
-      background: transparent;
-      border: none;
-      color: white;
+      margin-left: 8px;
+      margin-right: 8px;
     `}
 `;
 

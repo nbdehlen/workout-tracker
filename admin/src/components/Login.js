@@ -49,13 +49,14 @@ const Login = () => {
 
   return (
     <>
+      <div style={{ height: '8px' }}></div>
       <div>
         <Label> Username: </Label>
         <Input type='text' value={username} onChange={userHandler} />
         <Label> Password: </Label>
         <Input type='password' value={password} onChange={passwordHandler} />
-        <BtnTiny type='submit' onClick={postSubmit}>
-          save
+        <BtnTiny cancel type='submit' onClick={postSubmit}>
+          SAVE
         </BtnTiny>
       </div>
     </>

@@ -18,9 +18,9 @@ export const Dashboard = () => {
   // console.log(auth.xAccessToken);
 
   useEffect(() => {
-    if (!user?.isEditing) {
-      dispatch(fetchUsers(auth.xAccessToken));
-    }
+    // if (!user?.isEditing) {
+    dispatch(fetchUsers(auth.xAccessToken));
+    // }
 
     // const getWorkoutsEtc = async () => {
     //   let res = await axios({
@@ -31,7 +31,7 @@ export const Dashboard = () => {
     //   console.log(res);
     // };
     // getWorkoutsEtc();
-  }, [auth.xAccessToken]);
+  }, [auth, user]);
 
   return (
     <>
