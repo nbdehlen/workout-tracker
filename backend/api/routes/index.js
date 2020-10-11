@@ -23,7 +23,12 @@ const {
   superAdminBoard,
 } = require('../../controllers/Test');
 
-const { createUser, deleteUser } = require('../../controllers/Admin');
+const {
+  createUser,
+  deleteUser,
+  getUsers,
+  editUser,
+} = require('../../controllers/Admin');
 
 const router = express.Router();
 
@@ -53,7 +58,7 @@ router.post(
   createUser,
 );
 router.delete('/admin/:userId', [verifyToken, admin], deleteUser);
-
-router.get('/admin');
+router.get('/admin', [verifyToken, admin], getUsers);
+router.patch('/admin/:userId', [verifyToken, admin], editUser);
 
 module.exports = router;

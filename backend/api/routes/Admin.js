@@ -1,7 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const { createUser, deleteUser } = require('../../controllers/Admin');
+const {
+  createUser,
+  deleteUser,
+  getUsers,
+  editUser,
+} = require('../../controllers/Admin');
 const { emailExists, usernameExists } = require('../../middlewares/signUp');
 const verifyToken = require('../../middlewares/jwtToken');
 const { admin, superAdmin } = require('../../middlewares/roles');
@@ -20,7 +25,7 @@ router.post(
   [verifyToken, admin, emailExists, usernameExists],
   createUser,
 );
-
 router.delete('/admin/:userId', [verifyToken, admin], deleteUser);
-router.get('/admin');
+router.get('/admin', [verifyToken, admin], getUsers);
+router.patch('/admin/:userId', [verifyToken, admin], editUser);
 module.exports = router;
