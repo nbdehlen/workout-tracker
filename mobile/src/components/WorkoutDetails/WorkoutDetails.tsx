@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { useRoute } from '@react-navigation/native'
-import { Text, TextInput, TouchableOpacity, Button, View } from 'react-native'
+import { Text, TextInput, TouchableOpacity, Button, View, Switch } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
+import { ScrollView } from 'react-native-gesture-handler'
 
 type OwnProps = WorkoutData
 type Props = OwnProps
@@ -25,7 +26,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   }
 
   return (
-    <View>
+    <ScrollView>
       <View>
         <Text> Type: {workout.type} </Text>
       </View>
@@ -68,7 +69,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
             ))
           : null}
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

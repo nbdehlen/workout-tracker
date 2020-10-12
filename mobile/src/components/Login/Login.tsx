@@ -16,7 +16,7 @@ export const Login: FunctionComponent<Props> = () => {
   // const user = useSelector((state) => state.user)
 
   const bypassLogin = () => {
-    setUsername('modera')
+    setUsername('Sergej')
     setPassword('12345678')
   }
 

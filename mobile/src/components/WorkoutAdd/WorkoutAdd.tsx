@@ -8,6 +8,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   ScrollView,
+  Switch,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { workoutTemplate, exercisesTemplate } from '../../api/helpers'
@@ -64,7 +65,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
 
   const handlePostWorkout = (e, name) => {
     console.log(name)
-    console.log(e.nativeEvent.text)
+    console.log(e?.nativeEvent?.text)
     setPostWorkout((prevState) => ({
       ...prevState,
       [name]: e.nativeEvent.text,
@@ -73,13 +74,17 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   }
 
   const handlePostExercises = (e, name, i) => {
-    console.log(name)
-    console.log(e.nativeEvent.text)
+    // console.log(name)
+    console.log('e', e)
+    // console.log(e?.nativeEvent?.text)
     setPostExercises((prevState) => ({
       ...prevState,
       exercises: [
         ...prevState.exercises.slice(0, i),
-        { ...prevState.exercises[i], [name]: e.nativeEvent.text },
+        {
+          ...prevState.exercises[i],
+          [name]: typeof e === 'boolean' ? e : e.nativeEvent.text,
+        },
         ...prevState.exercises.slice(i + 1, +2),
       ],
     }))
@@ -88,7 +93,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
 
   const handlePostSets = (e, name, i, y) => {
     console.log(name)
-    console.log(e.nativeEvent.text)
+    console.log(e?.nativeEvent?.text)
     setPostExercises((prevState) => ({
       ...prevState,
       exercises: [
@@ -170,7 +175,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
             <Text> End </Text>
             <S.TextInput
               value={postWorkout.end}
-              name="type"
+              name="end"
               onChange={(e) => handlePostWorkout(e, 'end')}
             />
           </S.ContainerRow>
@@ -191,10 +196,10 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
                 onChange={(e) => handlePostExercises(e, 'name', i)}
               />
               <Text> Compound: </Text>
-              <S.TextInput
+              <Switch
                 value={exercise.compound}
                 name="compound"
-                onChange={(e) => handlePostExercises(e, 'compound', i)}
+                onValueChange={(e) => handlePostExercises(e, 'compound', i)}
               />
 
               <Text> Main Target: </Text>
@@ -221,10 +226,10 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
                 onChange={(e) => handlePostExercises(e, 'tool', i)}
               />
               <Text> Unilateral </Text>
-              <S.TextInput
+              <Switch
                 value={exercise.unilateral}
                 name="unilateral"
-                onChange={(e) => handlePostExercises(e, 'unilateral', i)}
+                onValueChange={(e) => handlePostExercises(e, 'unilateral', i)}
               />
               {exercise?.sets
                 ? exercise.sets.map((set, y) => (
