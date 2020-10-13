@@ -1,6 +1,14 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { useRoute } from '@react-navigation/native'
-import { Text, TextInput, TouchableOpacity, Button, View, Switch } from 'react-native'
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  View,
+  Switch,
+} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -45,7 +53,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
       <View>
         {workout.exercises
           ? workout.exercises.map((exercise) => (
-              <View>
+              <View key={uuidv4()}>
                 <Text> {exercise.name} </Text>
                 <Text> {exercise.name} </Text>
                 <Text> {exercise.exerciseType} </Text>
@@ -55,7 +63,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                 <Text> {exercise.secondaryMuscles} </Text>
 
                 {exercise.sets.map((set) => (
-                  <View>
+                  <View key={uuidv4()}>
                     <Text> {set.weight} </Text>
                     <Text> {set.reps} </Text>
                     <Text> {set.rest} </Text>
