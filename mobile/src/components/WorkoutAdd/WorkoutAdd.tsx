@@ -11,12 +11,19 @@ import {
   Switch,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { workoutTemplate, exercisesTemplate } from '../../api/helpers'
+import {
+  workoutTemplate,
+  exercisesTemplate,
+  bodyParts,
+} from '../../api/helpers'
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik'
 import * as S from '../../util/theme/base'
+import { Picker } from '@react-native-community/picker'
 
 type OwnProps = WorkoutData
 type Props = OwnProps
+
+type MainMuscle = String[]
 
 export const WorkoutAdd: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
@@ -26,6 +33,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   const user = useSelector((state) => state.user)
   const [postWorkout, setPostWorkout] = useState(workoutTemplate)
   const [postExercises, setPostExercises] = useState(exercisesTemplate)
+  const [mainMuscle, setMainMuscle] = useState<MainMuscle>([])
   // const exercises = postExercises
   const { exercises } = postExercises
 
@@ -114,34 +122,16 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     }
   }
 
-  //   const handlePostSets = (e, name, i, y) => {
-  //     console.log(name)
-  //     console.log(e.nativeEvent.text)
-  //     setPostExercises((prevState) => ({
-  //       ...prevState,
-  //       exercises: [
-  //         ...prevState.exercises.slice(0, i),
-  //         { ...prevState.exercises[i], ...prevState.exercises[i].sets: [
-  //         ...prevState.exercises[i].sets.splice(0, y),
-  //         {...prevState.exercises[i].sets[y], [name]: e.nativeEvent.text },
-  //         ...prevState.exercises[i].sets.splice(y+1, +2)
-
-  // ] }
-  //         ...prevState.exercises.slice(i + 1, +2),
-  //       ]
-  //     }))
-  //     console.log(postExercises)
-  //   }
-
-  // const handlePostExercises = (e, name) => {
-  //   console.log(name)
-  //   console.log(e.nativeEvent.text)
-  //   setPostExercises((prevState) => ({
-  //     ...prevState,
-  //     [name]: e.nativeEvent.text,
-  //   }))
-  //   console.log(postExercises)
-  // }
+  //need array of this? OR use prevstate and name and try to include in exerciseHandler?
+  const handlePostMainMuscle = (muscle, i) => {
+    console.log(muscle)
+    setMainMuscle([
+      ...mainMuscle.slice(0, i),
+      (mainMuscle[i] = muscle),
+      ...mainMuscle.slice(i + 1, mainMuscle.length),
+    ])
+    console.log(mainMuscle)
+  }
 
   return (
     <KeyboardAvoidingView>
@@ -203,11 +193,21 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
               />
 
               <Text> Main Target: </Text>
-              <S.TextInput
+              <Picker
+                selectedValue={mainMuscle[i] || 'n/a'}
+                style={{ height: 50, width: 100 }}
+                onValueChange={(muscle) => handlePostMainMuscle(muscle, i)}
+              >
+                {bodyParts.map((muscle) => (
+                  <Picker.Item label={muscle} value={muscle} />
+                ))}
+              </Picker>
+
+              {/* <S.TextInput
                 value={exercise.mainMuscle}
                 name="mainMuscle"
                 onChange={(e) => handlePostExercises(e, 'mainMuscle', i)}
-              />
+              /> */}
               <Text> Secondary Targets: </Text>
               <S.TextInput
                 value={exercise.secondaryMuscles}
