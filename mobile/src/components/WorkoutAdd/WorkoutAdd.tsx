@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent, useState, useEffect, ReactText } from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import {
   Text,
@@ -9,21 +9,26 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Switch,
+  Keyboard,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   workoutTemplate,
   exercisesTemplate,
   bodyParts,
+  populateSecondaryMuscles,
 } from '../../api/helpers'
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik'
 import * as S from '../../util/theme/base'
+import * as SS from './styled'
 import { Picker } from '@react-native-community/picker'
+import { v4 as uuidv4 } from 'uuid'
 
 type OwnProps = WorkoutData
 type Props = OwnProps
 
 type MainMuscle = String[]
+// type SecondaryMuscles = String[][]
 
 export const WorkoutAdd: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
@@ -34,42 +39,17 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   const [postWorkout, setPostWorkout] = useState(workoutTemplate)
   const [postExercises, setPostExercises] = useState(exercisesTemplate)
   const [mainMuscle, setMainMuscle] = useState<MainMuscle>([])
-  // const exercises = postExercises
+  const [secondaryMuscles, setSecondaryMuscles] = useState(
+    populateSecondaryMuscles(postExercises.exercises)
+  )
   const { exercises } = postExercises
+  const Item = Picker.Item as any
 
-  const initialValues = {
-    exercisesCount: '',
-    workout: workoutTemplate,
-  }
+  // useEffect(() => {
+  //   populateSecondaryMuscles()
+  // }, [])
 
-  //add screens and stack for add and edit in stack navigation
-  // or navigate inside workoutDetails?ff
-
-  // const onChangeExercises = (e, action, values, setValues) => {
-  //   if (action === 'ADD') {
-  //     exercises.push({
-  //       exerciseType: '',
-  //       name: '',
-  //       compound: 'false',
-  //       mainMuscle: '',
-  //       secondaryMuscles: [''],
-  //       tool: '',
-  //       unilateral: 'false',
-  //       sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
-  //       length: '',
-  //       calories: '0',
-  //     })
-  //   } else {
-  //     for (let i = previousNumber; i >= exercisesCount; i--) {
-  //       exercises.splice(i, 1)
-  //     }
-  //   }
-  // }
-
-  //  Object.keys(exercises[i]).find((val) => val === 'exerciseType')
-
-  //main muscle -> list single choice
-  //secondary muscles array -> list multiple choice
+  console.log('secondaryMuscles: ' + secondaryMuscles)
 
   const handlePostWorkout = (e, name) => {
     console.log(name)
@@ -82,9 +62,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   }
 
   const handlePostExercises = (e, name, i) => {
-    // console.log(name)
     console.log('e', e)
-    // console.log(e?.nativeEvent?.text)
     setPostExercises((prevState) => ({
       ...prevState,
       exercises: [
@@ -115,6 +93,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
           ],
         },
         ...prevState.exercises.slice(i + 1, +2),
+        //SHOULDNT THIS BE .LENGTH INSTEAD OF +2 ??
       ],
     }))
     for (let g = 0; postExercises.exercises.length > g; g++) {
@@ -122,7 +101,6 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     }
   }
 
-  //need array of this? OR use prevstate and name and try to include in exerciseHandler?
   const handlePostMainMuscle = (muscle, i) => {
     console.log(muscle)
     setMainMuscle([
@@ -133,6 +111,62 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     console.log(mainMuscle)
   }
 
+  const handlePostSecondaryMuscles = (muscle, i) => {
+    // get correct exercise from i
+    // if muscle exists in secondary muscles array - remove, else add
+
+    // console.log(secondaryMuscles.length)
+    if (secondaryMuscles[i]) {
+      console.log('in if')
+      // console.log(secondaryMuscles[i])
+      if (secondaryMuscles[i].includes(muscle)) {
+        console.log('in if -> if')
+        const muscleIndex = secondaryMuscles[i].indexOf(muscle)
+
+        setSecondaryMuscles([
+          ...secondaryMuscles.slice(0, i),
+          [
+            ...secondaryMuscles[i].slice(0, muscleIndex),
+            ...secondaryMuscles[i].slice(
+              muscleIndex + 1,
+              secondaryMuscles[i].length
+            ),
+          ],
+          ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
+        ])
+      } else {
+        console.log('in if -> else')
+        // setSecondaryMuscles([
+        //   ...secondaryMuscles[i],
+        //   secondaryMuscles.push(muscle),
+        // ])
+        // setSecondaryMuscles([
+        //   ...secondaryMuscles.slice(0, i),
+        //   [secondaryMuscles[i], secondaryMuscles[i].push(muscle)],
+        //   ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
+        // ])
+        setSecondaryMuscles([
+          ...secondaryMuscles,
+          secondaryMuscles[i].push(muscle),
+        ])
+      }
+    } else {
+      console.log('in else')
+      setSecondaryMuscles([
+        ...secondaryMuscles.slice(0, i),
+        secondaryMuscles[i].push(muscle),
+        // ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
+      ])
+    }
+    // for (let q = 0; q < secondaryMuscles.length; q++) {
+    //   for (let p = 0; p < secondaryMuscles[q].length; p++) {
+    //     console.log(secondaryMuscles[q][p])
+    //   }
+    // }
+    // console.log(secondaryMuscles)
+    console.log(secondaryMuscles[i])
+    // console.log(typeof secondaryMuscles)
+  }
   return (
     <KeyboardAvoidingView>
       <ScrollView>
@@ -172,7 +206,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
         </S.ContainerRow>
         <View>
           {exercises.map((exercise, i) => (
-            <View key={i}>
+            <View key={uuidv4()}>
               <Text> Exercise type: </Text>
               <S.TextInput
                 value={exercise.exerciseType}
@@ -192,48 +226,117 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
                 onValueChange={(e) => handlePostExercises(e, 'compound', i)}
               />
 
-              <Text> Main Target: </Text>
+              <Text> Main Target (single): </Text>
               <Picker
-                selectedValue={mainMuscle[i] || 'n/a'}
+                selectedValue={'select'}
                 style={{ height: 50, width: 100 }}
                 onValueChange={(muscle) => handlePostMainMuscle(muscle, i)}
+                // mode="dropdown"
               >
-                {bodyParts.map((muscle) => (
-                  <Picker.Item label={muscle} value={muscle} />
-                ))}
+                {/* itemStyle not working!!! */}
+                {bodyParts.map((muscle) =>
+                  mainMuscle[i] === muscle ? (
+                    <Item
+                      label={muscle}
+                      value={muscle}
+                      key={uuidv4()}
+                      color="blue"
+                    />
+                  ) : (
+                    <Item
+                      label={muscle}
+                      value={muscle}
+                      key={uuidv4()}
+                      color="black"
+                    />
+                  )
+                )}
+              </Picker>
+              <Text> {mainMuscle[i]} </Text>
+
+              <Text> Secondary Targets (multiple): </Text>
+              {/* handlePostSecondaryMuscles               */}
+              {/* value={exercise.secondaryMuscles} */}
+              {/* name="secondaryMuscles" */}
+              <Picker
+                // selectedValue={
+                //   secondaryMuscles
+                //     ? (secondaryMuscles[i] as ReactText) || 'n/a'
+                //     : 'n/a'
+                // }
+                selectedValue={'select'}
+                // selectedValue={'select'}
+                style={{ height: 50, width: 100 }}
+                onValueChange={(muscle) =>
+                  handlePostSecondaryMuscles(muscle, i)
+                }
+                // mode="dropdown"
+              >
+                {/* itemStyle not working!!! */}
+                {/* {bodyParts.map((muscle) => {
+                  if (secondaryMuscles[i]?.length > 0) {
+                    secondaryMuscles[i].includes(muscle) ? (
+                      <Item
+                        label={muscle}
+                        value={exercise.secondaryMuscles}
+                        key={uuidv4()}
+                        color="blue"
+                      />
+                    ) : null
+                  }
+                  return (
+                    <Item
+                      label={muscle}
+                      value={muscle}
+                      key={uuidv4()}
+                      color="black"
+                    />
+                  )
+                })} */}
+                {bodyParts.map((muscle) =>
+                  secondaryMuscles[i].includes(muscle) ? (
+                    <Item
+                      label={muscle}
+                      value={muscle}
+                      key={uuidv4()}
+                      color="blue"
+                    />
+                  ) : (
+                    <Item label={muscle} value={muscle} key={uuidv4()} />
+                  )
+                )}
               </Picker>
 
-              {/* <S.TextInput
-                value={exercise.mainMuscle}
-                name="mainMuscle"
-                onChange={(e) => handlePostExercises(e, 'mainMuscle', i)}
-              /> */}
-              <Text> Secondary Targets: </Text>
-              <S.TextInput
-                value={exercise.secondaryMuscles}
-                name="secondaryMuscles"
-              />
+              <View>
+                {secondaryMuscles[i].map((muscle) => (
+                  <Text> {muscle} </Text>
+                ))}
+              </View>
+
               <Text> Calories: </Text>
               <S.TextInput
                 value={exercise.calories}
                 name="calories"
                 onChange={(e) => handlePostExercises(e, 'calories', i)}
               />
+
               <Text> Tool: </Text>
               <S.TextInput
                 value={exercise.tool}
                 name="tool"
                 onChange={(e) => handlePostExercises(e, 'tool', i)}
               />
+
               <Text> Unilateral </Text>
               <Switch
                 value={exercise.unilateral}
                 name="unilateral"
                 onValueChange={(e) => handlePostExercises(e, 'unilateral', i)}
               />
+
               {exercise?.sets
                 ? exercise.sets.map((set, y) => (
-                    <View key={y}>
+                    <View key={uuidv4()}>
                       <Text> Weight: </Text>
                       <S.TextInput
                         value={set.weight}

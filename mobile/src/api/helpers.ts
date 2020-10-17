@@ -70,8 +70,17 @@ export const bodyParts = [
   'glutes',
   'abs',
   'obliques',
-  'n/a',
+  'select',
 ]
+
+export const populateSecondaryMuscles = (exercises) => {
+  let arr = []
+
+  for (let i = 0; i < exercises.length; i++) {
+    arr.push([])
+  }
+  return arr
+}
 
 const formDataBuilder = (workout: WorkoutData) => {
   // const { exercises } = workout
