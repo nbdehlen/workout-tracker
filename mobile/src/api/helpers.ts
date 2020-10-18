@@ -1,6 +1,8 @@
 import React, { FunctionComponent } from 'react'
 import { View, TextInput } from 'react-native'
 
+// SHOULD BE IN UTIL / HELPERS FORMHELPERS OR SMTN
+
 const formAddSet = () => {}
 
 export const workoutTemplate = {
@@ -51,6 +53,7 @@ export const exercisesTemplate = {
 }
 
 export const bodyParts = [
+  //REPLACE WITH KEY/VAL PAIRS
   'neck',
   'lats',
   'back',
