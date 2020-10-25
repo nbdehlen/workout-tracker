@@ -97,25 +97,22 @@ export const WorkoutForm: FunctionComponent<Props> = () => {
   }
 
   const addExercise = () => {
-    // setSecondaryMuscles((prevState) => [...prevState, prevState.push([])])
-    // setSecondaryMuscles((prevState) => [...prevState, []])
     secondaryMuscles.push([])
-    //push empty exercise with one set to state
     setPostExercises({
       exercises: [...exercises, emptyExercise],
     })
-    //need to add for mainMuscle and secondaryMuscles state aswell as it's not included here. Should do something about types for all of those aswell
-    // setMainMuscle([...mainMuscle, ''])
-    console.log(secondaryMuscles)
-    console.log('exercises.length', exercises.length)
+  }
+  const removeExercise = (i: number) => {
+    setPostExercises({
+      exercises: [
+        ...exercises.slice(0, i),
+        ...exercises.slice(i + 1, exercises.length),
+      ],
+    })
   }
 
   const changeOrderExercise = () => {
     //will have to look into this
-  }
-
-  const removeExercise = (exerciseId) => {
-    //remove selected exercise from array
   }
 
   const addSet = (exerciseId) => {
@@ -264,6 +261,9 @@ export const WorkoutForm: FunctionComponent<Props> = () => {
                 onChange={(e) => handlePostExercises(e, 'exerciseType', i)}
               />
               <Text> Exercise {i + 1} : </Text>
+              <TouchableOpacity onPress={() => removeExercise(i)}>
+                <Text>Remove Exercise</Text>
+              </TouchableOpacity>
               <S.TextInput
                 value={exercise.name}
                 name="name"
