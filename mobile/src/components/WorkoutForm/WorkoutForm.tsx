@@ -106,7 +106,23 @@ export const WorkoutForm: FunctionComponent<Props> = () => {
     console.log(exercises[i].sets)
   }
 
-  const removeSet = (exerciseId, setId) => {}
+  const removeSet = (i: number, y: number) => {
+    setPostExercises({
+      ...postExercises,
+      exercises: [
+        ...exercises.slice(0, i),
+        {
+          ...exercises[i],
+          sets: [
+            ...exercises[i].sets.slice(0, y),
+            ...exercises[i].sets.slice(y + 1, exercises[i].sets.length),
+          ],
+        },
+        ...exercises.slice(i + 1, exercises.length),
+      ],
+    })
+    console.log(exercises[i].sets)
+  }
 
   const changeOrderSet = (exerciseId, setId) => {
     //will have to look into this
@@ -363,6 +379,9 @@ export const WorkoutForm: FunctionComponent<Props> = () => {
               {exercise.sets &&
                 exercise.sets.map((set, y) => (
                   <View key={JSON.stringify(set + String(y))}>
+                    <TouchableOpacity onPress={() => removeSet(i, y)}>
+                      <Text>Remove set</Text>
+                    </TouchableOpacity>
                     <Text> Weight: </Text>
                     <S.TextInput
                       value={set.weight}
