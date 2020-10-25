@@ -16,6 +16,7 @@ import {
   bodyParts,
   populateSecondaryMuscles,
   emptyExercise,
+  emptySet,
 } from '../../api/helpers'
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik'
 import * as S from '../../util/theme/base'
@@ -30,30 +31,6 @@ type MainMuscle = String[]
 
 type ExerciseObj = {
   exercises: Exercise[]
-}
-
-const exercisesTemplateTest = {
-  exercises: [
-    // {
-    //   exerciseType: 'general',
-    //   name: '',
-    //   compound: false,
-    //   mainMuscle: '',
-    //   secondaryMuscles: [''],
-    //   tool: '',
-    //   unilateral: false,
-    //   sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
-    //   length: '',
-    //   calories: '0',
-    // },
-    {
-      exerciseType: 'faaaaaaaaaaaaat',
-      name: '',
-      compound: false,
-      unilateral: false,
-      sets: [{ weight: '1000', reps: '0', rest: '', time: '' }],
-    },
-  ],
 }
 
 export const WorkoutForm: FunctionComponent<Props> = () => {
@@ -115,8 +92,18 @@ export const WorkoutForm: FunctionComponent<Props> = () => {
     //will have to look into this
   }
 
-  const addSet = (exerciseId) => {
-    //add set to exercise
+  const addSet = (i: number) => {
+    // add set to exercise
+    setPostExercises({
+      ...postExercises,
+      exercises: [
+        ...exercises.slice(0, i),
+        { ...exercises[i], sets: [...exercises[i].sets, emptySet] },
+        ...exercises.slice(i + 1, exercises.length),
+      ],
+    })
+    // postExercises.exercises[i].sets.push(emptySet)
+    console.log(exercises[i].sets)
   }
 
   const removeSet = (exerciseId, setId) => {}
@@ -135,14 +122,15 @@ export const WorkoutForm: FunctionComponent<Props> = () => {
         {
           ...exercises[i],
           sets: [
-            ...exercises[i].sets.splice(0, y),
+            ...exercises[i].sets.slice(0, y),
             { ...exercises[i].sets[y], [name]: e.nativeEvent.text },
-            ...exercises[i].sets.splice(y + 1, exercises[i].sets.length),
+            ...exercises[i].sets.slice(y + 1, exercises[i].sets.length),
           ],
         },
         ...exercises.slice(i + 1, exercises.length),
       ],
     })
+    console.log(postExercises.exercises[i].sets)
   }
 
   const handlePostMainMuscle = (muscle: string, i: number) => {
@@ -369,36 +357,38 @@ export const WorkoutForm: FunctionComponent<Props> = () => {
                 onValueChange={(e) => handlePostExercises(e, 'unilateral', i)}
               />
 
-              {exercise?.sets
-                ? exercise.sets.map((set, y) => (
-                    <View key={JSON.stringify(set) + y}>
-                      <Text> Weight: </Text>
-                      <S.TextInput
-                        value={set.weight}
-                        name="weight"
-                        onChange={(e) => handlePostSets(e, 'weight', i, y)}
-                      />
-                      <Text> Reps </Text>
-                      <S.TextInput
-                        value={set.reps}
-                        name="reps"
-                        onChange={(e) => handlePostSets(e, 'reps', i, y)}
-                      />
-                      <Text> Rest </Text>
-                      <S.TextInput
-                        value={set.rest}
-                        name="rest"
-                        onChange={(e) => handlePostSets(e, 'rest', i, y)}
-                      />
-                      <Text> Time </Text>
-                      <S.TextInput
-                        value={set.time}
-                        name="time"
-                        onChange={(e) => handlePostSets(e, 'time', i, y)}
-                      />
-                    </View>
-                  ))
-                : null}
+              <TouchableOpacity onPress={() => addSet(i)}>
+                <Text>Add set</Text>
+              </TouchableOpacity>
+              {exercise.sets &&
+                exercise.sets.map((set, y) => (
+                  <View key={JSON.stringify(set + String(y))}>
+                    <Text> Weight: </Text>
+                    <S.TextInput
+                      value={set.weight}
+                      name="weight"
+                      onChange={(e) => handlePostSets(e, 'weight', i, y)}
+                    />
+                    <Text> Reps </Text>
+                    <S.TextInput
+                      value={set.reps}
+                      name="reps"
+                      onChange={(e) => handlePostSets(e, 'reps', i, y)}
+                    />
+                    <Text> Rest </Text>
+                    <S.TextInput
+                      value={set.rest}
+                      name="rest"
+                      onChange={(e) => handlePostSets(e, 'rest', i, y)}
+                    />
+                    <Text> Time </Text>
+                    <S.TextInput
+                      value={set.time}
+                      name="time"
+                      onChange={(e) => handlePostSets(e, 'time', i, y)}
+                    />
+                  </View>
+                ))}
             </View>
           ))}
           <TouchableOpacity onPress={addExercise}>

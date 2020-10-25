@@ -54,6 +54,13 @@ export const emptyExercise = {
   // ],
 }
 
+export const emptySet = {
+  weight: '0',
+  reps: '0',
+  rest: '',
+  time: '',
+}
+
 export const bodyParts = [
   //REPLACE WITH KEY/VAL PAIRS
   'neck',
