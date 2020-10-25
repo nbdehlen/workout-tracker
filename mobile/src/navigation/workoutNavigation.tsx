@@ -3,7 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import WorkoutsScreen from '../screens/WorkoutsScreen'
 import WorkoutDetails from '../components/WorkoutDetails'
 import WorkoutEdit from '../components/WorkoutEdit'
-import WorkoutAdd from '../components/WorkoutAdd'
+import WorkoutForm from '../components/WorkoutForm/WorkoutForm'
+
 type OwnProps = {}
 
 type Props = OwnProps
@@ -29,8 +30,8 @@ export const WorkoutNavigation: FunctionComponent<Props> = () => {
         options={{ headerShown: true }}
       />
       <Stack.Screen
-        name="workoutAdd"
-        component={WorkoutAdd}
+        name="workoutForm"
+        component={WorkoutForm}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

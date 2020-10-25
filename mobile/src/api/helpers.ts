@@ -10,20 +10,6 @@ export const workoutTemplate = {
   type: '',
   start: '',
   grade: '',
-  // exercises: [
-  //   {
-  //     exerciseType: '',
-  //     name: '',
-  //     compound: false,
-  //     mainMuscle: '',
-  //     secondaryMuscles: [''],
-  //     tool: '',
-  //     unilateral: false,
-  //     sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
-  //     length: '',
-  //     calories: '0',
-  //   },
-  // ],
   end: '',
 }
 
@@ -40,7 +26,6 @@ export const exercisesTemplate = {
       sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
       length: '',
       calories: '0',
-      //   },
     },
     {
       exerciseType: 'faaaaaaaaaaaaat',
@@ -50,6 +35,23 @@ export const exercisesTemplate = {
       sets: [{ weight: '1000', reps: '0', rest: '', time: '' }],
     },
   ],
+}
+
+export const emptyExercise = {
+  // exercises: [
+  // {
+  exerciseType: '',
+  name: '',
+  compound: false,
+  mainMuscle: '',
+  secondaryMuscles: [''],
+  tool: '',
+  unilateral: false,
+  sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
+  length: '',
+  calories: '0',
+  // },
+  // ],
 }
 
 export const bodyParts = [
@@ -76,7 +78,7 @@ export const bodyParts = [
   'select',
 ]
 
-export const populateSecondaryMuscles = (exercises) => {
+export const populateSecondaryMuscles = (exercises: any) => {
   let arr = []
 
   for (let i = 0; i < exercises.length; i++) {

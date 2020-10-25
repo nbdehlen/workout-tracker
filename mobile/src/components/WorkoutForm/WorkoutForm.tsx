@@ -1,11 +1,9 @@
-import React, { FunctionComponent, useState, useEffect, ReactText } from 'react'
+import React, { FunctionComponent, ReactText, useState } from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import {
   Text,
   TouchableOpacity,
-  Button,
   View,
-  FlatList,
   KeyboardAvoidingView,
   ScrollView,
   Switch,
@@ -17,6 +15,7 @@ import {
   exercisesTemplate,
   bodyParts,
   populateSecondaryMuscles,
+  emptyExercise,
 } from '../../api/helpers'
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik'
 import * as S from '../../util/theme/base'
@@ -29,14 +28,44 @@ type Props = OwnProps
 
 type MainMuscle = String[]
 
-export const WorkoutAdd: FunctionComponent<Props> = () => {
+type ExerciseObj = {
+  exercises: Exercise[]
+}
+
+const exercisesTemplateTest = {
+  exercises: [
+    // {
+    //   exerciseType: 'general',
+    //   name: '',
+    //   compound: false,
+    //   mainMuscle: '',
+    //   secondaryMuscles: [''],
+    //   tool: '',
+    //   unilateral: false,
+    //   sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
+    //   length: '',
+    //   calories: '0',
+    // },
+    {
+      exerciseType: 'faaaaaaaaaaaaat',
+      name: '',
+      compound: false,
+      unilateral: false,
+      sets: [{ weight: '1000', reps: '0', rest: '', time: '' }],
+    },
+  ],
+}
+
+export const WorkoutForm: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
-  const dispatch = useDispatch()
   const route = useRoute()
+  const dispatch = useDispatch()
   const workout: WorkoutData = route.params
   const user = useSelector((state) => state.user)
   const [postWorkout, setPostWorkout] = useState(workoutTemplate)
-  const [postExercises, setPostExercises] = useState(exercisesTemplate)
+  const [postExercises, setPostExercises] = useState<ExerciseObject>(
+    exercisesTemplate
+  )
   const [mainMuscle, setMainMuscle] = useState<MainMuscle>([])
   const [secondaryMuscles, setSecondaryMuscles] = useState(
     populateSecondaryMuscles(postExercises.exercises)
@@ -44,7 +73,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   const { exercises } = postExercises
   const Item = Picker.Item as any
 
-  const handlePostWorkout = (e, name) => {
+  const handlePostWorkout = (e, name: string) => {
     console.log(name)
     console.log(e?.nativeEvent?.text)
 
@@ -54,7 +83,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     })
   }
 
-  const handlePostExercises = (e, name, i) => {
+  const handlePostExercises = (e, name: string, i: number) => {
     setPostExercises({
       exercises: [
         ...exercises.slice(0, i),
@@ -67,7 +96,39 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     })
   }
 
-  const handlePostSets = (e, name, i, y) => {
+  const addExercise = () => {
+    // setSecondaryMuscles((prevState) => [...prevState, prevState.push([])])
+    // setSecondaryMuscles((prevState) => [...prevState, []])
+    secondaryMuscles.push([])
+    //push empty exercise with one set to state
+    setPostExercises({
+      exercises: [...exercises, emptyExercise],
+    })
+    //need to add for mainMuscle and secondaryMuscles state aswell as it's not included here. Should do something about types for all of those aswell
+    // setMainMuscle([...mainMuscle, ''])
+    console.log(secondaryMuscles)
+    console.log('exercises.length', exercises.length)
+  }
+
+  const changeOrderExercise = () => {
+    //will have to look into this
+  }
+
+  const removeExercise = (exerciseId) => {
+    //remove selected exercise from array
+  }
+
+  const addSet = (exerciseId) => {
+    //add set to exercise
+  }
+
+  const removeSet = (exerciseId, setId) => {}
+
+  const changeOrderSet = (exerciseId, setId) => {
+    //will have to look into this
+  }
+
+  const handlePostSets = (e, name: string, i: number, y: number) => {
     console.log(name)
     console.log(e?.nativeEvent?.text)
     setPostExercises({
@@ -87,7 +148,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     })
   }
 
-  const handlePostMainMuscle = (muscle, i) => {
+  const handlePostMainMuscle = (muscle: string, i: number) => {
     console.log(muscle)
     setMainMuscle([
       ...mainMuscle.slice(0, i),
@@ -97,8 +158,8 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
     console.log(mainMuscle)
   }
 
-  const handlePostSecondaryMuscles = (muscle, i) => {
-    if (secondaryMuscles[i].includes(muscle)) {
+  const handlePostSecondaryMuscles = (muscle: string, i: number) => {
+    if (secondaryMuscles[i] && secondaryMuscles[i].includes(muscle)) {
       console.log('in if')
       const muscleIndex = secondaryMuscles[i].indexOf(muscle)
 
@@ -108,7 +169,8 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
           ...secondaryMuscles[i].slice(0, muscleIndex),
           ...secondaryMuscles[i].slice(
             muscleIndex + 1,
-            secondaryMuscles[i].length
+            // secondaryMuscles[i].length
+            muscleIndex + 2
           ),
         ],
         ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
@@ -117,11 +179,11 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
       console.log('in else')
 
       setSecondaryMuscles([
-        ...secondaryMuscles,
-        secondaryMuscles[i].push(muscle),
+        ...secondaryMuscles.slice(0, i),
+        [...secondaryMuscles[i], muscle],
+        ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
       ])
     }
-    console.log(secondaryMuscles[i])
   }
 
   const submitForm = () => {
@@ -218,7 +280,9 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
               <Picker
                 selectedValue={'select'}
                 style={{ height: 50, width: 100 }}
-                onValueChange={(muscle) => handlePostMainMuscle(muscle, i)}
+                onValueChange={(muscle) =>
+                  handlePostMainMuscle(muscle as string, i)
+                }
                 // mode="dropdown"
               >
                 {bodyParts.map((muscle) =>
@@ -246,10 +310,18 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
                 selectedValue={'select'}
                 style={{ height: 50, width: 100 }}
                 onValueChange={(muscle) =>
-                  handlePostSecondaryMuscles(muscle, i)
+                  handlePostSecondaryMuscles(muscle as string, i)
                 }
               >
                 {bodyParts.map((muscle) =>
+                  // console.log('secondaryMuscles[i]', secondaryMuscles[i]),
+                  // console.log(
+                  //   'secondaryMuscles[i].length',
+                  //   secondaryMuscles[i].length
+                  // ),
+                  // console.log(typeof secondaryMuscles[i]),
+                  // console.log(secondaryMuscles),
+                  secondaryMuscles[i] &&
                   secondaryMuscles[i].includes(muscle) ? (
                     <Item
                       label={muscle}
@@ -268,11 +340,12 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
               </Picker>
 
               <View>
-                {secondaryMuscles[i].map((muscle) => (
-                  <Text key={JSON.stringify(muscle + 'displaySecondary')}>
-                    {muscle}
-                  </Text>
-                ))}
+                {secondaryMuscles[i] &&
+                  secondaryMuscles[i].map((muscle: ReactText) => (
+                    <Text key={JSON.stringify(muscle + 'displaySecondary')}>
+                      {muscle}
+                    </Text>
+                  ))}
               </View>
 
               <Text> Calories: </Text>
@@ -298,7 +371,7 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
 
               {exercise?.sets
                 ? exercise.sets.map((set, y) => (
-                    <View key={JSON.stringify(set + String(y))}>
+                    <View key={JSON.stringify(set) + y}>
                       <Text> Weight: </Text>
                       <S.TextInput
                         value={set.weight}
@@ -328,6 +401,9 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
                 : null}
             </View>
           ))}
+          <TouchableOpacity onPress={addExercise}>
+            <Text> Add Exercise </Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity onPress={submitForm}>
@@ -338,4 +414,4 @@ export const WorkoutAdd: FunctionComponent<Props> = () => {
   )
 }
 
-export default WorkoutAdd
+export default WorkoutForm

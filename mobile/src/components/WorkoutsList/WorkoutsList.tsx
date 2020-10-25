@@ -27,7 +27,7 @@ export const WorkoutsList: FunctionComponent<Props> = ({ data }) => {
   }
 
   const addWorkout = () => {
-    navigation.navigate('workoutAdd')
+    navigation.navigate('workoutForm')
     // navigate in stack to workout details page
     // console.log(workout)
   }
