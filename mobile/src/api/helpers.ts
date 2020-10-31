@@ -5,6 +5,28 @@ import { View, TextInput } from 'react-native'
 
 const formAddSet = () => {}
 
+export const completeWorkout = {
+  _id: '',
+  type: '',
+  start: '',
+  grade: '',
+  exercises: [
+    {
+      exerciseType: '',
+      name: '',
+      compound: false,
+      mainMuscle: [],
+      secondaryMuscles: [[]],
+      tool: '',
+      unilateral: false,
+      sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
+      length: '',
+      calories: '0',
+    },
+  ],
+  end: '',
+}
+
 export const workoutTemplate = {
   _id: '',
   type: '',
@@ -24,7 +46,7 @@ export const exercisesTemplate = {
       tool: '',
       unilateral: false,
       sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
-      length: '',
+      duration: '',
       calories: '0',
     },
     {
@@ -43,12 +65,12 @@ export const emptyExercise = {
   exerciseType: '',
   name: '',
   compound: false,
-  mainMuscle: '',
-  secondaryMuscles: [''],
+  mainMuscle: [],
+  secondaryMuscles: [],
   tool: '',
   unilateral: false,
   sets: [{ weight: '0', reps: '0', rest: '', time: '' }],
-  length: '',
+  duration: '',
   calories: '0',
   // },
   // ],
@@ -85,11 +107,20 @@ export const bodyParts = [
   'select',
 ]
 
-export const populateSecondaryMuscles = (exercises: any) => {
+export const populateSecondaryMuscles = (exercises: Exercise[]) => {
   let arr = []
 
   for (let i = 0; i < exercises.length; i++) {
-    arr.push([])
+    arr.push(exercises[i].secondaryMuscles)
+  }
+  return arr
+}
+
+export const populateMainMuscle = (exercises: Exercise[]) => {
+  let arr = []
+
+  for (let i = 0; i < exercises.length; i++) {
+    arr.push(exercises[i].mainMuscle)
   }
   return arr
 }

@@ -1,3 +1,12 @@
+type CompleteWorkout = {
+  _id?: string
+  type: string
+  start: string
+  grade?: string
+  exercises?: Exercise[]
+  end?: string
+}
+
 type WorkoutData = {
   // data: [
   // {
@@ -10,8 +19,8 @@ type WorkoutData = {
       exerciseType?: string
       name?: string
       compound?: boolean
-      mainMuscle?: string
-      secondaryMuscles?: string[]
+      mainMuscle?: MainMuscle
+      secondaryMuscles?: SecondaryMuscles
       tool?: string
       unilateral?: boolean
       sets?: [
@@ -22,13 +31,21 @@ type WorkoutData = {
           time?: string
         }
       ]
-      length?: string
+      duration?: string
       calories?: number
     }
   ]
   end?: string
   // }
   // ]
+}
+
+type Workout = {
+  _id?: string
+  type: string
+  start: string
+  grade?: string
+  end?: string
 }
 
 type ExerciseObject = {
@@ -39,11 +56,11 @@ type Exercise = {
   exerciseType?: string
   name?: string
   compound?: boolean
-  mainMuscle?: string
-  secondaryMuscles?: string[]
+  mainMuscle?: MainMuscle
+  secondaryMuscles?: SecondaryMuscles
   tool?: string
   unilateral?: boolean
-  length?: string
+  duration?: string
   calories?: string
   sets?: Sets[]
 }
@@ -54,3 +71,7 @@ type Sets = {
   rest?: string
   time?: string
 }
+
+type MainMuscle = string[]
+
+type SecondaryMuscles = string[][]

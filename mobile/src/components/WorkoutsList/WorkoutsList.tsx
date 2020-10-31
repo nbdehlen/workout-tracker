@@ -8,37 +8,27 @@ import {
   Button,
   GestureResponderEvent,
 } from 'react-native'
-// import { View } from 'styled-native-kit'
 import { useNavigation } from '@react-navigation/native'
 
 type OwnProps = {
-  data: WorkoutData[]
+  workouts: CompleteWorkout[]
 }
 
 type Props = OwnProps
 
-export const WorkoutsList: FunctionComponent<Props> = ({ data }) => {
+export const WorkoutsList: FunctionComponent<Props> = ({ workouts }) => {
   const navigation = useNavigation()
+  console.log('workouts', workouts)
 
-  const workoutDetails = (workout: WorkoutData) => {
+  const workoutDetails = (workout: CompleteWorkout) => {
     navigation.navigate('workoutDetails', workout)
     // navigate in stack to workout details page
     console.log(workout)
   }
 
-  const addWorkout = () => {
-    navigation.navigate('workoutForm')
-    // navigate in stack to workout details page
-    // console.log(workout)
-  }
-
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
-      <TouchableOpacity onPress={addWorkout}>
-        <Text> ADD </Text>
-      </TouchableOpacity>
-
-      {data.map((workout) => (
+      {workouts.map((workout) => (
         <TouchableOpacity
           key={workout._id}
           style={{ flex: 1, flexDirection: 'row' }}

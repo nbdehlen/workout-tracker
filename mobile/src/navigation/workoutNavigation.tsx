@@ -4,6 +4,8 @@ import WorkoutsScreen from '../screens/WorkoutsScreen'
 import WorkoutDetails from '../components/WorkoutDetails'
 import WorkoutEdit from '../components/WorkoutEdit'
 import WorkoutForm from '../components/WorkoutForm/WorkoutForm'
+import WorkoutAddScreen from '../screens/WorkoutAddScreen'
+import WorkoutEditScreen from '../screens/WorkoutEditScreen'
 
 type OwnProps = {}
 
@@ -26,12 +28,12 @@ export const WorkoutNavigation: FunctionComponent<Props> = () => {
       />
       <Stack.Screen
         name="workoutEdit"
-        component={WorkoutEdit}
+        component={WorkoutEditScreen}
         options={{ headerShown: true }}
       />
       <Stack.Screen
-        name="workoutForm"
-        component={WorkoutForm}
+        name="workoutAdd"
+        component={WorkoutAddScreen}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

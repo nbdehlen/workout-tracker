@@ -13,14 +13,14 @@ import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 
-type OwnProps = WorkoutData
+type OwnProps = CompleteWorkout
 type Props = OwnProps
 
 export const WorkoutDetails: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
-  const dispatch = useDispatch()
   const route = useRoute()
-  const workout: WorkoutData = route.params
+  const workout: CompleteWorkout = route.params
+  console.log('route.params', route.params)
 
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
@@ -35,6 +35,9 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
 
   return (
     <ScrollView>
+      <TouchableOpacity onPress={editWorkout}>
+        <Text>EDIT</Text>
+      </TouchableOpacity>
       <View>
         <Text> Type: {workout.type} </Text>
       </View>
@@ -52,13 +55,14 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
       </View>
       <View>
         {workout.exercises
-          ? workout.exercises.map((exercise) => (
-              <View key={uuidv4()}>
-                <Text> {exercise.name} </Text>
-                <Text> {exercise.name} </Text>
+          ? workout.exercises.map((exercise, i) => (
+              <View key={JSON.stringify(exercise + String(i))}>
+                <Text>
+                  Exercise {i + 1}: {exercise.name}
+                </Text>
                 <Text> {exercise.exerciseType} </Text>
                 <Text> {exercise.compound} </Text>
-                <Text> {exercise.length} </Text>
+                <Text> {exercise.duration} </Text>
                 <Text> {exercise.mainMuscle} </Text>
                 <Text> {exercise.secondaryMuscles} </Text>
 

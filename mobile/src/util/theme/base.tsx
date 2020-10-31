@@ -8,8 +8,8 @@ export const ContainerRow = styled.View`
 
 export const ContainerCol = styled.View`
   flex: 1;
+  flex-direction: row;
   background-color: #f9f9f9;
-  // flex-direction: column;
 `
 
 export const FatText = styled.Text`
@@ -21,6 +21,7 @@ export const TextInput = styled.TextInput`
   background-color: #add8e6;
   border: 1px solid black;
   border-radius: 5px;
+  width: 100%;
 `
 
 type Spacings = {

@@ -6,6 +6,7 @@ import { fetchWorkouts } from '../../redux/requests/actions'
 import axios from 'axios'
 import { Text, TextInput, TouchableOpacity, Button } from 'react-native'
 import WorkoutsList from '../WorkoutsList/WorkoutsList'
+import { useNavigation } from '@react-navigation/native'
 
 type OwnProps = {}
 
@@ -20,19 +21,29 @@ export const Workouts: FunctionComponent<Props> = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   console.log(user.xAccessToken)
+  const navigation = useNavigation()
 
   useEffect(() => {
     dispatch(fetchWorkouts(user.xAccessToken))
   }, [])
 
+  const addWorkout = () => {
+    navigation.navigate('workoutAdd')
+    // navigate in stack to workout details page
+    // console.log(workout)
+  }
   return (
     <>
+      <TouchableOpacity onPress={addWorkout}>
+        <Text> ADD </Text>
+      </TouchableOpacity>
+
       <Query
         type={FETCH_WORKOUTS}
         errorComponent={RequestError}
         noDataMessage={<Text>There is no entity currently.</Text>}
       >
-        {({ data }) => <WorkoutsList data={data} />}
+        {({ data }) => <WorkoutsList workouts={data} />}
       </Query>
     </>
   )
