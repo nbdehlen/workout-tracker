@@ -1,0 +1,60 @@
+TO DO in Mobile:
+X change booleans from input fields to switches? X
+X main muscle - single choice X
+X state for form array secondaryMuscles X
+X    multi choice X
+
+X Add exercise X
+X remove Exercise X
+
+
+X Add set X
+X Input in sets disappear unless first set X
+X Remove set X
+
+both post and edit functionality on WorkoutForm.
+Length on workoutSchema??? check schema.
+
+Set up WorkoutForm with redux-requests
+
+types nativeEvent???
+
+types navigation
+
+look into using formik
+
+move api/helpers to utils/form-something
+
+bug: cant edit mainMuscle 2 before 1 is set, it will set mainMuscle 1 instead.
+
+make workoutAdd into workoutForm and send in props, reuse for editWorkout?
+      How will that work for having dropdowns with saved workouts/exercises etc?
+
+Datepicker for start/end
+
+1-10 grade picker grade
+
+yup? form validation / validator
+
+create and hook up redux-requests for edit, post and delete
+
+event types?
+
+Function for saving exercises / workouts
+    (need to add backend endpoint and funtionality)
+
+add signup
+
+asyncStorage
+
+wrap things in auth route, redirect from login to workout stack
+
+redo login post from axios to redux-requests
+create spacer
+styling!!
+create proper navigation w right animations and types
+error component
+error handling with react-redux
+fix some workout fields like length to be in workout and not only in exercises?
+add typescript on everything
+onboarding
