@@ -4,7 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const createError = require('http-errors');
 const db = require('./db/index');
-
+initial = require('./db/schema/utils/populateRoles');
 const app = express();
 const index = require('./api/routes');
 
@@ -23,6 +23,9 @@ app.use('/api/v1', index);
 db.connect().then(() => {
   app.listen(port, host, () => console.log(`App running on ${host}:${port}`));
 });
+
+//uncomment to populate roles
+// initial();
 
 app.use((req, res, next) => {
   next(createError(404, 'Not found'));

@@ -7,9 +7,7 @@ const Role = require('../db/schema/RoleSchema');
 // make sure signUp gives 'user' role only.
 
 const postSignUp = async (req, res) => {
-  const {
-    username, email, password, roles,
-  } = req.body;
+  const { username, email, password } = req.body;
 
   const user = new User({
     username,
@@ -18,12 +16,6 @@ const postSignUp = async (req, res) => {
   });
 
   try {
-    if (roles) {
-      const assignedRoles = await Role.find({ name: { $in: roles } });
-      user.roles = assignedRoles.map(role => role._id);
-      await user.save();
-      return res.json({ message: 'User was registered successfully!' });
-    }
     const assignRoleUser = await Role.findOne({ name: 'user' });
     user.roles = [assignRoleUser._id];
     await user.save();
@@ -55,7 +47,9 @@ const postLogin = async (req, res) => {
       expiresIn: 86400, // 24 hours
     });
 
-    const authorities = user.roles.map(role => `ROLE_${role.name.toUpperCase()}`);
+    const authorities = user.roles.map(
+      (role) => `ROLE_${role.name.toUpperCase()}`,
+    );
     return res.status(200).json({
       id: user._id,
       username: user.username,

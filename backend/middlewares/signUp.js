@@ -31,22 +31,21 @@ const emailExists = async (req, res, next) => {
   }
 };
 
-const rolesExists = (req, res, next) => {
-  const { roles } = req.body;
-  if (roles) {
-    roles.forEach(role => {
-      if (!ROLES.includes(role)) {
-        res.status(400).json({
-          message: `Failed! Role ${role} does not exist!`,
-        });
-      }
-    });
-  }
-  next();
-};
+// const rolesExists = (req, res, next) => {
+//   const { roles } = req.body;
+//   if (roles) {
+//     roles.forEach(role => {
+//       if (!ROLES.includes(role)) {
+//         res.status(400).json({
+//           message: `Failed! Role ${role} does not exist!`,
+//         });
+//       }
+//     });
+//   }
+//   next();
+// };
 
 module.exports = {
   usernameExists,
   emailExists,
-  rolesExists,
 };

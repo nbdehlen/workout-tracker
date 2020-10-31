@@ -10,13 +10,13 @@ const adminBoard = (req, res) => {
   res.status(200).send('Admin Content.');
 };
 
-const moderatorBoard = (req, res) => {
-  res.status(200).send('Moderator Content.');
+const superAdminBoard = (req, res) => {
+  res.status(200).send('Super admin Content.');
 };
 
 module.exports = {
   allAccess,
   userBoard,
   adminBoard,
-  moderatorBoard,
+  superAdminBoard,
 };
