@@ -227,7 +227,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
           rest: set.rest,
           time: set.time,
         })),
-        length: exercise.duration,
+        duration: exercise.duration,
         calories: exercise.calories,
       })),
     }
@@ -377,11 +377,11 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
                 </View>
               </S.ContainerCol>
               <S.ContainerCol>
-                <Text> Length: </Text>
+                <Text> Duration: </Text>
                 <S.TextInput
                   value={exercise.duration}
                   name="duration"
-                  onChange={(e) => handlePostExercises(e, 'calories', i)}
+                  onChange={(e) => handlePostExercises(e, 'duration', i)}
                 />
               </S.ContainerCol>
               <S.ContainerCol>
@@ -421,7 +421,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
                     <S.ContainerCol>
                       <Text> Weight: </Text>
                       <S.TextInput
-                        value={set.weight}
+                        value={String(set.weight)}
                         name="weight"
                         onChange={(e) => handlePostSets(e, 'weight', i, y)}
                       />
@@ -429,7 +429,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
                     <S.ContainerCol>
                       <Text> Reps </Text>
                       <S.TextInput
-                        value={set.reps}
+                        value={String(set.reps)}
                         name="reps"
                         onChange={(e) => handlePostSets(e, 'reps', i, y)}
                       />

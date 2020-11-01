@@ -19,8 +19,8 @@ type Props = OwnProps
 export const WorkoutDetails: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const route = useRoute()
-  const workout: CompleteWorkout = route.params
   console.log('route.params', route.params)
+  const workout: CompleteWorkout = route.params
 
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
