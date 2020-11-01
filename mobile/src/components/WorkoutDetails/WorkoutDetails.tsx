@@ -28,7 +28,8 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   const addWorkoutHandler = () => {}
 
   const editWorkout = () => {
-    navigation.navigate('workoutEdit', workout)
+    const isEdit = true
+    navigation.navigate('workoutEdit', { workout })
     // navigate in stack to workout details page
     console.log(workout)
   }

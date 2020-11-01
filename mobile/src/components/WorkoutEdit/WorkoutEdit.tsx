@@ -7,11 +7,11 @@ type OwnProps = WorkoutData
 type Props = OwnProps
 
 export const WorkoutEdit: FunctionComponent<Props> = () => {
-  const navigation = useNavigation()
+  // const navigation = useNavigation()
   const dispatch = useDispatch()
   const route = useRoute()
+  console.log('route.params', route.params)
   const workout: WorkoutData = route.params
-
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
 
@@ -44,7 +44,7 @@ export const WorkoutEdit: FunctionComponent<Props> = () => {
                 <Text> {exercise.name} </Text>
                 <Text> {exercise.exerciseType} </Text>
                 <Text> {exercise.compound} </Text>
-                <Text> {exercise.length} </Text>
+                <Text> {exercise.duration} </Text>
                 <Text> {exercise.mainMuscle} </Text>
                 <Text> {exercise.secondaryMuscles} </Text>
 

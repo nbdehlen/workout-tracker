@@ -23,30 +23,25 @@ import * as S from '../../util/theme/base'
 import * as SS from './styled'
 import { Picker } from '@react-native-community/picker'
 import { v4 as uuidv4 } from 'uuid'
+import { EDIT_WORKOUT } from '../../redux/requests/actionTypes'
+import { editWorkout, postNewWorkout } from '../../redux/requests/actions'
 
 type OwnProps = {
   workout: CompleteWorkout
-  // exercises?: Exercise[]
-  // sets?: Sets[]
-  // mainMuscle?: MainMuscle
-  // secondaryMuscles?: SecondaryMuscles
+  isEdit: boolean
 }
 type Props = OwnProps
 
 type MainMuscle = String[]
 
-type ExerciseObj = {
-  exercises: Exercise[]
-}
-
-export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
+export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   console.log('workout', workout)
   const navigation = useNavigation()
   const route = useRoute()
   const dispatch = useDispatch()
   // const workout: WorkoutData = route.params
-  // const user = useSelector((state) => state.user)
-
+  const user = useSelector((state) => state.user)
+  console.log('user', user)
   const [postWorkout, setPostWorkout] = useState<CompleteWorkout>({
     _id: workout._id,
     type: workout.type,
@@ -207,6 +202,15 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
 
   const submitForm = () => {
     const { _id, end, grade, start, type } = postWorkout
+
+    const mainMuscleValidation = (mainMuscle) => {
+      return mainMuscle.length > 0 ? mainMuscle : ''
+    }
+
+    const secondaryMusclesValidation = (secondaryMuscles) => {
+      return secondaryMuscles[0].length > 0 ? secondaryMuscles : ['']
+    }
+
     const fullWorkout = {
       _id,
       end,
@@ -217,8 +221,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
         exerciseType: exercise.exerciseType,
         name: exercise.name,
         compound: exercise.compound,
-        mainMuscle: mainMuscle[i],
-        secondaryMuscles: secondaryMuscles[i],
+        mainMuscle: mainMuscleValidation(mainMuscle[i]),
+        secondaryMuscles: secondaryMusclesValidation(secondaryMuscles[i]),
         tool: exercise.tool,
         unilateral: exercise.unilateral,
         sets: exercise.sets.map((set) => ({
@@ -231,7 +235,12 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout }) => {
         calories: exercise.calories,
       })),
     }
+    // console.log('secondaryMuscles', secondaryMuscles, secondaryMuscles.length)
+    console.log('fullworkout etc', fullWorkout.exercises[0].mainMuscle)
     console.log(fullWorkout)
+    isEdit
+      ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
+      : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
   }
 
   return (

@@ -10,11 +10,12 @@ type Props = OwnProps
 const WorkoutEditScreen: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const route = useRoute()
-  const workout = route.params
+  const { workout } = route.params
+  console.log('route.params editScreen', route.params)
 
   return (
     <View style={{ flex: 1 }}>
-      <WorkoutForm workout={workout} />
+      <WorkoutForm workout={workout} isEdit={true} />
     </View>
   )
 }
