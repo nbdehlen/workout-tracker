@@ -65,11 +65,11 @@ const WorkoutSchema = mongoose.Schema({
           },
           reps: {
             type: Number,
-            max: [1000, "You didn't do {VALUE} reps. Why you always lying"],
-            min: [
-              1,
-              "You did 0 reps? so it's almost like you shouldnt log it?",
-            ],
+            max: [10000, "You didn't do {VALUE} reps. Why you always lying"],
+            // min: [
+            //   1,
+            //   "You did 0 reps? so it's almost like you shouldnt log it?",
+            // ],
           },
           rest: strTrimLcLen50,
           time: strTrimLcLen50,

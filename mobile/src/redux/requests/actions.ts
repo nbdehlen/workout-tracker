@@ -23,7 +23,7 @@ export const postNewWorkout = (token, workout) => ({
     url: 'http://10.0.2.2:5000/api/v1/user/workout',
     method: 'POST',
     headers: { 'x-access-token': token },
-    data: workout,
+    body: { workout },
   },
 })
 
@@ -33,7 +33,7 @@ export const editWorkout = (id, token, workout) => ({
     url: `http://10.0.2.2:5000/api/v1/user/workout/${id}`,
     method: 'PATCH',
     headers: { 'x-access-token': token },
-    data: workout,
+    body: { workout },
   },
 })
 
@@ -41,7 +41,7 @@ export const deleteWorkout = (id, token) => ({
   type: DELETE_WORKOUT,
   request: {
     url: `http://10.0.2.2:5000/api/v1/user/workout/${id}`,
-    method: 'PATCH',
+    method: 'DELETE',
     headers: { 'x-access-token': token },
   },
 })

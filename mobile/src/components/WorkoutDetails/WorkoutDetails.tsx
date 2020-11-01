@@ -10,8 +10,9 @@ import {
   Switch,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
+import { deleteWorkout } from '../../redux/requests/actions'
 
 type OwnProps = CompleteWorkout
 type Props = OwnProps
@@ -19,25 +20,33 @@ type Props = OwnProps
 export const WorkoutDetails: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const route = useRoute()
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
   console.log('route.params', route.params)
   const workout: CompleteWorkout = route.params
 
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
 
-  const addWorkoutHandler = () => {}
-
-  const editWorkout = () => {
+  const handleEditWorkout = () => {
     const isEdit = true
     navigation.navigate('workoutEdit', { workout })
     // navigate in stack to workout details page
     console.log(workout)
   }
 
+  const handleDeleteWorkout = () => {
+    dispatch(deleteWorkout(workout._id, user.xAccessToken))
+  }
+
   return (
     <ScrollView>
-      <TouchableOpacity onPress={editWorkout}>
+      <TouchableOpacity onPress={handleEditWorkout}>
         <Text>EDIT</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleDeleteWorkout}>
+        <Text>Delete</Text>
       </TouchableOpacity>
       <View>
         <Text> Type: {workout.type} </Text>
