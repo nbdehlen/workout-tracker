@@ -7,7 +7,6 @@ X    multi choice X
 X Add exercise X
 X remove Exercise X
 
-
 X Add set X
 X Input in sets disappear unless first set X
 X Remove set X
@@ -17,33 +16,31 @@ X Length on workoutSchema??? check schema. X
 X make workoutAdd into workoutForm and send in props, reuse for editWorkout? X
 
 X create and hook up redux-requests for edit, post X
-redux-requests delete
-redux-requests update fetch onSuccess
+X redux-requests delete X
 
+asyncStorage
 add signup
 wrap things in auth route, redirect from login to workout stack
+logout in settings screen - right header when logged in
 
+move components to screens
+
+redux-requests update fetch onSuccess
 types workout etc
 types nativeEvent???
 types navigation
 
 move api/helpers to utils/form-something
-look into using formik
+look into using formik and yup or valdiator
 bug: cant edit mainMuscle 2 before 1 is set, it will set mainMuscle 1 instead.
 
 Datepicker for start/end
 
 1-10 grade picker grade
 
-
-create and hook up redux-requests for edit, post and delete
-
-yup? form validation / validator
-
 Function for saving exercises / workouts
     (need to add backend endpoint and funtionality)
 
-asyncStorage
 
 redo login post from axios to redux-requests
 create spacer

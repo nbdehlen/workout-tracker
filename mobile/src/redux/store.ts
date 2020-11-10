@@ -13,8 +13,15 @@ import axios from 'axios'
 import { onRequest, onSuccess, onError } from './requests/interceptors'
 import { handleRequests } from '@redux-requests/core'
 import { createDriver } from '@redux-requests/axios'
+import { persistCombineReducers, persistStore } from 'redux-persist'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export const configureStore = () => {
+  const persistConfig = {
+    key: 'primary',
+    storage: AsyncStorage,
+    whitelist: ['user'],
+  }
   const { requestsReducer, requestsMiddleware } = handleRequests({
     driver: createDriver(
       axios
@@ -32,17 +39,24 @@ export const configureStore = () => {
   //   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   // compose
 
-  const reducers = combineReducers({
+  // const reducers = combineReducers({
+  //   user: authReducer,
+  //   requests: requestsReducer,
+  // })
+
+  const reduxPersistReducers = persistCombineReducers(persistConfig, {
     user: authReducer,
     requests: requestsReducer,
   })
 
   const store = createStore(
-    reducers,
+    reduxPersistReducers,
     // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     compose(Reactotron.createEnhancer(), applyMiddleware(...requestsMiddleware))
   )
   return store
 }
+
+export const persistor = persistStore(configureStore())
 
 export default configureStore
