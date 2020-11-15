@@ -22,6 +22,8 @@ asyncStorage
 add signup
 wrap things in auth route, redirect from login to workout stack
 logout in settings screen - right header when logged in
+create spacer
+styling!!
 
 move components to screens
 
@@ -43,8 +45,6 @@ Function for saving exercises / workouts
 
 
 redo login post from axios to redux-requests
-create spacer
-styling!!
 create proper navigation w right animations and types
 error component
 error handling with react-redux
