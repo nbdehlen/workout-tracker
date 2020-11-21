@@ -7,12 +7,12 @@ type OwnProps = {}
 
 type Props = OwnProps
 
-const WelcomeScreen: FunctionComponent<Props> = () => {
+const WorkoutsScreen: FunctionComponent<Props> = () => {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Workouts />
     </View>
   )
 }
 
-export default WelcomeScreen
+export default WorkoutsScreen

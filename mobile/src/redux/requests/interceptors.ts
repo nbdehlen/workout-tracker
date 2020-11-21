@@ -12,23 +12,20 @@ export const onSuccess = (response, action, store) => {
 }
 
 export const onError = async (error, action, store) => {
+  const { status } = error.response
   console.log('in onError')
-  if (
-    error.response &&
-    error.response.status === 404 &&
-    action.type === FETCH_WORKOUTS
-  ) {
+  if (error.response && status === 404 && action.type === FETCH_WORKOUTS) {
     const response = await store.dispatch({
       // ...fetchWorkouts(),
       // Initially would fetch a error photo to display
       meta: { silent: true, runOnSuccess: false, runOnRequest: false },
     })
-
     if (response.data) {
       return { data: response.data }
     }
+  } else {
+    throw error
   }
-
   // store.dispatch(incrementErrorCounter());
   throw error
 }
