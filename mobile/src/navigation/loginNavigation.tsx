@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import LoginScreen from '../screens/LoginScreen'
+import SignupScreen from '../screens/SignupScreen'
 
 type OwnProps = {}
 
@@ -14,6 +15,11 @@ export const LoginNavigation: FunctionComponent<Props> = () => {
       <Stack.Screen
         name="login"
         component={LoginScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="signup"
+        component={SignupScreen}
         options={{ headerShown: true }}
       />
       {/* <Stack.Screen name="signup" component={SignupScreen} options={{headerShown: true}} /> */}
