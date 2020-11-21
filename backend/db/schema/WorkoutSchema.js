@@ -66,17 +66,23 @@ const WorkoutSchema = mongoose.Schema({
           reps: {
             type: Number,
             max: [1000, "You didn't do {VALUE} reps. Why you always lying"],
-            min: [1, "You did 0 reps? so it's almost like you shouldnt log it?"],
+            min: [
+              1,
+              "You did 0 reps? so it's almost like you shouldnt log it?",
+            ],
           },
           rest: strTrimLcLen50,
           time: strTrimLcLen50,
         },
       ],
 
-      length: strTrimLcLen50,
+      duration: strTrimLcLen50,
       calories: {
         type: Number,
-        max: [10000, "Come on dude, you didn't just burn {VALUE} calories in a single workout."],
+        max: [
+          10000,
+          "Come on dude, you didn't just burn {VALUE} calories in a single workout.",
+        ],
         min: [
           0,
           'So you stuffed your face while working out and want to put a negative number? Just mark it zero',

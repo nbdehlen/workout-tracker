@@ -7,7 +7,9 @@ const getWorkout = async (req, res, next) => {
   try {
     const result = await WorkoutSchema.find({}).limit(10000);
 
-    return res.status(200).json(result.map(entry => entry.toObject({ getters: true })));
+    return res
+      .status(200)
+      .json(result.map((entry) => entry.toObject({ getters: true })));
   } catch (error) {
     return next(error);
   }
@@ -34,9 +36,7 @@ const getWorkoutById = async (req, res, next) => {
 
 const postWorkout = async (req, res, next) => {
   try {
-    const {
-      author, type, start, grade, end, exercises,
-    } = req.body;
+    const { author, type, start, grade, end, exercises } = req.body;
 
     const workout = new WorkoutSchema({
       author,
@@ -78,7 +78,9 @@ const patchWorkoutById = async (req, res, next) => {
     if (error instanceof mongoose.CastError) {
       // build custom error handler for CastErrors?
       // Need standardized error messages for the repeating errors.
-      return next(createError(400, `Parameters or workout ID ${workoutId} is invalid`));
+      return next(
+        createError(400, `Parameters or workout ID ${workoutId} is invalid`),
+      );
     }
     return next(error);
   }
@@ -146,7 +148,9 @@ const patchUserWorkoutById = async (req, res, next) => {
       // build custom error handler for CastErrors?
       // Need standardized error messages for the repeating errors.
 
-      return next(createError(400, `Parameters or workout ID ${workoutId} is invalid`));
+      return next(
+        createError(400, `Parameters or workout ID ${workoutId} is invalid`),
+      );
     }
     return next(error);
   }
@@ -179,9 +183,7 @@ const deleteUserWorkoutById = async (req, res, next) => {
 
 const postUserWorkout = async (req, res, next) => {
   try {
-    const {
-      type, start, grade, end, exercises,
-    } = req.body;
+    const { type, start, grade, end, exercises } = req.body;
 
     if (req.userId === undefined) {
       return next(createError(504, 'User not logged in'));
