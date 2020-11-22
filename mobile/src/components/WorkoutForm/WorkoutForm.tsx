@@ -247,51 +247,51 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     <KeyboardAvoidingView>
       <ScrollView>
         {/* <S.ContainerRow> */}
-        <S.ContainerCol>
+        <S.FlexCol>
           <Text> Workout type </Text>
           <S.TextInput
             value={postWorkout.type}
             name="type"
             onChange={(e) => handlePostWorkout(e, 'type')}
           />
-        </S.ContainerCol>
-        <S.ContainerCol>
+        </S.FlexCol>
+        <S.FlexCol>
           <Text> Grade </Text>
           <S.TextInput
             value={String(postWorkout.grade)}
             name="grade"
             onChange={(e) => handlePostWorkout(e, 'grade')}
           />
-        </S.ContainerCol>
-        <S.ContainerCol>
+        </S.FlexCol>
+        <S.FlexCol>
           <Text> Start </Text>
           <S.TextInput
             value={postWorkout.start}
             name="start"
             onChange={(e) => handlePostWorkout(e, 'start')}
           />
-        </S.ContainerCol>
-        <S.ContainerCol>
+        </S.FlexCol>
+        <S.FlexCol>
           <Text> End </Text>
           <S.TextInput
             value={postWorkout.end}
             name="end"
             onChange={(e) => handlePostWorkout(e, 'end')}
           />
-        </S.ContainerCol>
+        </S.FlexCol>
         {/* </S.ContainerRow> */}
         <View>
           {exercises.map((exercise, i) => (
             <View key={'exercise' + i}>
-              <S.ContainerCol>
+              <S.FlexCol>
                 <Text> Exercise type: </Text>
                 <S.TextInput
                   value={exercise.exerciseType}
                   name="exerciseType"
                   onChange={(e) => handlePostExercises(e, 'exerciseType', i)}
                 />
-              </S.ContainerCol>
-              <S.ContainerCol>
+              </S.FlexCol>
+              <S.FlexCol>
                 <Text> Exercise {i + 1} : </Text>
                 <TouchableOpacity onPress={() => removeExercise(i)}>
                   <Text>Remove Exercise</Text>
@@ -302,16 +302,16 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                   name="name"
                   onChange={(e) => handlePostExercises(e, 'name', i)}
                 />
-              </S.ContainerCol>
-              <S.ContainerCol>
+              </S.FlexCol>
+              <S.FlexCol>
                 <Text> Compound: </Text>
                 <Switch
                   value={exercise.compound}
                   name="compound"
                   onValueChange={(e) => handlePostExercises(e, 'compound', i)}
                 />
-              </S.ContainerCol>
-              <S.ContainerCol>
+              </S.FlexCol>
+              <S.FlexCol>
                 <Text> Main Target (single): </Text>
                 <Picker
                   selectedValue={'select'}
@@ -340,8 +340,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                   )}
                 </Picker>
                 <Text> {mainMuscle[i]} </Text>
-              </S.ContainerCol>
-              <S.ContainerCol>
+              </S.FlexCol>
+              <S.FlexCol>
                 <Text> Secondary Targets (multiple): </Text>
                 <Picker
                   selectedValue={'select'}
@@ -384,31 +384,31 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                       </Text>
                     ))}
                 </View>
-              </S.ContainerCol>
-              <S.ContainerCol>
+              </S.FlexCol>
+              <S.FlexCol>
                 <Text> Duration: </Text>
                 <S.TextInput
                   value={exercise.duration}
                   name="duration"
                   onChange={(e) => handlePostExercises(e, 'duration', i)}
                 />
-              </S.ContainerCol>
-              <S.ContainerCol>
+              </S.FlexCol>
+              <S.FlexCol>
                 <Text> Calories: </Text>
                 <S.TextInput
                   value={exercise.calories}
                   name="calories"
                   onChange={(e) => handlePostExercises(e, 'calories', i)}
                 />
-              </S.ContainerCol>
-              <S.ContainerCol>
+              </S.FlexCol>
+              <S.FlexCol>
                 <Text> Tool: </Text>
                 <S.TextInput
                   value={exercise.tool}
                   name="tool"
                   onChange={(e) => handlePostExercises(e, 'tool', i)}
                 />
-              </S.ContainerCol>
+              </S.FlexCol>
               <Text> Unilateral </Text>
               <Switch
                 value={exercise.unilateral}
@@ -427,38 +427,38 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                     </TouchableOpacity>
 
                     <Text> Set {y + 1} </Text>
-                    <S.ContainerCol>
+                    <S.FlexCol>
                       <Text> Weight: </Text>
                       <S.TextInput
                         value={String(set.weight)}
                         name="weight"
                         onChange={(e) => handlePostSets(e, 'weight', i, y)}
                       />
-                    </S.ContainerCol>
-                    <S.ContainerCol>
+                    </S.FlexCol>
+                    <S.FlexCol>
                       <Text> Reps </Text>
                       <S.TextInput
                         value={String(set.reps)}
                         name="reps"
                         onChange={(e) => handlePostSets(e, 'reps', i, y)}
                       />
-                    </S.ContainerCol>
-                    <S.ContainerCol>
+                    </S.FlexCol>
+                    <S.FlexCol>
                       <Text> Rest </Text>
                       <S.TextInput
                         value={set.rest}
                         name="rest"
                         onChange={(e) => handlePostSets(e, 'rest', i, y)}
                       />
-                    </S.ContainerCol>
-                    <S.ContainerCol>
+                    </S.FlexCol>
+                    <S.FlexCol>
                       <Text> Time </Text>
                       <S.TextInput
                         value={set.time}
                         name="time"
                         onChange={(e) => handlePostSets(e, 'time', i, y)}
                       />
-                    </S.ContainerCol>
+                    </S.FlexCol>
                   </View>
                 ))}
             </View>
