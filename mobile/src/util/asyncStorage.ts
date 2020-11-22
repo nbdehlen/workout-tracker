@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage'
 
-export const saveData = async (STORAGE_KEY, data) => {
+export const saveData = async (STORAGE_KEY: string, data) => {
   try {
     console.log(data)
 
@@ -11,7 +11,7 @@ export const saveData = async (STORAGE_KEY, data) => {
   }
 }
 
-export const readData = async (STORAGE_KEY) => {
+export const readData = async (STORAGE_KEY: string) => {
   try {
     const data = await AsyncStorage.getItem(STORAGE_KEY)
 

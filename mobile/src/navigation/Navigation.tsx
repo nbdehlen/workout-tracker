@@ -19,7 +19,10 @@ export const Navigation: FunctionComponent<Props> = ({}) => {
       try {
         const userPersisted = await readData('user')
         console.log('userPersisted', userPersisted)
-        dispatch(login(userPersisted))
+
+        if (userPersisted) {
+          dispatch(login(userPersisted))
+        }
         console.log('isLoggedIn', isLoggedIn)
 
         setNavState(true)
