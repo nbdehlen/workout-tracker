@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { deleteWorkout } from '../../redux/requests/actions'
+import { Spacer } from '../../util/theme/base'
 
 type OwnProps = CompleteWorkout
 type Props = OwnProps
