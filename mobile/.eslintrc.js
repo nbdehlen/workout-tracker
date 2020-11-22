@@ -2,8 +2,9 @@ module.exports = {
   root: true,
   extends: '@react-native-community',
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
     '@typescript-eslint/no-var-requires': 0,
     'react-native/no-raw-text': 0,
     'no-plusplus': 0,

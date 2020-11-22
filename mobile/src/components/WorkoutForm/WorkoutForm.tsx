@@ -258,7 +258,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         <S.ContainerCol>
           <Text> Grade </Text>
           <S.TextInput
-            value={postWorkout.grade}
+            value={String(postWorkout.grade)}
             name="grade"
             onChange={(e) => handlePostWorkout(e, 'grade')}
           />
@@ -471,7 +471,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         <TouchableOpacity onPress={submitForm}>
           <Text> Print complete form </Text>
         </TouchableOpacity>
-        <View style={{ height: 20 }}></View>
+        <View style={{ height: 20 }} />
       </ScrollView>
     </KeyboardAvoidingView>
   )

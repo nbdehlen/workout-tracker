@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../redux/auth/actions'
 import axios from 'axios'
 import * as S from './styled'
+import { saveData } from '../../util/asyncStorage'
 
 type OwnProps = {}
 
@@ -34,7 +35,7 @@ export const Login: FunctionComponent<Props> = () => {
       setPassword('')
       console.log(loginStatus)
       dispatch(login(loginStatus.data))
-
+      saveData('user', loginStatus.data)
       //Redirect to somewhere
     } catch (err) {
       console.log(err)

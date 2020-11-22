@@ -1,4 +1,4 @@
-import { LOGIN } from './actionTypes'
+import { LOGIN, LOGOUT } from './actionTypes'
 
 const initialState = {
   username: '',
@@ -16,6 +16,8 @@ const authReducer = (state = initialState, action) => {
         isLoggedIn: true,
         xAccessToken: action.payload.accessToken,
       }
+    case LOGOUT:
+      return initialState
     default:
       return state
   }

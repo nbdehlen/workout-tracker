@@ -6,7 +6,7 @@ import Reactotron from '../ReactotronConfig'
 
 // export default store
 
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 
 import authReducer from './auth/authReducer'
 import axios from 'axios'
@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 export const configureStore = () => {
   const persistConfig = {
-    key: 'primary',
+    key: 'user',
     storage: AsyncStorage,
     whitelist: ['user'],
   }
