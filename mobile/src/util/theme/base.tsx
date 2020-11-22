@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 import React, { FunctionComponent } from 'react'
+import { View } from 'react-native'
 
-export const ContainerRow = styled.View`
+export const FlexRow = styled.View`
   flex: 1;
   background-color: #f9f9f9;
 `
 
-export const ContainerCol = styled.View`
+export const FlexCol = styled.View`
   flex: 1;
   flex-direction: row;
   background-color: #f9f9f9;
@@ -29,4 +30,6 @@ type Spacings = {
   w?: number
 }
 
-export const Space: FunctionComponent<Spacings> = ({}) => {}
+export const Spacer: FunctionComponent<Spacings> = ({ h, w }) => {
+  return <View style={{ height: h, width: w }} />
+}
