@@ -13,7 +13,10 @@ import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { deleteWorkout } from '../../redux/requests/actions'
-import { Spacer } from '../../util/theme/base'
+import { FlexCol, FlexRow, Spacer } from '../../util/theme/base'
+import { differenceInMinutes, format, isValid } from 'date-fns'
+import { ucFirst } from '../../util/helpers'
+import DataTable from './DataTable'
 
 type OwnProps = CompleteWorkout
 type Props = OwnProps
@@ -29,6 +32,8 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
 
+  console.log('isValid:', isValid(new Date(workout.start)))
+
   const handleEditWorkout = () => {
     const isEdit = true
     navigation.navigate('workoutEdit', { workout })
@@ -40,6 +45,14 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
     dispatch(deleteWorkout(workout._id, user.xAccessToken))
   }
 
+  const calculcateTotalSets = () => {
+    let count = 0
+    workout.exercises.forEach((exercise) => {
+      count += exercise.sets.length
+    })
+    return count
+  }
+
   return (
     <ScrollView>
       <TouchableOpacity onPress={handleEditWorkout}>
@@ -49,43 +62,68 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
       <TouchableOpacity onPress={handleDeleteWorkout}>
         <Text>Delete</Text>
       </TouchableOpacity>
-      <View>
-        <Text> Type: {workout.type} </Text>
-      </View>
-      <View>
-        <Text> Start: {workout.start} </Text>
-      </View>
-      <View>
-        <Text> End: {workout.end} </Text>
-      </View>
-      <View>
-        <Text> Length: len of workout </Text>
-      </View>
-      <View>
-        <Text> {workout.grade} </Text>
-      </View>
+
+      <FlexRow>
+        {/* style={{ justifyContent: 'center' }} */}
+        <View style={{ flex: 1 }}>
+          <Text>Workout Type: {workout.type} </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text>Sets: {calculcateTotalSets()} </Text>
+        </View>
+      </FlexRow>
+
+      <FlexRow>
+        <View style={{ flex: 1 }}>
+          <Text>Grade: {workout.grade}/10</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text>
+            Duration:{' '}
+            {differenceInMinutes(
+              new Date(workout.end),
+              new Date(workout.start)
+            )}{' '}
+            min
+          </Text>
+        </View>
+      </FlexRow>
+
+      <FlexRow>
+        <View style={{ flex: 1 }}>
+          <Text>
+            Start: {format(new Date(workout.start), 'HH:mm do MMM yy')}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text>End: {format(new Date(workout.end), 'HH:mm do MMM yy')}</Text>
+        </View>
+      </FlexRow>
+
       <View>
         {workout.exercises
           ? workout.exercises.map((exercise, i) => (
-              <View key={JSON.stringify(exercise + String(i))}>
-                <Text>
-                  Exercise {i + 1}: {exercise.name}
+              <View key={exercise + String(i)}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  {ucFirst(exercise.tool)} {exercise.name}
                 </Text>
                 <Text> {exercise.exerciseType} </Text>
-                <Text> {exercise.compound} </Text>
+                {/* <Text> {exercise.compound} </Text> */}
                 <Text> {exercise.duration} </Text>
                 <Text> {exercise.mainMuscle} </Text>
                 <Text> {exercise.secondaryMuscles} </Text>
 
-                {exercise.sets.map((set) => (
-                  <View key={uuidv4()}>
+                <FlexRow>
+                  <DataTable data={exercise.sets} />
+                </FlexRow>
+                {/* {exercise.sets.map((set, y) => (
+                  <View key={set + String(y)}>
                     <Text> {set.weight} </Text>
                     <Text> {set.reps} </Text>
                     <Text> {set.rest} </Text>
                     <Text> {set.time} </Text>
                   </View>
-                ))}
-                <Text> {exercise.tool} </Text>
+                ))} */}
                 <Text> {exercise.unilateral} </Text>
                 <Text> {exercise.calories} </Text>
               </View>
