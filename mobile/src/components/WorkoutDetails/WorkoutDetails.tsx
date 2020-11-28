@@ -8,6 +8,7 @@ import {
   Button,
   View,
   Switch,
+  Modal,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,6 +29,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   const user = useSelector((state) => state.user)
   console.log('route.params', route.params)
   const workout: CompleteWorkout = route.params
+  const [modalVisible, setModalVisible] = useState(null)
 
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
@@ -51,6 +53,10 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
     return count
   }
 
+  const handleModal = (index) => {
+    modalVisible === index ? setModalVisible('') : setModalVisible(index)
+  }
+
   let startDate
   let endDate
   isValid(new Date(workout.start)) && (startDate = new Date(workout.start))
@@ -68,73 +74,105 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
 
       <FlexRow>
         {/* style={{ justifyContent: 'center' }} */}
-        <View style={{ flex: 1 }}>
-          <Text>Workout Type: {workout.type} </Text>
-        </View>
-        <View style={{ flex: 1 }}>
+        {workout.type && (
+          <FlexRow>
+            <Text>Workout type: {ucFirst(workout.type)} </Text>
+          </FlexRow>
+        )}
+
+        <FlexRow>
           <Text>Sets: {calculcateTotalSets()} </Text>
-        </View>
+        </FlexRow>
       </FlexRow>
 
       <FlexRow>
-        <View style={{ flex: 1 }}>
+        <FlexRow>
           <Text>Grade: {workout.grade}/10</Text>
-        </View>
+        </FlexRow>
 
         {startDate && endDate && (
-          <View style={{ flex: 1 }}>
+          <FlexRow>
             <Text>Duration: {differenceInMinutes(endDate, startDate)} min</Text>
-          </View>
+          </FlexRow>
         )}
       </FlexRow>
 
       <FlexRow>
-        {isValid(new Date(workout.start)) && (
-          <View style={{ flex: 1 }}>
-            <Text>
-              Start: {format(new Date(workout.start), 'HH:mm do MMM yy')}
-            </Text>
-          </View>
+        {startDate && (
+          <FlexRow>
+            <Text>Start: {format(startDate, 'HH:mm do MMM yy')}</Text>
+          </FlexRow>
         )}
 
-        {isValid(new Date(workout.end)) && (
-          <View style={{ flex: 1 }}>
-            <Text>End: {format(new Date(workout.end), 'HH:mm do MMM yy')}</Text>
-          </View>
+        {endDate && (
+          <FlexRow>
+            <Text>End: {format(endDate, 'HH:mm do MMM yy')}</Text>
+          </FlexRow>
         )}
       </FlexRow>
-      {/* Dropdown for all exercise details like Barbell row ^ */}
-      <Spacer h={16} />
+      <Spacer h={8} />
       <View>
-        {workout.exercises
-          ? workout.exercises.map((exercise, i) => (
-              <View key={exercise + String(i)}>
-                <FlexRow>
-                  <FlexCol>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                      {ucFirst(exercise.tool)} {exercise.name}
-                    </Text>
-                  </FlexCol>
-                  <FlexCol>
-                    <Text> Focus: {ucFirst(exercise.exerciseType)} </Text>
-                  </FlexCol>
+        {workout.exercises &&
+          workout.exercises.map((exercise, i) => (
+            <View key={exercise + String(i)}>
+              <FlexRow>
+                <FlexRow style={{ alignItems: 'center' }}>
+                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                    {ucFirst(exercise.tool)} {exercise.name}
+                  </Text>
+                  {/* <Spacer w={16} /> */}
+                  <TouchableOpacity onPress={() => handleModal(i)}>
+                    <Text> {modalVisible === i ? 'Close' : 'Details...'} </Text>
+                  </TouchableOpacity>
                 </FlexRow>
-                {/* <Text> {exercise.compound} </Text> */}
-                <FlexRow>
-                  <Text> {exercise.duration} </Text>
-                  <Text>{ucFirst(exercise.mainMuscle)}</Text>
-                  {exercise.secondaryMuscles.map((muscle) => (
-                    <Text> {ucFirst(muscle)}</Text>
-                  ))}
-                </FlexRow>
-                <FlexRow>
-                  <DataTable data={exercise.sets} />
-                </FlexRow>
-                <Text> {exercise.unilateral} </Text>
-                <Text> {exercise.calories} </Text>
-              </View>
-            ))
-          : null}
+
+                {/* Not sure why && isn't working here */}
+              </FlexRow>
+              {i === modalVisible && (
+                <FlexCol style={{ justifyContent: 'flex-start' }}>
+                  <FlexRow>
+                    {exercise.exerciseType ? (
+                      <Text>Focus: {ucFirst(exercise.exerciseType)} </Text>
+                    ) : null}
+                  </FlexRow>
+
+                  {exercise.duration ? (
+                    <Text> {exercise.duration} </Text>
+                  ) : null}
+
+                  <FlexRow>
+                    <Text>Muscles: </Text>
+                    {exercise.mainMuscle ? (
+                      <Text>
+                        {ucFirst(exercise.mainMuscle)}
+                        {exercise.secondaryMuscles && ','}
+                      </Text>
+                    ) : null}
+
+                    {exercise.secondaryMuscles &&
+                      exercise.secondaryMuscles.map((muscle, y) => (
+                        <Text>
+                          {' '}
+                          {ucFirst(muscle)}
+                          {exercise.secondaryMuscles.length - 1 > y ? ',' : '.'}
+                        </Text>
+                      ))}
+                  </FlexRow>
+
+                  {exercise.compound && <Text>Compound movement</Text>}
+                  {exercise.unilateral && <Text>Unilateral</Text>}
+                  {exercise.calories && (
+                    <Text> Calories burned: {exercise.calories} </Text>
+                  )}
+                  <Spacer h={4} />
+                </FlexCol>
+              )}
+              <FlexRow>
+                <DataTable data={exercise.sets} />
+              </FlexRow>
+              <Spacer h={4} />
+            </View>
+          ))}
       </View>
     </ScrollView>
   )

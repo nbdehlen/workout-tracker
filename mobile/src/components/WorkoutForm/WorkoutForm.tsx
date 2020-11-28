@@ -247,9 +247,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     if (start.length < 1) {
       fullWorkout.start = undefined
     }
-    // console.log('secondaryMuscles', secondaryMuscles, secondaryMuscles.length)
-    // console.log('fullworkout etc', fullWorkout.exercises[0].mainMuscle)
     console.log(fullWorkout)
+
     isEdit
       ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
       : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))

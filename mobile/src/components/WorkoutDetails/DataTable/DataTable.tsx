@@ -48,13 +48,13 @@ export const DataTable: FunctionComponent<Props> = ({ data, headers }) => {
         return (
           <FlexCol key={arr}>
             <View>
-              <Text> {ucFirst(arr[0])} </Text>
+              <Text>{ucFirst(arr[0])}</Text>
             </View>
             <FlexCol>
               {arr[1].map((val) => {
                 return (
                   <FlexRow key={String(arr)}>
-                    <Text> {val} </Text>
+                    <Text>{val}</Text>
                   </FlexRow>
                 )
               })}
