@@ -1,6 +1,7 @@
-const createError = require('http-errors');
-const mongoose = require('mongoose');
-const WorkoutSchema = require('../db/schema/WorkoutSchema');
+const createError = require("http-errors");
+const mongoose = require("mongoose");
+const { create } = require("../db/schema/WorkoutSchema");
+const WorkoutSchema = require("../db/schema/WorkoutSchema");
 // const protoChain = require('../utils/protoChain');
 
 const getWorkout = async (req, res, next) => {
@@ -51,7 +52,7 @@ const postWorkout = async (req, res, next) => {
 
     return res.status(201).json(workout.toObject({ getters: true }));
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       return next(createError(422, error.message));
     }
     return next(error);
@@ -62,11 +63,16 @@ const patchWorkoutById = async (req, res, next) => {
   const { body } = req;
   const { workoutId } = req.params;
 
+  console.log(body);
+  if (!body) {
+    throw createError(400, "Body is empty");
+  }
+
   try {
     const result = await WorkoutSchema.findOneAndUpdate(
       { _id: workoutId },
       { $set: body },
-      { new: true },
+      { new: true }
     );
 
     if (!result) {
@@ -79,7 +85,7 @@ const patchWorkoutById = async (req, res, next) => {
       // build custom error handler for CastErrors?
       // Need standardized error messages for the repeating errors.
       return next(
-        createError(400, `Parameters or workout ID ${workoutId} is invalid`),
+        createError(400, `Parameters or workout ID ${workoutId} is invalid`)
       );
     }
     return next(error);
@@ -113,7 +119,9 @@ const getUserWorkouts = async (req, res, next) => {
   const { userId } = req;
 
   try {
-    const result = await WorkoutSchema.find({ author: userId });
+    const result = await WorkoutSchema.find({ author: userId }).sort({
+      start: "desc",
+    });
 
     if (!result) {
       return res.status(404).json({
@@ -131,11 +139,18 @@ const patchUserWorkoutById = async (req, res, next) => {
   const { workoutId } = req.params;
   const { userId } = req;
 
+  // console.log(Object.entries(body).length);
+  // console.log(body);
+
+  if (Object.entries(body).length === 0) {
+    return next(createError(422, "Body is empty"));
+  }
+
   try {
     const result = await WorkoutSchema.findOneAndUpdate(
       { _id: workoutId, author: userId },
       { $set: body },
-      { new: true },
+      { new: true }
     );
 
     if (!result) {
@@ -149,7 +164,7 @@ const patchUserWorkoutById = async (req, res, next) => {
       // Need standardized error messages for the repeating errors.
 
       return next(
-        createError(400, `Parameters or workout ID ${workoutId} is invalid`),
+        createError(400, `Parameters or workout ID ${workoutId} is invalid`)
       );
     }
     return next(error);
@@ -182,11 +197,14 @@ const deleteUserWorkoutById = async (req, res, next) => {
 };
 
 const postUserWorkout = async (req, res, next) => {
+  if (Object.entries(req.body).length === 0) {
+    return next(createError(422, "Body is empty"));
+  }
+
   try {
     const { type, start, grade, end, exercises } = req.body;
-
     if (req.userId === undefined) {
-      return next(createError(504, 'User not logged in'));
+      return next(createError(504, "User not logged in"));
     }
     const { userId } = req;
 
@@ -203,7 +221,7 @@ const postUserWorkout = async (req, res, next) => {
 
     return res.status(201).json(workout.toObject({ getters: true }));
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       return next(createError(422, error.message));
     }
     return next(error);

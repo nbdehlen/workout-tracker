@@ -4,13 +4,12 @@ import { View } from 'react-native'
 
 export const FlexRow = styled.View`
   flex: 1;
-  background-color: #f9f9f9;
+  flex-direction: row;
 `
 
 export const FlexCol = styled.View`
   flex: 1;
-  flex-direction: row;
-  background-color: #f9f9f9;
+  flex-direction: column;
 `
 
 export const FatText = styled.Text`
@@ -33,3 +32,5 @@ type Spacings = {
 export const Spacer: FunctionComponent<Spacings> = ({ h, w }) => {
   return <View style={{ height: h, width: w }} />
 }
+
+// Padding container
