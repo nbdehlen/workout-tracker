@@ -13,18 +13,16 @@ const WorkoutSchema = mongoose.Schema({
   type: {
     type: String,
     default: "General",
-    required: true,
-    // lowercase: true,
     trim: true,
     maxlength: [50, "Max char length is 50"],
   },
 
   start: {
     type: Date,
-    // required: true,
+    required: "Must have start date - default value is the created date",
     default: Date.now,
     trim: true,
-    maxlength: [50, "Max char length is 50"],
+    maxlength: [100, "Max char length is 100"],
     minLength: [1, "Min char length is 1"],
   },
 
@@ -34,7 +32,7 @@ const WorkoutSchema = mongoose.Schema({
       validator: Number.isInteger,
       message: "{VALUE} is not an integer value",
     },
-    min: [0, "Value neeeds to be on a scale between 0 and 10"],
+    min: [1, "Value neeeds to be on a scale between 0 and 10"],
     max: [10, "Value neeeds to be on a scale between 0 and 10"],
   },
 
@@ -97,8 +95,10 @@ const WorkoutSchema = mongoose.Schema({
 
   end: {
     type: Date,
+    required: "Must have end date - default value is the created date +1 hour",
+    default: () => new Date(Date.now() + 60 * 60 * 1000),
     trim: true,
-    maxlength: [50, "Max char length is 50"],
+    maxlength: [100, "Max char length is 100"],
   },
 });
 

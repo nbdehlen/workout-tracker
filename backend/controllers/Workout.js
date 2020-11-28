@@ -119,7 +119,9 @@ const getUserWorkouts = async (req, res, next) => {
   const { userId } = req;
 
   try {
-    const result = await WorkoutSchema.find({ author: userId });
+    const result = await WorkoutSchema.find({ author: userId }).sort({
+      start: "desc",
+    });
 
     if (!result) {
       return res.status(404).json({

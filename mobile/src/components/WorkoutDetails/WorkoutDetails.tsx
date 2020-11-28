@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { deleteWorkout } from '../../redux/requests/actions'
 import { FlexCol, FlexRow, Spacer } from '../../util/theme/base'
-import { differenceInMinutes, format, isValid } from 'date-fns'
+import { differenceInMinutes, format, isValid, parseISO } from 'date-fns'
 import { ucFirst } from '../../util/helpers'
 import DataTable from './DataTable'
 
@@ -31,8 +31,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
 
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
-
-  console.log('isValid:', isValid(new Date(workout.start)))
 
   const handleEditWorkout = () => {
     const isEdit = true
@@ -52,6 +50,11 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
     })
     return count
   }
+
+  let startDate
+  let endDate
+  isValid(new Date(workout.start)) && (startDate = new Date(workout.start))
+  isValid(new Date(workout.end)) && (endDate = new Date(workout.end))
 
   return (
     <ScrollView>
@@ -78,22 +81,15 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
           <Text>Grade: {workout.grade}/10</Text>
         </View>
 
-        {isValid(workout.end) && isValid(workout.start) && (
+        {startDate && endDate && (
           <View style={{ flex: 1 }}>
-            <Text>
-              Duration:{' '}
-              {differenceInMinutes(
-                new Date(workout.end),
-                new Date(workout.start)
-              )}{' '}
-              min
-            </Text>
+            <Text>Duration: {differenceInMinutes(endDate, startDate)} min</Text>
           </View>
         )}
       </FlexRow>
 
       <FlexRow>
-        {isValid(workout.start) && (
+        {isValid(new Date(workout.start)) && (
           <View style={{ flex: 1 }}>
             <Text>
               Start: {format(new Date(workout.start), 'HH:mm do MMM yy')}

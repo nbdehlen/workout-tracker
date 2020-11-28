@@ -239,6 +239,14 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         calories: exercise.calories,
       })),
     }
+
+    //MongoDB needs undefined to set default dates
+    if (end.length < 1) {
+      fullWorkout.end = undefined
+    }
+    if (start.length < 1) {
+      fullWorkout.start = undefined
+    }
     // console.log('secondaryMuscles', secondaryMuscles, secondaryMuscles.length)
     // console.log('fullworkout etc', fullWorkout.exercises[0].mainMuscle)
     console.log(fullWorkout)
