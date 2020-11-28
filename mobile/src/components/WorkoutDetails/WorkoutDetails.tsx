@@ -77,27 +77,35 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
         <View style={{ flex: 1 }}>
           <Text>Grade: {workout.grade}/10</Text>
         </View>
-        <View style={{ flex: 1 }}>
-          <Text>
-            Duration:{' '}
-            {differenceInMinutes(
-              new Date(workout.end),
-              new Date(workout.start)
-            )}{' '}
-            min
-          </Text>
-        </View>
+
+        {isValid(workout.end) && isValid(workout.start) && (
+          <View style={{ flex: 1 }}>
+            <Text>
+              Duration:{' '}
+              {differenceInMinutes(
+                new Date(workout.end),
+                new Date(workout.start)
+              )}{' '}
+              min
+            </Text>
+          </View>
+        )}
       </FlexRow>
 
       <FlexRow>
-        <View style={{ flex: 1 }}>
-          <Text>
-            Start: {format(new Date(workout.start), 'HH:mm do MMM yy')}
-          </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>End: {format(new Date(workout.end), 'HH:mm do MMM yy')}</Text>
-        </View>
+        {isValid(workout.start) && (
+          <View style={{ flex: 1 }}>
+            <Text>
+              Start: {format(new Date(workout.start), 'HH:mm do MMM yy')}
+            </Text>
+          </View>
+        )}
+
+        {isValid(new Date(workout.end)) && (
+          <View style={{ flex: 1 }}>
+            <Text>End: {format(new Date(workout.end), 'HH:mm do MMM yy')}</Text>
+          </View>
+        )}
       </FlexRow>
       {/* Dropdown for all exercise details like Barbell row ^ */}
       <Spacer h={16} />

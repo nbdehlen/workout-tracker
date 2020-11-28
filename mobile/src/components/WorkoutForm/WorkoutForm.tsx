@@ -245,7 +245,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     isEdit
       ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
       : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
-    // dispatch(fetchWorkouts(user.xAccessToken))
+    dispatch(fetchWorkouts(user.xAccessToken))
   }
 
   return (
