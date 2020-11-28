@@ -1,9 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { Text, View } from 'react-native'
-import { FlexRow } from 'styled-native-kit'
-import { stringify } from 'uuid'
 import { ucFirst } from '../../../util/helpers'
-import { FlexCol } from '../../../util/theme/base'
+import { FlexCol, FlexRow } from '../../../util/theme/base'
 import * as S from './styled'
 
 type OwnProps = {
@@ -25,8 +23,6 @@ export const DataTable: FunctionComponent<Props> = ({ data, headers }) => {
       dataTable[headers[i]] = []
     }
   } else {
-    console.log(data)
-
     for (const key of Object.keys(data[0])) {
       if (key !== '_id' && key !== 'id') {
         dataTable[key] = []
@@ -34,7 +30,7 @@ export const DataTable: FunctionComponent<Props> = ({ data, headers }) => {
     }
   }
 
-  //populate dataTable with data
+  //populate dataTable
   for (let i = 0; i < data.length; i++) {
     console.log('data[i]', data[i])
     for (const [dataKey, val] of Object.entries(data[i])) {

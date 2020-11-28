@@ -6,7 +6,7 @@ import {
 } from './actionTypes'
 
 //had issues setting baseURL, will try something different later
-
+//304 not modified every fkn time
 export const fetchWorkouts = (token) => ({
   type: FETCH_WORKOUTS,
   // headers: { 'x-access-token': token },

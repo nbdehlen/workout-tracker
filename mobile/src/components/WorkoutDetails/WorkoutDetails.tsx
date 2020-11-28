@@ -99,31 +99,33 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
           <Text>End: {format(new Date(workout.end), 'HH:mm do MMM yy')}</Text>
         </View>
       </FlexRow>
-
+      {/* Dropdown for all exercise details like Barbell row ^ */}
+      <Spacer h={16} />
       <View>
         {workout.exercises
           ? workout.exercises.map((exercise, i) => (
               <View key={exercise + String(i)}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                  {ucFirst(exercise.tool)} {exercise.name}
-                </Text>
-                <Text> {exercise.exerciseType} </Text>
+                <FlexRow>
+                  <FlexCol>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                      {ucFirst(exercise.tool)} {exercise.name}
+                    </Text>
+                  </FlexCol>
+                  <FlexCol>
+                    <Text> Focus: {ucFirst(exercise.exerciseType)} </Text>
+                  </FlexCol>
+                </FlexRow>
                 {/* <Text> {exercise.compound} </Text> */}
-                <Text> {exercise.duration} </Text>
-                <Text> {exercise.mainMuscle} </Text>
-                <Text> {exercise.secondaryMuscles} </Text>
-
+                <FlexRow>
+                  <Text> {exercise.duration} </Text>
+                  <Text>{ucFirst(exercise.mainMuscle)}</Text>
+                  {exercise.secondaryMuscles.map((muscle) => (
+                    <Text> {ucFirst(muscle)}</Text>
+                  ))}
+                </FlexRow>
                 <FlexRow>
                   <DataTable data={exercise.sets} />
                 </FlexRow>
-                {/* {exercise.sets.map((set, y) => (
-                  <View key={set + String(y)}>
-                    <Text> {set.weight} </Text>
-                    <Text> {set.reps} </Text>
-                    <Text> {set.rest} </Text>
-                    <Text> {set.time} </Text>
-                  </View>
-                ))} */}
                 <Text> {exercise.unilateral} </Text>
                 <Text> {exercise.calories} </Text>
               </View>

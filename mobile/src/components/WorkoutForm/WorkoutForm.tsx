@@ -24,7 +24,11 @@ import * as SS from './styled'
 import { Picker } from '@react-native-community/picker'
 import { v4 as uuidv4 } from 'uuid'
 import { EDIT_WORKOUT } from '../../redux/requests/actionTypes'
-import { editWorkout, postNewWorkout } from '../../redux/requests/actions'
+import {
+  editWorkout,
+  fetchWorkouts,
+  postNewWorkout,
+} from '../../redux/requests/actions'
 
 type OwnProps = {
   workout: CompleteWorkout
@@ -236,11 +240,12 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
       })),
     }
     // console.log('secondaryMuscles', secondaryMuscles, secondaryMuscles.length)
-    console.log('fullworkout etc', fullWorkout.exercises[0].mainMuscle)
+    // console.log('fullworkout etc', fullWorkout.exercises[0].mainMuscle)
     console.log(fullWorkout)
     isEdit
       ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
       : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
+    // dispatch(fetchWorkouts(user.xAccessToken))
   }
 
   return (
