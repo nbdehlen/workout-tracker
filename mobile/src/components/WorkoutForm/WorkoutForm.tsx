@@ -7,28 +7,26 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Switch,
+  Platform,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  workoutTemplate,
-  exercisesTemplate,
   bodyParts,
   populateSecondaryMuscles,
   emptyExercise,
   emptySet,
   populateMainMuscle,
 } from '../../api/helpers'
-import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik'
 import * as S from '../../util/theme/base'
-import * as SS from './styled'
 import { Picker } from '@react-native-community/picker'
-import { v4 as uuidv4 } from 'uuid'
-import { EDIT_WORKOUT } from '../../redux/requests/actionTypes'
 import {
   editWorkout,
   fetchWorkouts,
   postNewWorkout,
 } from '../../redux/requests/actions'
+import DatePicker from 'react-native-date-picker'
+import { format } from 'date-fns'
+// import DateTimePicker from '@react-native-community/datetimepicker'
 
 type OwnProps = {
   workout: CompleteWorkout
@@ -39,13 +37,12 @@ type Props = OwnProps
 type MainMuscle = String[]
 
 export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
-  console.log('workout', workout)
+  // console.log('workout', workout)
   const navigation = useNavigation()
   const route = useRoute()
   const dispatch = useDispatch()
-  // const workout: WorkoutData = route.params
   const user = useSelector((state) => state.user)
-  console.log('user', user)
+  // console.log('user', user)
   const [postWorkout, setPostWorkout] = useState<CompleteWorkout>({
     _id: workout._id,
     type: workout.type,
@@ -75,6 +72,14 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     setPostWorkout({
       ...postWorkout,
       [name]: e.nativeEvent.text,
+    })
+  }
+
+  const handlePostWorkoutDate = (date, key) => {
+    console.log(date)
+    setPostWorkout({
+      ...postWorkout,
+      [key]: date,
     })
   }
 
@@ -121,7 +126,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         ...exercises.slice(i + 1, exercises.length),
       ],
     })
-    // postExercises.exercises[i].sets.push(emptySet)
     console.log(exercises[i].sets)
   }
 
@@ -255,6 +259,16 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     dispatch(fetchWorkouts(user.xAccessToken))
   }
 
+  const [showStart, setShowStart] = useState(false)
+  const [showEnd, setShowEnd] = useState(false)
+  // const [date, setDate] = useState(new Date(Date.now()))
+
+  // const onChangeDatePicker = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date
+  //   setShowStart(Platform.OS === 'ios')
+  //   setDate(currentDate)
+  // }
+
   return (
     <KeyboardAvoidingView>
       <ScrollView>
@@ -276,20 +290,78 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           />
         </S.FlexCol>
         <S.FlexCol>
-          <Text> Start </Text>
-          <S.TextInput
+          <TouchableOpacity onPress={() => setShowStart(!showStart)}>
+            <Text>
+              Start:{' '}
+              {postWorkout.start
+                ? format(
+                    new Date(new Date(postWorkout.start)),
+                    'HH:mm do MMM yy'
+                  )
+                : format(new Date(Date.now()), 'HH:mm do MMM yy')}
+            </Text>
+          </TouchableOpacity>
+
+          {/*
+          {show && (
+            <>
+              <Text>Im shown!</Text>
+              <DateTimePicker
+                value={date}
+                mode="time"
+                onChange={onChangeDatePicker}
+                is24Hour={true}
+                display="clock"
+              />
+            </>
+          )} */}
+          {showStart && (
+            <DatePicker
+              mode="datetime"
+              date={
+                postWorkout?.start
+                  ? new Date(postWorkout.start)
+                  : new Date(Date.now())
+              }
+              onDateChange={(date) => handlePostWorkoutDate(date, 'start')}
+            />
+          )}
+          {/*
+            <S.TextInput
             value={postWorkout.start}
             name="start"
             onChange={(e) => handlePostWorkout(e, 'start')}
-          />
+          /> */}
         </S.FlexCol>
         <S.FlexCol>
-          <Text> End </Text>
+          {/* <Text> End </Text>
           <S.TextInput
             value={postWorkout.end}
             name="end"
             onChange={(e) => handlePostWorkout(e, 'end')}
-          />
+          /> */}
+          <TouchableOpacity onPress={() => setShowEnd(!showEnd)}>
+            <Text>
+              End:{' '}
+              {postWorkout.end
+                ? format(new Date(new Date(postWorkout.end)), 'HH:mm do MMM yy')
+                : format(
+                    new Date(Date.now() + 60 * 60 * 1000),
+                    'HH:mm do MMM yy'
+                  )}
+            </Text>
+          </TouchableOpacity>
+          {showEnd && (
+            <DatePicker
+              mode="datetime"
+              date={
+                postWorkout?.end
+                  ? new Date(postWorkout.end)
+                  : new Date(Date.now())
+              }
+              onDateChange={(date) => handlePostWorkoutDate(date, 'end')}
+            />
+          )}
         </S.FlexCol>
         {/* </S.ContainerRow> */}
         <View>

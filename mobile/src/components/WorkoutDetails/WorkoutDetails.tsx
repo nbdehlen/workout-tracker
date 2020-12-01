@@ -1,21 +1,12 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 import { useRoute } from '@react-navigation/native'
-import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Button,
-  View,
-  Switch,
-  Modal,
-} from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { deleteWorkout } from '../../redux/requests/actions'
 import { FlexCol, FlexRow, Spacer } from '../../util/theme/base'
-import { differenceInMinutes, format, isValid, parseISO } from 'date-fns'
+import { differenceInMinutes, format, isValid } from 'date-fns'
 import { ucFirst } from '../../util/helpers'
 import DataTable from './DataTable'
 
@@ -31,14 +22,9 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   const workout: CompleteWorkout = route.params
   const [modalVisible, setModalVisible] = useState(null)
 
-  //add screens and stack for add and edit in stack navigation
-  // or navigate inside workoutDetails?
-
   const handleEditWorkout = () => {
     const isEdit = true
     navigation.navigate('workoutEdit', { workout })
-    // navigate in stack to workout details page
-    console.log(workout)
   }
 
   const handleDeleteWorkout = () => {
@@ -57,8 +43,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
     modalVisible === index ? setModalVisible('') : setModalVisible(index)
   }
 
-  let startDate
-  let endDate
+  let startDate, endDate
   isValid(new Date(workout.start)) && (startDate = new Date(workout.start))
   isValid(new Date(workout.end)) && (endDate = new Date(workout.end))
 
@@ -73,7 +58,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
       </TouchableOpacity>
 
       <FlexRow>
-        {/* style={{ justifyContent: 'center' }} */}
         {workout.type && (
           <FlexRow>
             <Text>Workout type: {ucFirst(workout.type)} </Text>
@@ -120,7 +104,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                   <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
                     {ucFirst(exercise.tool)} {exercise.name}
                   </Text>
-                  {/* <Spacer w={16} /> */}
                   <TouchableOpacity onPress={() => handleModal(i)}>
                     <Text> {modalVisible === i ? 'Close' : 'Details...'} </Text>
                   </TouchableOpacity>
@@ -162,7 +145,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                   {exercise.compound && <Text>Compound movement</Text>}
                   {exercise.unilateral && <Text>Unilateral</Text>}
                   {exercise.calories && (
-                    <Text> Calories burned: {exercise.calories} </Text>
+                    <Text>Calories burned: {exercise.calories} </Text>
                   )}
                   <Spacer h={4} />
                 </FlexCol>
