@@ -26,7 +26,6 @@ import {
 } from '../../redux/requests/actions'
 import DatePicker from 'react-native-date-picker'
 import { format } from 'date-fns'
-// import DateTimePicker from '@react-native-community/datetimepicker'
 
 type OwnProps = {
   workout: CompleteWorkout

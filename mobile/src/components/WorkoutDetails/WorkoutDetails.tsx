@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { useRoute } from '@react-navigation/native'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Keyboard, Modal, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -56,7 +56,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
       <TouchableOpacity onPress={handleDeleteWorkout}>
         <Text>Delete</Text>
       </TouchableOpacity>
-
       <FlexRow>
         {workout.type && (
           <FlexRow>
@@ -104,52 +103,88 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                   <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
                     {ucFirst(exercise.tool)} {exercise.name}
                   </Text>
-                  <TouchableOpacity onPress={() => handleModal(i)}>
-                    <Text> {modalVisible === i ? 'Close' : 'Details...'} </Text>
+                  <Spacer w={8} />
+                  <TouchableOpacity
+                    onPress={() => handleModal(i)}
+                    style={{
+                      // backgroundColor: 'grey',
+                      borderRadius: 8,
+                      borderColor: 'black',
+                      paddingHorizontal: 4,
+                      borderWidth: 1,
+                    }}
+                  >
+                    <Text>details...</Text>
                   </TouchableOpacity>
                 </FlexRow>
 
                 {/* Not sure why && isn't working here */}
               </FlexRow>
-              {i === modalVisible && (
-                <FlexCol style={{ justifyContent: 'flex-start' }}>
-                  <FlexRow>
-                    {exercise.exerciseType ? (
-                      <Text>Focus: {ucFirst(exercise.exerciseType)} </Text>
+              {/* {i === modalVisible && ( */}
+              <Modal visible={i === modalVisible} transparent={true}>
+                <TouchableOpacity
+                  onPress={() => handleModal(i)}
+                  style={{
+                    flex: 1,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(255,255,255,0.6)',
+                  }}
+                >
+                  <View
+                    style={{
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      width: 300,
+                      height: 200,
+                      borderRadius: 8,
+                      padding: 16,
+                      backgroundColor: '#f1eeee',
+                      elevation: 5,
+                    }}
+                  >
+                    <View style={{ flexDirection: 'row' }}>
+                      {exercise.exerciseType ? (
+                        <Text>Focus: {ucFirst(exercise.exerciseType)} </Text>
+                      ) : null}
+                    </View>
+
+                    {exercise.duration ? (
+                      <Text> {exercise.duration} </Text>
                     ) : null}
-                  </FlexRow>
 
-                  {exercise.duration ? (
-                    <Text> {exercise.duration} </Text>
-                  ) : null}
-
-                  <FlexRow>
-                    <Text>Muscles: </Text>
-                    {exercise.mainMuscle ? (
-                      <Text>
-                        {ucFirst(exercise.mainMuscle)}
-                        {exercise.secondaryMuscles && ','}
-                      </Text>
-                    ) : null}
-
-                    {exercise.secondaryMuscles &&
-                      exercise.secondaryMuscles.map((muscle, y) => (
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text>Muscles: </Text>
+                      {exercise.mainMuscle ? (
                         <Text>
-                          {' '}
-                          {ucFirst(muscle)}
-                          {exercise.secondaryMuscles.length - 1 > y ? ',' : '.'}
+                          {ucFirst(exercise.mainMuscle)}
+                          {exercise.secondaryMuscles && ','}
                         </Text>
-                      ))}
-                  </FlexRow>
+                      ) : null}
 
-                  {exercise.compound && <Text>Compound movement</Text>}
-                  {exercise.unilateral && <Text>Unilateral</Text>}
-                  {exercise.calories && (
-                    <Text>Calories burned: {exercise.calories} </Text>
-                  )}
-                  <Spacer h={4} />
-                </FlexCol>
-              )}
+                      {exercise.secondaryMuscles &&
+                        exercise.secondaryMuscles.map((muscle, y) => (
+                          <Text>
+                            {' '}
+                            {ucFirst(muscle)}
+                            {exercise.secondaryMuscles.length - 1 > y
+                              ? ','
+                              : '.'}
+                          </Text>
+                        ))}
+                    </View>
+
+                    {exercise.compound && <Text>Compound movement</Text>}
+                    {exercise.unilateral && <Text>Unilateral</Text>}
+                    {exercise.calories && (
+                      <Text>Calories burned: {exercise.calories} </Text>
+                    )}
+                    <Spacer h={4} />
+                  </View>
+                </TouchableOpacity>
+              </Modal>
+              {/* )} */}
               <FlexRow>
                 <DataTable data={exercise.sets} />
               </FlexRow>
