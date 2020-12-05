@@ -1,11 +1,11 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
-import { Keyboard, Modal, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { deleteWorkout } from '../../redux/requests/actions'
-import { FlexCol, FlexRow, Spacer } from '../../util/theme/base'
+import { FlexRow, Spacer } from '../../util/theme/base'
 import { differenceInMinutes, format, isValid } from 'date-fns'
 import { ucFirst } from '../../util/helpers'
 import DataTable from './DataTable'
@@ -107,7 +107,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                   <TouchableOpacity
                     onPress={() => handleModal(i)}
                     style={{
-                      // backgroundColor: 'grey',
                       borderRadius: 8,
                       borderColor: 'black',
                       paddingHorizontal: 4,
@@ -121,7 +120,11 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                 {/* Not sure why && isn't working here */}
               </FlexRow>
               {/* {i === modalVisible && ( */}
-              <Modal visible={i === modalVisible} transparent={true}>
+              <Modal
+                visible={i === modalVisible}
+                transparent={true}
+                animationType="slide"
+              >
                 <TouchableOpacity
                   onPress={() => handleModal(i)}
                   style={{
@@ -144,26 +147,32 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                       elevation: 5,
                     }}
                   >
-                    <View style={{ flexDirection: 'row' }}>
-                      {exercise.exerciseType ? (
+                    {exercise.exerciseType ? (
+                      <View style={{ flexDirection: 'row' }}>
                         <Text>Focus: {ucFirst(exercise.exerciseType)} </Text>
-                      ) : null}
-                    </View>
-
-                    {exercise.duration ? (
-                      <Text> {exercise.duration} </Text>
+                      </View>
                     ) : null}
 
+                    {exercise.duration ? (
+                      <Text>Duration: {exercise.duration} min</Text>
+                    ) : null}
+
+                    {exercise.calories ? (
+                      <Text>Calories burned: {exercise.calories} </Text>
+                    ) : null}
                     <View style={{ flexDirection: 'row' }}>
-                      <Text>Muscles: </Text>
-                      {exercise.mainMuscle ? (
+                      {(exercise.secondaryMuscles[0].length > 0 ||
+                        exercise.mainMuscle.length > 0) && (
+                        <Text>Muscles: </Text>
+                      )}
+                      {exercise.mainMuscle.length > 0 ? (
                         <Text>
                           {ucFirst(exercise.mainMuscle)}
                           {exercise.secondaryMuscles && ','}
                         </Text>
                       ) : null}
 
-                      {exercise.secondaryMuscles &&
+                      {exercise.secondaryMuscles[0].length > 0 &&
                         exercise.secondaryMuscles.map((muscle, y) => (
                           <Text>
                             {' '}
@@ -176,11 +185,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                     </View>
 
                     {exercise.compound && <Text>Compound movement</Text>}
-                    {exercise.unilateral && <Text>Unilateral</Text>}
-                    {exercise.calories && (
-                      <Text>Calories burned: {exercise.calories} </Text>
-                    )}
-                    <Spacer h={4} />
+                    {exercise.unilateral && <Text>Unilateral movement</Text>}
                   </View>
                 </TouchableOpacity>
               </Modal>
