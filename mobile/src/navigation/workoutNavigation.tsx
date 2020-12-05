@@ -2,8 +2,6 @@ import React, { FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import WorkoutsScreen from '../screens/WorkoutsScreen'
 import WorkoutDetails from '../components/WorkoutDetails'
-import WorkoutEdit from '../components/WorkoutEdit'
-import WorkoutForm from '../components/WorkoutForm/WorkoutForm'
 import WorkoutAddScreen from '../screens/WorkoutAddScreen'
 import WorkoutEditScreen from '../screens/WorkoutEditScreen'
 

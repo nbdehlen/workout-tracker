@@ -147,6 +147,9 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                       elevation: 5,
                     }}
                   >
+                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+                      {ucFirst(exercise.tool)} {exercise.name} details
+                    </Text>
                     {exercise.exerciseType ? (
                       <View style={{ flexDirection: 'row' }}>
                         <Text>Focus: {ucFirst(exercise.exerciseType)} </Text>
