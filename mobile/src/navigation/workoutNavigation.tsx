@@ -17,22 +17,22 @@ export const WorkoutNavigation: FunctionComponent<Props> = () => {
       <Stack.Screen
         name="workout"
         component={WorkoutsScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Workout log' }}
       />
       <Stack.Screen
         name="workoutDetails"
         component={WorkoutDetails}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Workout details' }}
       />
       <Stack.Screen
         name="workoutEdit"
         component={WorkoutEditScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Edit workout' }}
       />
       <Stack.Screen
         name="workoutAdd"
         component={WorkoutAddScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Add workout' }}
       />
     </Stack.Navigator>
   )

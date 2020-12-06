@@ -27,10 +27,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
     navigation.navigate('workoutEdit', { workout })
   }
 
-  const handleDeleteWorkout = () => {
-    dispatch(deleteWorkout(workout._id, user.xAccessToken))
-  }
-
   const calculcateTotalSets = () => {
     let count = 0
     workout.exercises.forEach((exercise) => {
@@ -53,9 +49,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
         <Text>EDIT</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleDeleteWorkout}>
-        <Text>Delete</Text>
-      </TouchableOpacity>
       <FlexRow>
         {workout.type && (
           <FlexRow>
@@ -192,7 +185,6 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
                   </View>
                 </TouchableOpacity>
               </Modal>
-              {/* )} */}
               <FlexRow>
                 <DataTable data={exercise.sets} />
               </FlexRow>

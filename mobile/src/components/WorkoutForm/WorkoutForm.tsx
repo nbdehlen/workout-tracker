@@ -434,13 +434,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                   }
                 >
                   {bodyParts.map((muscle) =>
-                    // console.log('secondaryMuscles[i]', secondaryMuscles[i]),
-                    // console.log(
-                    //   'secondaryMuscles[i].length',
-                    //   secondaryMuscles[i].length
-                    // ),
-                    // console.log(typeof secondaryMuscles[i]),
-                    // console.log(secondaryMuscles),
                     secondaryMuscles[i] &&
                     secondaryMuscles[i].includes(muscle) ? (
                       <Item
