@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useLayoutEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import { Modal, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -16,14 +16,12 @@ type Props = OwnProps
 export const WorkoutDetails: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const route = useRoute()
-  const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   console.log('route.params', route.params)
   const workout: CompleteWorkout = route.params
   const [modalVisible, setModalVisible] = useState(null)
 
   const handleEditWorkout = () => {
-    const isEdit = true
     navigation.navigate('workoutEdit', { workout })
   }
 
@@ -43,12 +41,18 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   isValid(new Date(workout.start)) && (startDate = new Date(workout.start))
   isValid(new Date(workout.end)) && (endDate = new Date(workout.end))
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleEditWorkout}>
+          <Text>EDIT</Text>
+        </TouchableOpacity>
+      ),
+    })
+  }, [navigation])
+
   return (
     <ScrollView>
-      <TouchableOpacity onPress={handleEditWorkout}>
-        <Text>EDIT</Text>
-      </TouchableOpacity>
-
       <FlexRow>
         {workout.type && (
           <FlexRow>

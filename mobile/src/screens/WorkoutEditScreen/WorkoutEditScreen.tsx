@@ -19,15 +19,15 @@ const WorkoutEditScreen: FunctionComponent<Props> = () => {
   const { workout } = route.params
   console.log('route.params editScreen', route.params)
 
+  const handleDeleteWorkout = () => {
+    dispatch(deleteWorkout(workout._id, user.xAccessToken))
+    navigation.navigate('workout')
+  }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {
-            dispatch(deleteWorkout(workout._id, user.xAccessToken))
-            navigation.navigate('workout')
-          }}
-        >
+        <TouchableOpacity onPress={handleDeleteWorkout}>
           <Text>Delete</Text>
         </TouchableOpacity>
       ),
