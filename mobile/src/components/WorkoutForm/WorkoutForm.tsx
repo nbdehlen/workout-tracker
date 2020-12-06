@@ -1,4 +1,9 @@
-import React, { FunctionComponent, ReactText, useState } from 'react'
+import React, {
+  FunctionComponent,
+  ReactText,
+  useLayoutEffect,
+  useState,
+} from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import {
   Text,
@@ -8,6 +13,7 @@ import {
   ScrollView,
   Switch,
   Platform,
+  Alert,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -20,6 +26,7 @@ import {
 import * as S from '../../util/theme/base'
 import { Picker } from '@react-native-community/picker'
 import {
+  deleteWorkout,
   editWorkout,
   fetchWorkouts,
   postNewWorkout,
@@ -36,12 +43,10 @@ type Props = OwnProps
 type MainMuscle = String[]
 
 export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
-  // console.log('workout', workout)
   const navigation = useNavigation()
   const route = useRoute()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
-  // console.log('user', user)
   const [postWorkout, setPostWorkout] = useState<CompleteWorkout>({
     _id: workout._id,
     type: workout.type,
@@ -61,13 +66,47 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     populateSecondaryMuscles(workout.exercises)
   )
 
+  const handleDeleteWorkout = () => {
+    Alert.alert(
+      'Delete workout',
+      'Are you sure you want to delete the workout?',
+      [
+        {
+          text: 'Delete workout',
+          onPress: () => {
+            dispatch(deleteWorkout(workout._id, user.xAccessToken))
+            navigation.navigate('workout')
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ]
+    )
+  }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity onPress={submitForm}>
+            <Text>SAVE</Text>
+          </TouchableOpacity>
+          <S.Spacer w={24} />
+          <TouchableOpacity onPress={handleDeleteWorkout}>
+            <Text>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    })
+  }, [navigation])
+
   const { exercises } = postExercises
 
   const Item = Picker.Item as any
 
   const handlePostWorkout = (e, name: string) => {
-    console.log(name)
-    console.log(e?.nativeEvent?.text)
+    console.log(name, e?.nativeEvent?.text)
     setPostWorkout({
       ...postWorkout,
       [name]: e.nativeEvent.text,
@@ -207,6 +246,14 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     }
   }
 
+  const handleWorkoutGrade = (grade) => {
+    console.log('grade', grade)
+    setPostWorkout({
+      ...postWorkout,
+      grade: String(grade),
+    })
+  }
+
   const submitForm = () => {
     const { _id, end, grade, start, type } = postWorkout
 
@@ -260,18 +307,10 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
 
   const [showStart, setShowStart] = useState(false)
   const [showEnd, setShowEnd] = useState(false)
-  // const [date, setDate] = useState(new Date(Date.now()))
-
-  // const onChangeDatePicker = (event, selectedDate) => {
-  //   const currentDate = selectedDate || date
-  //   setShowStart(Platform.OS === 'ios')
-  //   setDate(currentDate)
-  // }
 
   return (
     <KeyboardAvoidingView>
       <ScrollView>
-        {/* <S.ContainerRow> */}
         <S.FlexCol>
           <Text> Workout type </Text>
           <S.TextInput
@@ -282,11 +321,29 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         </S.FlexCol>
         <S.FlexCol>
           <Text> Grade </Text>
-          <S.TextInput
+          {/* <S.TextInput
             value={String(postWorkout.grade)}
             name="grade"
             onChange={(e) => handlePostWorkout(e, 'grade')}
-          />
+          /> */}
+
+          <Picker
+            selectedValue={postWorkout?.grade || '5'}
+            style={{ height: 50, width: 120 }}
+            onValueChange={handleWorkoutGrade}
+            // mode="dropdown"
+          >
+            {['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].map(
+              (grade) => (
+                <Item
+                  label={grade + '/10'}
+                  value={grade}
+                  key={JSON.stringify(grade + 'grade')}
+                  color="black"
+                />
+              )
+            )}
+          </Picker>
         </S.FlexCol>
         <S.FlexCol>
           <TouchableOpacity onPress={() => setShowStart(!showStart)}>
@@ -317,28 +374,24 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           {showStart && (
             <DatePicker
               mode="datetime"
+              minimumDate={new Date(Date.now() - 60 * 60 * 1000 * 24 * 365)}
+              maximumDate={new Date(Date.now() + 60 * 60 * 1000 * 24 * 7)}
               date={
                 postWorkout?.start
                   ? new Date(postWorkout.start)
                   : new Date(Date.now())
               }
+              // date={new Date(postWorkout.start)}
               onDateChange={(date) => handlePostWorkoutDate(date, 'start')}
             />
           )}
-          {/*
-            <S.TextInput
-            value={postWorkout.start}
-            name="start"
-            onChange={(e) => handlePostWorkout(e, 'start')}
-          /> */}
+          {console.log(
+            'postWorkout.start',
+            postWorkout.start,
+            new Date(Date.now())
+          )}
         </S.FlexCol>
         <S.FlexCol>
-          {/* <Text> End </Text>
-          <S.TextInput
-            value={postWorkout.end}
-            name="end"
-            onChange={(e) => handlePostWorkout(e, 'end')}
-          /> */}
           <TouchableOpacity onPress={() => setShowEnd(!showEnd)}>
             <Text>
               End:{' '}
@@ -353,6 +406,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           {showEnd && (
             <DatePicker
               mode="datetime"
+              minimumDate={new Date(Date.now() - 60 * 60 * 1000 * 24 * 365)}
+              maximumDate={new Date(Date.now() + 60 * 60 * 1000 * 24 * 7)}
               date={
                 postWorkout?.end
                   ? new Date(postWorkout.end)
@@ -362,7 +417,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
             />
           )}
         </S.FlexCol>
-        {/* </S.ContainerRow> */}
         <View>
           {exercises.map((exercise, i) => (
             <View key={'exercise' + i}>
@@ -544,9 +598,9 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={submitForm}>
+        {/* <TouchableOpacity onPress={submitForm}>
           <Text> Print complete form </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={{ height: 20 }} />
       </ScrollView>
     </KeyboardAvoidingView>
