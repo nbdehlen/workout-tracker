@@ -15,14 +15,13 @@ export const LoginNavigation: FunctionComponent<Props> = () => {
       <Stack.Screen
         name="login"
         component={LoginScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Login' }}
       />
       <Stack.Screen
         name="signup"
         component={SignupScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Signup' }}
       />
-      {/* <Stack.Screen name="signup" component={SignupScreen} options={{headerShown: true}} /> */}
     </Stack.Navigator>
   )
 }

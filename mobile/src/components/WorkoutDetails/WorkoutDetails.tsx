@@ -174,13 +174,15 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
 
                       {exercise.secondaryMuscles[0].length > 0 &&
                         exercise.secondaryMuscles.map((muscle, y) => (
-                          <Text>
-                            {' '}
-                            {ucFirst(muscle)}
-                            {exercise.secondaryMuscles.length - 1 > y
-                              ? ','
-                              : '.'}
-                          </Text>
+                          <View key={JSON.stringify(muscle + String(y))}>
+                            <Text>
+                              {' '}
+                              {ucFirst(muscle)}
+                              {exercise.secondaryMuscles.length - 1 > y
+                                ? ','
+                                : '.'}
+                            </Text>
+                          </View>
                         ))}
                     </View>
 

@@ -303,6 +303,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
       ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
       : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
     dispatch(fetchWorkouts(user.xAccessToken))
+    navigation.navigate('workout')
   }
 
   const [showStart, setShowStart] = useState(false)
@@ -321,11 +322,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         </S.FlexCol>
         <S.FlexCol>
           <Text> Grade </Text>
-          {/* <S.TextInput
-            value={String(postWorkout.grade)}
-            name="grade"
-            onChange={(e) => handlePostWorkout(e, 'grade')}
-          /> */}
 
           <Picker
             selectedValue={postWorkout?.grade || '5'}
@@ -358,19 +354,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
             </Text>
           </TouchableOpacity>
 
-          {/*
-          {show && (
-            <>
-              <Text>Im shown!</Text>
-              <DateTimePicker
-                value={date}
-                mode="time"
-                onChange={onChangeDatePicker}
-                is24Hour={true}
-                display="clock"
-              />
-            </>
-          )} */}
           {showStart && (
             <DatePicker
               mode="datetime"
@@ -597,11 +580,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
             <Text> Add Exercise </Text>
           </TouchableOpacity>
         </View>
-
-        {/* <TouchableOpacity onPress={submitForm}>
-          <Text> Print complete form </Text>
-        </TouchableOpacity> */}
-        <View style={{ height: 20 }} />
       </ScrollView>
     </KeyboardAvoidingView>
   )
