@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ucFirst } from '../../util/helpers'
 import { differenceInMinutes, format, isValid } from 'date-fns'
-
+import { ScreenRoute } from '../../navigation/navigationConstants'
 type OwnProps = {
   workouts: CompleteWorkout[]
 }
@@ -14,7 +14,7 @@ export const WorkoutsList: FunctionComponent<Props> = ({ workouts }) => {
   const navigation = useNavigation()
 
   const workoutDetails = (workout: CompleteWorkout) => {
-    navigation.navigate('workoutDetails', workout)
+    navigation.navigate(ScreenRoute.WORKOUT_DETAILS, workout)
   }
 
   return (

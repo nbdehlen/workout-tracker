@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from '../screens/SignupScreen'
+import { ScreenRoute } from './navigationConstants'
 
 type OwnProps = {}
 
@@ -13,12 +14,12 @@ export const LoginNavigation: FunctionComponent<Props> = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
       <Stack.Screen
-        name="login"
+        name={ScreenRoute.LOGIN}
         component={LoginScreen}
         options={{ headerShown: true, title: 'Login' }}
       />
       <Stack.Screen
-        name="signup"
+        name={ScreenRoute.SIGNUP}
         component={SignupScreen}
         options={{ headerShown: true, title: 'Signup' }}
       />
