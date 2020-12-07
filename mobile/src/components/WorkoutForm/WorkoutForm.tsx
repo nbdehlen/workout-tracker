@@ -33,6 +33,7 @@ import {
 } from '../../redux/requests/actions'
 import DatePicker from 'react-native-date-picker'
 import { format } from 'date-fns'
+import { Icons } from '../../assets'
 
 type OwnProps = {
   workout: CompleteWorkout
@@ -80,7 +81,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         },
         {
           text: 'Cancel',
-          style: 'cancel',
+          // style: 'cancel',
         },
       ]
     )
@@ -94,7 +95,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           </TouchableOpacity>
           <S.Spacer w={24} />
           <TouchableOpacity onPress={handleDeleteWorkout}>
-            <Text>Delete</Text>
+            {/* <Text>Delete</Text> */}
+            <Icons.TrashCan fill="grey" />
           </TouchableOpacity>
         </View>
       ),
