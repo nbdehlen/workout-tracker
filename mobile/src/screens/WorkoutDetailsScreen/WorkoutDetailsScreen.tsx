@@ -2,18 +2,18 @@ import React, { FunctionComponent, useLayoutEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import { Modal, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
-import { deleteWorkout } from '../../redux/requests/actions'
 import { FlexRow, Spacer } from '../../util/theme/base'
 import { differenceInMinutes, format, isValid } from 'date-fns'
 import { ucFirst } from '../../util/helpers'
-import DataTable from './DataTable'
+import { ScreenRoute } from '../../navigation/navigationConstants'
+import DataTable from '../../components/DataTable'
 
 type OwnProps = CompleteWorkout
 type Props = OwnProps
 
-export const WorkoutDetails: FunctionComponent<Props> = () => {
+export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const user = useSelector((state) => state.user)
@@ -22,7 +22,7 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   const [modalVisible, setModalVisible] = useState(null)
 
   const handleEditWorkout = () => {
-    navigation.navigate('workoutEdit', { workout })
+    navigation.navigate(ScreenRoute.EDIT_WORKOUT, { workout })
   }
 
   const calculcateTotalSets = () => {
@@ -202,4 +202,4 @@ export const WorkoutDetails: FunctionComponent<Props> = () => {
   )
 }
 
-export default WorkoutDetails
+export default WorkoutDetailsScreen

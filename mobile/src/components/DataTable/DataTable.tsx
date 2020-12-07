@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { Text, View } from 'react-native'
-import { ucFirst } from '../../../util/helpers'
-import { FlexCol, FlexRow } from '../../../util/theme/base'
+import { ucFirst } from '../../util/helpers'
+import { FlexCol, FlexRow } from '../../util/theme/base'
 import * as S from './styled'
 
 type OwnProps = {
