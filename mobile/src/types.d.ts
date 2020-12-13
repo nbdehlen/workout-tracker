@@ -1,7 +1,7 @@
 type CompleteWorkout = {
   _id?: string
-  type: string
-  start: string
+  type?: string
+  start?: string
   grade?: string
   exercises?: Exercise[]
   end?: string

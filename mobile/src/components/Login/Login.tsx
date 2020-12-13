@@ -16,7 +16,6 @@ export const Login: FunctionComponent<Props> = () => {
   const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  // const user = useSelector((state) => state.user)
   const navigation = useNavigation()
 
   const bypassLogin = () => {
@@ -27,7 +26,6 @@ export const Login: FunctionComponent<Props> = () => {
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        // 'http://localhost:5000/api/v1/auth/login',
         'http://10.0.2.2:5000/api/v1/auth/login',
         {
           username,
@@ -54,7 +52,7 @@ export const Login: FunctionComponent<Props> = () => {
       <Text> Username </Text>
       <TextInput value={username} onChangeText={setUsername} />
       <Text> Password </Text>
-      <TextInput value={password} onChangeText={setPassword} />
+      <TextInput value={password} onChangeText={setPassword} secureTextEntry />
 
       <TouchableOpacity onPress={postSubmit} onLongPress={bypassLogin}>
         <Text>Login</Text>
