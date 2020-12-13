@@ -1,15 +1,9 @@
-// import { useNavigation } from '@react-navigation/native'
-import React, { FunctionComponent, useState, useEffect } from 'react'
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Button,
-  GestureResponderEvent,
-} from 'react-native'
+import React, { FunctionComponent } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-
+import { ucFirst } from '../../util/helpers'
+import { differenceInMinutes, format, isValid } from 'date-fns'
+import { ScreenRoute } from '../../navigation/navigationConstants'
 type OwnProps = {
   workouts: CompleteWorkout[]
 }
@@ -18,12 +12,9 @@ type Props = OwnProps
 
 export const WorkoutsList: FunctionComponent<Props> = ({ workouts }) => {
   const navigation = useNavigation()
-  console.log('workouts', workouts)
 
   const workoutDetails = (workout: CompleteWorkout) => {
-    navigation.navigate('workoutDetails', workout)
-    // navigate in stack to workout details page
-    console.log(workout)
+    navigation.navigate(ScreenRoute.WORKOUT_DETAILS, workout)
   }
 
   return (
@@ -34,20 +25,27 @@ export const WorkoutsList: FunctionComponent<Props> = ({ workouts }) => {
           style={{ flex: 1, flexDirection: 'row' }}
           onPress={() => workoutDetails(workout)}
         >
+          {isValid(new Date(workout.start)) && (
+            <View>
+              <Text>{format(new Date(workout.start), 'do MMM')} </Text>
+            </View>
+          )}
+
           <View>
-            <Text> {workout.type} </Text>
-          </View>
-          <View>
-            <Text> {workout.start} </Text>
-          </View>
-          {/* use moment or something to display it nicely */}
-          <View>
-            <Text> {workout.end ? 'calc length of workout' : 'na'} </Text>
+            <Text>{ucFirst(workout.type)} </Text>
           </View>
 
-          {/* {entry.exercises
-            ? entry.exercises.map((exercise) => <Text> {exercise} </Text>)
-            : null} */}
+          {isValid(new Date(workout.end)) && isValid(new Date(workout.start)) && (
+            <View>
+              <Text>
+                {differenceInMinutes(
+                  new Date(workout.end),
+                  new Date(workout.start)
+                )}
+                min
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
       ))}
     </View>

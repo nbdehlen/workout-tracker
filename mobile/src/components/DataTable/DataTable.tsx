@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { Text, View } from 'react-native'
-import { ucFirst } from '../../../util/helpers'
-import { FlexCol, FlexRow } from '../../../util/theme/base'
+import { ucFirst } from '../../util/helpers'
+import { FlexCol, FlexRow } from '../../util/theme/base'
 import * as S from './styled'
 
 type OwnProps = {
@@ -51,9 +51,9 @@ export const DataTable: FunctionComponent<Props> = ({ data, headers }) => {
               <Text>{ucFirst(arr[0])}</Text>
             </View>
             <FlexCol>
-              {arr[1].map((val) => {
+              {arr[1].map((val, index) => {
                 return (
-                  <FlexRow key={String(arr)}>
+                  <FlexRow key={index}>
                     <Text>{val}</Text>
                   </FlexRow>
                 )

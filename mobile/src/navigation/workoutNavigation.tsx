@@ -1,12 +1,10 @@
 import React, { FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import WorkoutsScreen from '../screens/WorkoutsScreen'
-import WorkoutDetails from '../components/WorkoutDetails'
-import WorkoutEdit from '../components/WorkoutEdit'
-import WorkoutForm from '../components/WorkoutForm/WorkoutForm'
 import WorkoutAddScreen from '../screens/WorkoutAddScreen'
 import WorkoutEditScreen from '../screens/WorkoutEditScreen'
-
+import WorkoutDetailsScreen from '../screens/WorkoutDetailsScreen'
+import { ScreenRoute } from './navigationConstants'
 type OwnProps = {}
 
 type Props = OwnProps
@@ -17,24 +15,24 @@ export const WorkoutNavigation: FunctionComponent<Props> = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
       <Stack.Screen
-        name="workout"
+        name={ScreenRoute.WORKOUTS}
         component={WorkoutsScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Workout log' }}
       />
       <Stack.Screen
-        name="workoutDetails"
-        component={WorkoutDetails}
-        options={{ headerShown: true }}
+        name={ScreenRoute.WORKOUT_DETAILS}
+        component={WorkoutDetailsScreen}
+        options={{ headerShown: true, title: 'Workout details' }}
       />
       <Stack.Screen
-        name="workoutEdit"
+        name={ScreenRoute.EDIT_WORKOUT}
         component={WorkoutEditScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Edit workout' }}
       />
       <Stack.Screen
-        name="workoutAdd"
+        name={ScreenRoute.ADD_WORKOUT}
         component={WorkoutAddScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Add workout' }}
       />
     </Stack.Navigator>
   )

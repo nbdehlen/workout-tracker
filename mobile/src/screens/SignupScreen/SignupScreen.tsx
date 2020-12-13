@@ -6,7 +6,6 @@ import axios from 'axios'
 import * as S from './styled'
 import { saveData } from '../../util/asyncStorage'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { Navigation } from '../../navigation/Navigation'
 
 type OwnProps = {}
 
@@ -19,17 +18,10 @@ export const SignupScreen: FunctionComponent<Props> = () => {
   const [password, setPassword] = useState('')
   const route = useRoute()
   const navigation = useNavigation()
-  // const user = useSelector((state) => state.user)
-
-  // const bypassLogin = () => {
-  //   setUsername('Sergej')
-  //   setPassword('12345678')
-  // }
 
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        // 'http://localhost:5000/api/v1/auth/login',
         'http://10.0.2.2:5000/api/v1/auth/signup',
         {
           email,
@@ -57,7 +49,7 @@ export const SignupScreen: FunctionComponent<Props> = () => {
       <Text> Username </Text>
       <TextInput value={username} onChangeText={setUsername} />
       <Text> Password </Text>
-      <TextInput value={password} onChangeText={setPassword} />
+      <TextInput value={password} onChangeText={setPassword} secureTextEntry />
 
       <TouchableOpacity onPress={postSubmit}>
         <Text>Signup</Text>
