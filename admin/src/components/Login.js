@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Input, Label } from '../styles/input';
-import { BtnTiny } from '../styles/btn';
-import axios from 'axios';
-import { login } from '../redux/auth/action';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Input, Label } from "../styles/input";
+import { BtnTiny } from "../styles/btn";
+import axios from "axios";
+import { login } from "../redux/auth/action";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   // if user return you're already logged in. Do you want to logout? <box to logout>
   const userHandler = (e) => {
@@ -23,21 +23,16 @@ const Login = () => {
   const postSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const id = Math.random();
-      // const title = post;
-      // const isEditing = false;
-      // dispatch(addPost({ id, title, isEditing }));
-
       const loginStatus = await axios.post(
-        'http://localhost:5000/api/v1/auth/login',
+        `${process.env.REACT_APP_BASE_API_URL}/api/v1/auth/login`,
         {
           username,
           password,
-        },
+        }
       );
 
-      setUsername('');
-      setPassword('');
+      setUsername("");
+      setPassword("");
       console.log(loginStatus);
       dispatch(login(loginStatus.data));
 
@@ -49,13 +44,13 @@ const Login = () => {
 
   return (
     <>
-      <div style={{ height: '8px' }}></div>
+      <div style={{ height: "8px" }}></div>
       <div>
         <Label> Username: </Label>
-        <Input type='text' value={username} onChange={userHandler} />
+        <Input type="text" value={username} onChange={userHandler} />
         <Label> Password: </Label>
-        <Input type='password' value={password} onChange={passwordHandler} />
-        <BtnTiny cancel type='submit' onClick={postSubmit}>
+        <Input type="password" value={password} onChange={passwordHandler} />
+        <BtnTiny cancel type="submit" onClick={postSubmit}>
           SAVE
         </BtnTiny>
       </div>
