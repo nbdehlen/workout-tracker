@@ -49,6 +49,9 @@ export const TabNavigation: FunctionComponent<Props> = ({}) => {
           }
         },
       })}
+      tabBarOptions={{
+        keyboardHidesTabBar: true,
+      }}
     >
       <Tab.Screen
         name={ScreenRoute.WELCOME}
