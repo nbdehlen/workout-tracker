@@ -21,6 +21,7 @@
     "styled-components": "^5.2.0"
   },
   "scripts": {
+    "publishToHeroku": "cd ../ && git subtree push --prefix admin workouttracker-dashboard master || true",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
