@@ -7,6 +7,7 @@ import * as S from './styled'
 import { saveData } from '../../util/asyncStorage'
 import { navigationRef } from '../../util/navigationService'
 import { useNavigation } from '@react-navigation/native'
+import constants from '../../api/constants'
 
 type OwnProps = {}
 
@@ -26,7 +27,8 @@ export const Login: FunctionComponent<Props> = () => {
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        'http://10.0.2.2:5000/api/v1/auth/login',
+        // 'http://10.0.2.2:5000/api/v1/auth/login',
+        `${constants.baseUrl}/api/v1/auth/login`,
         {
           username,
           password,

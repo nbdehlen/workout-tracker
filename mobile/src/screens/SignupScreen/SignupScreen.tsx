@@ -6,6 +6,7 @@ import axios from 'axios'
 import * as S from './styled'
 import { saveData } from '../../util/asyncStorage'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import constants from '../../api/constants'
 
 type OwnProps = {}
 
@@ -22,7 +23,8 @@ export const SignupScreen: FunctionComponent<Props> = () => {
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        'http://10.0.2.2:5000/api/v1/auth/signup',
+        // 'http://10.0.2.2:5000/api/v1/auth/signup',
+        `${constants.baseUrl}/api/v1/auth/signup`,
         {
           email,
           username,
