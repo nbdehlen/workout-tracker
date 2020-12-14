@@ -23,7 +23,6 @@ import {
   emptySet,
   populateMainMuscle,
 } from '../../api/helpers'
-import * as S from '../../util/theme/base'
 import { Picker } from '@react-native-community/picker'
 import {
   deleteWorkout,
@@ -34,6 +33,10 @@ import {
 import DatePicker from 'react-native-date-picker'
 import { format } from 'date-fns'
 import { Icons } from '../../assets'
+import * as S from '../../util/theme/base'
+import { Spacer } from '../../util/theme/base'
+import CustomInput from '../atoms/CustomInput'
+import CustomButton from '../atoms/CustomButton'
 
 type OwnProps = {
   workout: CompleteWorkout
@@ -93,7 +96,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           <TouchableOpacity onPress={submitForm}>
             <Text>SAVE</Text>
           </TouchableOpacity>
-          <S.Spacer w={24} />
+          <Spacer w={24} />
           <TouchableOpacity onPress={handleDeleteWorkout}>
             {/* <Text>Delete</Text> */}
             <Icons.TrashCan fill="grey" />
@@ -531,16 +534,9 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                 onValueChange={(e) => handlePostExercises(e, 'unilateral', i)}
               />
 
-              <TouchableOpacity onPress={() => addSet(i)}>
-                <Text>Add set</Text>
-              </TouchableOpacity>
               {exercise.sets &&
                 exercise.sets.map((set, y) => (
                   <View key={JSON.stringify(set + String(y))}>
-                    <TouchableOpacity onPress={() => removeSet(i, y)}>
-                      <Text>Remove set</Text>
-                    </TouchableOpacity>
-
                     <Text> Set {y + 1} </Text>
                     <S.FlexCol>
                       <Text> Weight: </Text>
@@ -574,13 +570,34 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                         onChange={(e) => handlePostSets(e, 'time', i, y)}
                       />
                     </S.FlexCol>
+                    <TouchableOpacity onPress={() => removeSet(i, y)}>
+                      <Text style={{ color: 'red', fontWeight: 'bold' }}>
+                        Remove set
+                      </Text>
+                    </TouchableOpacity>
+                    <Spacer h={8} />
                   </View>
                 ))}
+
+              <View>
+                <TouchableOpacity onPress={() => addSet(i)}>
+                  <Text style={{ color: 'blue', fontWeight: 'bold' }}>
+                    Add set
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           ))}
           <TouchableOpacity onPress={addExercise}>
-            <Text> Add Exercise </Text>
+            <Text style={{ color: 'blue', fontWeight: 'bold' }}>
+              Add Exercise
+            </Text>
           </TouchableOpacity>
+          <Spacer h={8} />
+          <View style={{ alignItems: 'center' }}>
+            <CustomButton title="Submit" onPress={submitForm} />
+          </View>
+          <Spacer h={8} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
