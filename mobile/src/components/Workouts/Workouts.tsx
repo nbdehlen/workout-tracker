@@ -26,17 +26,8 @@ export const Workouts: FunctionComponent<Props> = () => {
     dispatch(fetchWorkouts(user.xAccessToken))
   }, [])
 
-  const addWorkout = () => {
-    navigation.navigate('workoutAdd')
-    // navigate in stack to workout details page
-    // console.log(workout)
-  }
   return (
     <>
-      <TouchableOpacity onPress={addWorkout}>
-        <Text> ADD </Text>
-      </TouchableOpacity>
-
       <Query
         type={FETCH_WORKOUTS}
         errorComponent={RequestError}

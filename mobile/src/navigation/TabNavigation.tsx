@@ -63,11 +63,11 @@ export const TabNavigation: FunctionComponent<Props> = ({}) => {
         component={WorkoutAddScreen}
         options={{ title: 'Workout' }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={StackRoute.AUTH}
         component={LoginNavigation}
         options={{ title: 'Login' }}
-      />
+      /> */}
       <Tab.Screen
         name={StackRoute.WORKOUT}
         component={WorkoutNavigation}

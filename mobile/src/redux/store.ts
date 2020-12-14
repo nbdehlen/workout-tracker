@@ -15,6 +15,7 @@ import { handleRequests } from '@redux-requests/core'
 import { createDriver } from '@redux-requests/axios'
 import { persistCombineReducers, persistStore } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage'
+import constants from '../api/constants'
 
 export const configureStore = () => {
   const persistConfig = {
@@ -26,8 +27,8 @@ export const configureStore = () => {
     driver: createDriver(
       axios
       // axios.create({
-      //   baseURL: 'http://localhost:5000',
-      // }),
+      //   baseURL: constants.baseUrl,
+      // })
     ),
     onRequest,
     onSuccess,

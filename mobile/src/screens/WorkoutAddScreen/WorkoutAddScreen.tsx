@@ -15,7 +15,6 @@ type Props = OwnProps
 const WorkoutAddScreen: FunctionComponent<Props> = () => {
   return (
     <View style={{ flex: 1 }}>
-      <Text> Workout Add </Text>
       <WorkoutForm workout={completeWorkout} isEdit={false} />
     </View>
   )

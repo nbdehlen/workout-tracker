@@ -1,4 +1,4 @@
-export function ucFirst(str) {
+export const ucFirst = (str) => {
   if (!str) {
     return str
   }

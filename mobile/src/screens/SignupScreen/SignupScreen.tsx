@@ -1,11 +1,16 @@
 import React, { FunctionComponent, useState } from 'react'
-import { Text, TextInput, TouchableOpacity } from 'react-native'
+import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { signup } from '../../redux/auth/actions'
 import axios from 'axios'
 import * as S from './styled'
 import { saveData } from '../../util/asyncStorage'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import constants from '../../api/constants'
+import { ScreenRoute } from '../../navigation/navigationConstants'
+import CustomInput from '../../components/atoms/CustomInput'
+import { Spacer } from '../../util/theme/base'
+import CustomButton from '../../components/atoms/CustomButton'
 
 type OwnProps = {}
 
@@ -22,7 +27,8 @@ export const SignupScreen: FunctionComponent<Props> = () => {
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        'http://10.0.2.2:5000/api/v1/auth/signup',
+        // 'http://10.0.2.2:5000/api/v1/auth/signup',
+        `${constants.baseUrl}/api/v1/auth/signup`,
         {
           email,
           username,
@@ -40,23 +46,39 @@ export const SignupScreen: FunctionComponent<Props> = () => {
     }
   }
   const goToLogin = () => {
-    navigation.navigate('login')
+    navigation.navigate(ScreenRoute.LOGIN)
   }
   return (
-    <S.Container>
+    <S.Container style={{ padding: 16 }}>
       <Text> Email </Text>
-      <TextInput value={email} onChangeText={setEmail} />
+      <CustomInput
+        value={email}
+        onChangeText={setEmail}
+        placeholder="john@doe.com"
+      />
+      <Spacer h={8} />
       <Text> Username </Text>
-      <TextInput value={username} onChangeText={setUsername} />
+      <CustomInput
+        value={username}
+        onChangeText={setUsername}
+        placeholder="MacGyver75"
+      />
+      <Spacer h={8} />
       <Text> Password </Text>
-      <TextInput value={password} onChangeText={setPassword} secureTextEntry />
-
-      <TouchableOpacity onPress={postSubmit}>
-        <Text>Signup</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={goToLogin}>
-        <Text>Already have an account?</Text>
-      </TouchableOpacity>
+      <CustomInput
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        placeholder="Super secret password"
+      />
+      <Spacer h={16} />
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <CustomButton onPress={postSubmit} title="Signup" />
+        <Spacer h={16} />
+        <TouchableOpacity onPress={goToLogin}>
+          <Text style={{ color: 'red' }}>Already have an account?</Text>
+        </TouchableOpacity>
+      </View>
     </S.Container>
   )
 }
