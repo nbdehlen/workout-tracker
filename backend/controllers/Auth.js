@@ -1,8 +1,8 @@
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const User = require('../db/schema/UserSchema');
-const Role = require('../db/schema/RoleSchema');
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const User = require("../db/schema/UserSchema");
+const Role = require("../db/schema/RoleSchema");
 
 // make sure signUp gives 'user' role only.
 
@@ -16,10 +16,10 @@ const postSignUp = async (req, res) => {
   });
 
   try {
-    const assignRoleUser = await Role.findOne({ name: 'user' });
+    const assignRoleUser = await Role.findOne({ name: "user" });
     user.roles = [assignRoleUser._id];
     await user.save();
-    return res.json({ message: 'User was registered successfully!' });
+    return res.json({ message: "User was registered successfully!" });
   } catch (err) {
     return res.status(500).json({ message: err });
   }
@@ -28,7 +28,7 @@ const postSignUp = async (req, res) => {
 const postLogin = async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username }).populate('roles', '-__v');
+    const user = await User.findOne({ username }).populate("roles", "-__v");
 
     // if (!user) {
     //   return res.status(404).json({ message: 'User Not found.' });
@@ -39,16 +39,16 @@ const postLogin = async (req, res) => {
     if (!passwordIsValid) {
       return res.status(401).json({
         accessToken: null,
-        message: 'Invalid Password!',
+        message: "Invalid Password!",
       });
     }
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-      expiresIn: 86400, // 24 hours
+      expiresIn: 86400 * 30, // 24 hours*30
     });
 
     const authorities = user.roles.map(
-      (role) => `ROLE_${role.name.toUpperCase()}`,
+      (role) => `ROLE_${role.name.toUpperCase()}`
     );
     return res.status(200).json({
       id: user._id,
@@ -59,7 +59,7 @@ const postLogin = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(404).json({ message: 'User Not found.' });
+    return res.status(404).json({ message: "User Not found." });
   }
 };
 
