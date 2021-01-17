@@ -1,44 +1,24 @@
-const express = require("express");
-
+const express = require("express")
 const {
-  getWorkout,
-  postWorkout,
-  getWorkoutById,
-  patchWorkoutById,
-  deleteWorkoutById,
   getUserWorkouts,
   patchUserWorkoutById,
   deleteUserWorkoutById,
   postUserWorkout,
-} = require("../../controllers/Workout");
-// const exercise = require('../../controllers/Exercise');
-const { emailExists, usernameExists } = require("../../middlewares/signUp");
-const { postLogin, postSignUp } = require("../../controllers/Auth");
+} = require("../../controllers/Workout")
+const { emailExists, usernameExists } = require("../../middlewares/signUp")
+const { postLogin, postSignUp } = require("../../controllers/Auth")
 
-const verifyToken = require("../../middlewares/jwtToken");
-const { admin, superAdmin } = require("../../middlewares/roles");
-const {
-  allAccess,
-  userBoard,
-  adminBoard,
-  superAdminBoard,
-} = require("../../controllers/Test");
+const verifyToken = require("../../middlewares/jwtToken")
+const { admin } = require("../../middlewares/roles")
 
 const {
   createUser,
   deleteUser,
   getUsers,
   editUser,
-} = require("../../controllers/Admin");
+} = require("../../controllers/Admin")
 
-const router = express.Router();
-
-// router.get("/workout", getWorkout);
-// router.post("/workout", postWorkout);
-// router.get("/workout/:workoutId", getWorkoutById);
-// router.patch("/workout/:workoutId", patchWorkoutById);
-// router.delete("/workout/:workoutId", deleteWorkoutById);
-// router.get('/exercise', exercise);
+const router = express.Router()
 
 /**
  * @swagger
@@ -160,7 +140,7 @@ const router = express.Router();
  *      '500':
  *        description: Server error
  */
-router.post("/auth/signup", [emailExists, usernameExists, postSignUp]);
+router.post("/auth/signup", [emailExists, usernameExists, postSignUp])
 
 /**
  * @swagger
@@ -181,12 +161,7 @@ router.post("/auth/signup", [emailExists, usernameExists, postSignUp]);
  *      '404':
  *        description: User not found
  */
-router.post("/auth/login", postLogin);
-
-// router.get("/test/all", allAccess);
-// router.get("/test/user", [verifyToken], userBoard);
-// router.get("/test/super_admin", [verifyToken, superAdmin], superAdminBoard);
-// router.get("/test/admin", [verifyToken, admin], adminBoard);
+router.post("/auth/login", postLogin)
 
 /**
  * @swagger
@@ -210,7 +185,7 @@ router.post("/auth/login", postLogin);
  *        description: UserID does not exist
  *
  */
-router.get("/user/workouts", [verifyToken, getUserWorkouts]);
+router.get("/user/workouts", [verifyToken, getUserWorkouts])
 
 /**
  * @swagger
@@ -251,7 +226,7 @@ router.get("/user/workouts", [verifyToken, getUserWorkouts]);
  *       "500":
  *         description: Server error
  */
-router.patch("/user/workout/:workoutId", [verifyToken, patchUserWorkoutById]);
+router.patch("/user/workout/:workoutId", [verifyToken, patchUserWorkoutById])
 
 /**
  * @swagger
@@ -285,7 +260,7 @@ router.patch("/user/workout/:workoutId", [verifyToken, patchUserWorkoutById]);
  *      '500':
  *        description: Server error
  */
-router.delete("/user/workout/:workoutId", [verifyToken, deleteUserWorkoutById]);
+router.delete("/user/workout/:workoutId", [verifyToken, deleteUserWorkoutById])
 
 /**
  * @swagger
@@ -326,15 +301,15 @@ router.delete("/user/workout/:workoutId", [verifyToken, deleteUserWorkoutById]);
  *      '504':
  *        description: User not logged in
  */
-router.post("/user/workout", [verifyToken, postUserWorkout]);
+router.post("/user/workout", [verifyToken, postUserWorkout])
 
 router.post(
   "/admin",
   [verifyToken, admin, emailExists, usernameExists],
   createUser
-);
-router.delete("/admin/:userId", [verifyToken, admin], deleteUser);
-router.get("/admin", [verifyToken, admin], getUsers);
-router.patch("/admin/:userId", [verifyToken, admin], editUser);
+)
+router.delete("/admin/:userId", [verifyToken, admin], deleteUser)
+router.get("/admin", [verifyToken, admin], getUsers)
+router.patch("/admin/:userId", [verifyToken, admin], editUser)
 
-module.exports = router;
+module.exports = router

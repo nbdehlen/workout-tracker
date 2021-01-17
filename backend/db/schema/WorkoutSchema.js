@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const strTrimLcLen50 = require("./utils/defSchemaObjects");
+const mongoose = require("mongoose")
+const strTrimLcLen50 = require("./utils/defSchemaObjects")
 
 // use mongoDBs version of `findOneAndUpdate`
-mongoose.set("useFindAndModify", false);
+mongoose.set("useFindAndModify", false)
 
 const WorkoutSchema = mongoose.Schema({
   author: {
@@ -64,10 +64,6 @@ const WorkoutSchema = mongoose.Schema({
           reps: {
             type: Number,
             max: [10000, "You didn't do {VALUE} reps. Why you always lying"],
-            // min: [
-            //   1,
-            //   "You did 0 reps? so it's almost like you shouldnt log it?",
-            // ],
           },
           rest: strTrimLcLen50,
           time: strTrimLcLen50,
@@ -100,14 +96,12 @@ const WorkoutSchema = mongoose.Schema({
     trim: true,
     maxlength: [100, "Max char length is 100"],
   },
-});
-
-// const workoutModel = mongoose.model('Workout', WorkoutSchema);
+})
 
 // Pre hook for `findOneAndUpdate`. (arrow func doesnt work)
 WorkoutSchema.pre("findOneAndUpdate", function (next) {
-  this.options.runValidators = true;
-  next();
-});
+  this.options.runValidators = true
+  next()
+})
 
-module.exports = mongoose.model("Workout", WorkoutSchema);
+module.exports = mongoose.model("Workout", WorkoutSchema)

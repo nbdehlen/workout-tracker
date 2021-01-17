@@ -1,43 +1,40 @@
-const createError = require("http-errors");
-const mongoose = require("mongoose");
-const { create } = require("../db/schema/WorkoutSchema");
-const WorkoutSchema = require("../db/schema/WorkoutSchema");
-// const protoChain = require('../utils/protoChain');
+const createError = require("http-errors")
+const mongoose = require("mongoose")
+const WorkoutSchema = require("../db/schema/WorkoutSchema")
 
-const getWorkout = async (req, res, next) => {
+const getWorkout = async (_, res, next) => {
   try {
-    const result = await WorkoutSchema.find({}).limit(10000);
+    const result = await WorkoutSchema.find({}).limit(10000)
 
     return res
       .status(200)
-      .json(result.map((entry) => entry.toObject({ getters: true })));
+      .json(result.map((entry) => entry.toObject({ getters: true })))
   } catch (error) {
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const getWorkoutById = async (req, res, next) => {
-  const { workoutId } = req.params;
+  const { workoutId } = req.params
 
   try {
-    const result = await WorkoutSchema.findById(workoutId);
+    const result = await WorkoutSchema.findById(workoutId)
 
     if (!result) {
-      throw createError(404, `Workout ID ${workoutId} does not exist`);
+      throw createError(404, `Workout ID ${workoutId} does not exist`)
     }
-    // protoChain(result);
-    return res.status(200).json(result.toObject({ getters: true }));
+    return res.status(200).json(result.toObject({ getters: true }))
   } catch (error) {
     if (error instanceof mongoose.CastError) {
-      return next(createError(400, `Workout ID ${workoutId} is invalid`));
+      return next(createError(400, `Workout ID ${workoutId} is invalid`))
     }
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const postWorkout = async (req, res, next) => {
   try {
-    const { author, type, start, grade, end, exercises } = req.body;
+    const { author, type, start, grade, end, exercises } = req.body
 
     const workout = new WorkoutSchema({
       author,
@@ -46,26 +43,26 @@ const postWorkout = async (req, res, next) => {
       grade,
       end,
       exercises,
-    });
+    })
 
-    await workout.save();
+    await workout.save()
 
-    return res.status(201).json(workout.toObject({ getters: true }));
+    return res.status(201).json(workout.toObject({ getters: true }))
   } catch (error) {
     if (error.name === "ValidationError") {
-      return next(createError(422, error.message));
+      return next(createError(422, error.message))
     }
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const patchWorkoutById = async (req, res, next) => {
-  const { body } = req;
-  const { workoutId } = req.params;
+  const { body } = req
+  const { workoutId } = req.params
 
-  console.log(body);
+  console.log(body)
   if (!body) {
-    throw createError(400, "Body is empty");
+    throw createError(400, "Body is empty")
   }
 
   try {
@@ -73,77 +70,72 @@ const patchWorkoutById = async (req, res, next) => {
       { _id: workoutId },
       { $set: body },
       { new: true }
-    );
+    )
 
     if (!result) {
-      throw createError(404, `Workout ID ${workoutId} does not exist`);
+      throw createError(404, `Workout ID ${workoutId} does not exist`)
     }
 
-    return res.status(200).json(result.toObject({ getters: true }));
+    return res.status(200).json(result.toObject({ getters: true }))
   } catch (error) {
     if (error instanceof mongoose.CastError) {
-      // build custom error handler for CastErrors?
-      // Need standardized error messages for the repeating errors.
       return next(
         createError(400, `Parameters or workout ID ${workoutId} is invalid`)
-      );
+      )
     }
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const deleteWorkoutById = async (req, res, next) => {
-  const { workoutId } = req.params;
+  const { workoutId } = req.params
 
   try {
     const result = await WorkoutSchema.findByIdAndDelete({
       _id: workoutId,
-    });
+    })
 
     if (!result) {
-      throw createError(404, `Workout ID ${workoutId} does not exist`);
+      throw createError(404, `Workout ID ${workoutId} does not exist`)
     }
 
     return res.status(200).json({
       message: `Deleted workout ${workoutId}`,
-    });
+    })
   } catch (error) {
     if (error instanceof mongoose.CastError) {
-      return next(createError(400, `Workout ID ${workoutId} is invalid`));
+      return next(createError(400, `Workout ID ${workoutId} is invalid`))
     }
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const getUserWorkouts = async (req, res, next) => {
-  const { userId } = req;
+  const { userId } = req
 
   try {
     const result = await WorkoutSchema.find({ author: userId }).sort({
       start: "desc",
-    });
+    })
 
     if (!result) {
       return res.status(404).json({
         Error: `User ${userId} does not exist`,
-      });
+      })
     }
-    return res.status(200).json(result);
+    return res.status(200).json(result)
   } catch (error) {
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const patchUserWorkoutById = async (req, res, next) => {
-  const { body } = req;
-  const { workoutId } = req.params;
-  const { userId } = req;
-
-  // console.log(Object.entries(body).length);
-  // console.log(body);
+  const { body } = req
+  const { workoutId } = req.params
+  const { userId } = req
 
   if (Object.entries(body).length === 0) {
-    return next(createError(422, "Body is empty"));
+    return next(createError(422, "Body is empty"))
   }
 
   try {
@@ -151,62 +143,59 @@ const patchUserWorkoutById = async (req, res, next) => {
       { _id: workoutId, author: userId },
       { $set: body },
       { new: true }
-    );
+    )
 
     if (!result) {
-      throw createError(404, `Workout ID ${workoutId} does not exist`);
+      throw createError(404, `Workout ID ${workoutId} does not exist`)
     }
 
-    return res.status(200).json(result.toObject({ getters: true }));
+    return res.status(200).json(result.toObject({ getters: true }))
   } catch (error) {
     if (error instanceof mongoose.CastError) {
-      // build custom error handler for CastErrors?
-      // Need standardized error messages for the repeating errors.
-
       return next(
         createError(400, `Parameters or workout ID ${workoutId} is invalid`)
-      );
+      )
     }
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const deleteUserWorkoutById = async (req, res, next) => {
-  const { workoutId } = req.params;
-  const { userId } = req;
+  const { workoutId } = req.params
+  const { userId } = req
 
   try {
     const result = await WorkoutSchema.findByIdAndDelete({
       _id: workoutId,
       author: userId,
-    });
+    })
 
     if (!result) {
-      throw createError(404, `Workout ID ${workoutId} does not exist`);
+      throw createError(404, `Workout ID ${workoutId} does not exist`)
     }
 
     return res.status(200).json({
       message: `Deleted workout ${workoutId}`,
-    });
+    })
   } catch (error) {
     if (error instanceof mongoose.CastError) {
-      return next(createError(400, `Workout ID ${workoutId} is invalid`));
+      return next(createError(400, `Workout ID ${workoutId} is invalid`))
     }
-    return next(error);
+    return next(error)
   }
-};
+}
 
 const postUserWorkout = async (req, res, next) => {
   if (Object.entries(req.body).length === 0) {
-    return next(createError(422, "Body is empty"));
+    return next(createError(422, "Body is empty"))
   }
 
   try {
-    const { type, start, grade, end, exercises } = req.body;
+    const { type, start, grade, end, exercises } = req.body
     if (req.userId === undefined) {
-      return next(createError(504, "User not logged in"));
+      return next(createError(504, "User not logged in"))
     }
-    const { userId } = req;
+    const { userId } = req
 
     const workout = new WorkoutSchema({
       author: userId,
@@ -215,21 +204,18 @@ const postUserWorkout = async (req, res, next) => {
       grade,
       end,
       exercises,
-    });
+    })
 
-    await workout.save();
+    await workout.save()
 
-    return res.status(201).json(workout.toObject({ getters: true }));
+    return res.status(201).json(workout.toObject({ getters: true }))
   } catch (error) {
     if (error.name === "ValidationError") {
-      return next(createError(422, error.message));
+      return next(createError(422, error.message))
     }
-    return next(error);
+    return next(error)
   }
-};
-
-// "2020-06-11T14:50:40Z"
-// 5ee293f614368832c4f17be9
+}
 
 module.exports = {
   getWorkout,
@@ -241,4 +227,4 @@ module.exports = {
   patchUserWorkoutById,
   deleteUserWorkoutById,
   postUserWorkout,
-};
+}
