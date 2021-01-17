@@ -4,7 +4,7 @@ const cors = require("cors")
 const morgan = require("morgan")
 const createError = require("http-errors")
 const db = require("./db/index")
-initial = require("./db/schema/utils/populateRoles")
+// const initial = require("./db/schema/utils/populateRoles")
 const app = express()
 const index = require("./api/routes")
 const swaggerJsDoc = require("swagger-jsdoc")
@@ -56,11 +56,11 @@ db.connect().then(() => {
 //uncomment to populate roles
 // initial();
 
-app.use((req, res, next) => {
-  next(createError(404, "Not found", { expose: false }))
+app.use((_, __, next) => {
+  return next(createError(404, "Not found", { expose: false }))
 })
 
-app.use((error, req, res, next) => {
+app.use((error, _, res, __) => {
   res.status(error.status || 500)
   res.json({
     error: {
