@@ -9,7 +9,7 @@ const app = express()
 const index = require("./api/routes")
 const swaggerJsDoc = require("swagger-jsdoc")
 const swaggerUi = require("swagger-ui-express")
-
+const YAML = require("yamljs")
 const host = process.env.HOST
 const port = process.env.PORT
 
@@ -23,21 +23,7 @@ const swaggerCssOptions = {
   customCss: ".swagger-ui .topbar { display: none }",
 }
 
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: "3.0.0",
-    info: {
-      version: "1.0.0",
-      title: "Workout tracker API",
-      description: "User API Information",
-      contact: {
-        name: "Bastian",
-      },
-      servers: ["https://workouttracker-api.herokuapp.com/"],
-    },
-  },
-  apis: ["./api/routes/index.js"],
-}
+const swaggerOptions = YAML.load("./swagger.yaml")
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 app.use(
