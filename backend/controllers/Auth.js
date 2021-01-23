@@ -37,7 +37,7 @@ const postLogin = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-      expiresIn: 86400 * 30,
+      expiresIn: "365d",
     })
 
     const authorities = user.roles.map(
