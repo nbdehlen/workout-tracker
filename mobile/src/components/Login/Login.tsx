@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/auth/actions'
 import axios from 'axios'
@@ -11,6 +11,7 @@ import CustomInput from '../atoms/CustomInput'
 import { Spacer } from '../../util/theme/base'
 import CustomButton from '../atoms/CustomButton'
 import { ScreenRoute } from '../../navigation/navigationConstants'
+import GradientButton from '../atoms/GradientButton'
 
 type OwnProps = {}
 
@@ -42,7 +43,6 @@ export const Login: FunctionComponent<Props> = () => {
       console.log(loginStatus)
       dispatch(login(loginStatus.data))
       saveData('user', loginStatus.data)
-      //Redirect to somewhere
     } catch (err) {
       console.log(err)
     }
@@ -70,15 +70,18 @@ export const Login: FunctionComponent<Props> = () => {
       />
       <Spacer h={16} />
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <CustomButton
+        <GradientButton
           onPress={postSubmit}
           onLongPress={bypassLogin}
           title="Login"
+          width="60%"
         />
         <Spacer h={16} />
-        <TouchableOpacity onPress={goToSignup}>
-          <Text style={{ color: 'red' }}>Create an account</Text>
-        </TouchableOpacity>
+        <CustomButton
+          onPress={goToSignup}
+          title="Sign Up instead?"
+          width="60%"
+        />
       </View>
     </S.Container>
   )

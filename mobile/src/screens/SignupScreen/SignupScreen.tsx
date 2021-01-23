@@ -40,7 +40,8 @@ export const SignupScreen: FunctionComponent<Props> = () => {
       console.log(loginStatus)
       dispatch(signup(loginStatus.data))
       saveData('user', loginStatus.data)
-      //Redirect to somewhere
+      //toast message
+      navigation.navigate(ScreenRoute.LOGIN)
     } catch (err) {
       console.log(err)
     }

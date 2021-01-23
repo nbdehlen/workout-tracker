@@ -19,10 +19,12 @@ export const FatText = styled.Text`
 `
 export const TextInput = styled.TextInput`
   background-color: #add8e6;
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  width: 50%;
 `
+
+export const text = styled.View``
 
 type Spacings = {
   h?: number

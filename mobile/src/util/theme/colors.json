@@ -1,0 +1,17 @@
+{
+  "primary": {
+    "color": "#2f2d41",
+    "onColor": "#2388a6"
+  },
+  "background": {
+    "color": "#242236",
+    "onColor": "#f4f4f4"
+  },
+  "neutral": {
+    "color": "#ffffff"
+  },
+  "gradient": {
+    "start": "#2db6a8",
+    "end": "#2b90bf"
+  }
+}
