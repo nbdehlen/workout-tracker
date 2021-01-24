@@ -8,7 +8,7 @@ type OwnProps = {
   title: string
   width?: string
   icon?: string
-  variant?: 'default' | 'outline'
+  variant?: 'default' | 'outline' | 'clear'
 }
 
 type Props = OwnProps & ViewProps & TouchableOpacityProps

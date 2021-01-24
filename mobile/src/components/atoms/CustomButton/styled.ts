@@ -1,13 +1,22 @@
 import styled, { css } from 'styled-components/native'
 import theme from '../../../util/theme'
 
-const defaultStyle = css`
+const touchDefaultStyle = css`
   background-color: ${theme.primary.onColor};
   border-color: ${theme.primary.color};
 `
-const outlineStyle = css`
+const touchOutlineStyle = css`
   background-color: ${theme.primary.color};
   border-color: ${theme.primary.onColor};
+`
+const touchClearStyle = css`
+  background-color: transparent;
+  border-width: 0px;
+`
+const textClearStyle = css`
+  color: ${theme.neutral_1};
+  font-size: 12px;
+  text-decoration: underline;
 `
 export const Touchable = styled.TouchableOpacity`
   justify-content: center;
@@ -16,13 +25,15 @@ export const Touchable = styled.TouchableOpacity`
   border-radius: 100px;
   padding: 8px 16px;
   width: ${({ width }) => width};
-  ${({ variant }) => variant === 'outline' && outlineStyle};
-  ${({ variant }) => variant === 'default' && defaultStyle};
+  ${({ variant }) => variant === 'outline' && touchDefaultStyle};
+  ${({ variant }) => variant === 'default' && touchOutlineStyle};
+  ${({ variant }) => variant === 'clear' && touchClearStyle};
 `
 export const Text = styled.Text`
   font-size: 20px;
-  color: ${({ variant }) =>
-    variant === 'outline' ? theme.primary.onColor : theme.primary.color};
+  color: ${({ variant }) => variant === 'outline' && theme.primary.color};
+  color: ${({ variant }) => variant === 'default' && theme.primary.onColor};
+  ${({ variant }) => variant === 'clear' && textClearStyle};
 `
 export const IconWrapper = styled.View`
   position: absolute;
