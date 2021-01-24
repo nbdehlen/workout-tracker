@@ -17,7 +17,7 @@ export const TextInput = styled.TextInput`
 export const Text = styled.Text`
   margin-bottom: 8px;
   color: ${theme.neutral_2};
-  font-size: 12px;
+  font-size: 14px;
 `
 export const IconWrapper = styled.View`
   margin-left: 12px;

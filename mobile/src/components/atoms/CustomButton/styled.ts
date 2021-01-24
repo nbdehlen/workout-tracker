@@ -15,7 +15,7 @@ const touchClearStyle = css`
 `
 const textClearStyle = css`
   color: ${theme.neutral_1};
-  font-size: 12px;
+  font-size: 14px;
   text-decoration: underline;
 `
 export const Touchable = styled.TouchableOpacity`

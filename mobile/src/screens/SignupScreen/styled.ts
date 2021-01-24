@@ -3,7 +3,6 @@ import theme from '../../util/theme'
 
 export const Container = styled.View`
   padding: 16px;
-  padding-top: 16px;
   border-radius: 24px;
   background-color: ${theme.primary.color};
 `
