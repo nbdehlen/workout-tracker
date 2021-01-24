@@ -12,7 +12,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Switch,
-  Platform,
   Alert,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,10 +32,13 @@ import {
 import DatePicker from 'react-native-date-picker'
 import { format } from 'date-fns'
 import { Icons } from '../../assets'
-import * as S from '../../util/theme/base'
+import * as B from '../../util/theme/base'
 import { Spacer } from '../../util/theme/base'
 import CustomInput from '../atoms/CustomInput'
 import CustomButton from '../atoms/CustomButton'
+import * as S from './styled'
+import theme from '../../util/theme'
+import { ScreenRoute } from '../../navigation/navigationConstants'
 
 type OwnProps = {
   workout: CompleteWorkout
@@ -79,7 +81,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           text: 'Delete workout',
           onPress: () => {
             dispatch(deleteWorkout(workout._id, user.xAccessToken))
-            navigation.navigate('workout')
+            navigation.navigate(ScreenRoute.WORKOUTS)
           },
         },
         {
@@ -92,16 +94,15 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity onPress={submitForm}>
-            <Text>SAVE</Text>
-          </TouchableOpacity>
+        <S.RightHeaderContainer>
+          <S.SaveButton onPress={submitForm}>
+            <S.Text>SAVE</S.Text>
+          </S.SaveButton>
           <Spacer w={24} />
-          <TouchableOpacity onPress={handleDeleteWorkout}>
-            {/* <Text>Delete</Text> */}
-            <Icons.TrashCan fill="grey" />
-          </TouchableOpacity>
-        </View>
+          <S.DeleteButton onPress={handleDeleteWorkout}>
+            <Icons.TrashCan fill={theme.neutral_1} />
+          </S.DeleteButton>
+        </S.RightHeaderContainer>
       ),
     })
   }, [navigation])
@@ -308,7 +309,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
       ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
       : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
     dispatch(fetchWorkouts(user.xAccessToken))
-    navigation.navigate('workout')
+    // TODO: toast saved etc
+    navigation.navigate(ScreenRoute.WORKOUTS)
   }
 
   const [showStart, setShowStart] = useState(false)
@@ -317,15 +319,15 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   return (
     <KeyboardAvoidingView>
       <ScrollView>
-        <S.FlexCol>
+        <B.FlexCol>
           <Text> Workout type </Text>
-          <S.TextInput
+          <B.TextInput
             value={postWorkout.type}
             name="type"
             onChange={(e) => handlePostWorkout(e, 'type')}
           />
-        </S.FlexCol>
-        <S.FlexCol>
+        </B.FlexCol>
+        <B.FlexCol>
           <Text> Grade </Text>
 
           <Picker
@@ -345,8 +347,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
               )
             )}
           </Picker>
-        </S.FlexCol>
-        <S.FlexCol>
+        </B.FlexCol>
+        <B.FlexCol>
           <TouchableOpacity onPress={() => setShowStart(!showStart)}>
             <Text>
               Start:{' '}
@@ -378,8 +380,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
             postWorkout.start,
             new Date(Date.now())
           )}
-        </S.FlexCol>
-        <S.FlexCol>
+        </B.FlexCol>
+        <B.FlexCol>
           <TouchableOpacity onPress={() => setShowEnd(!showEnd)}>
             <Text>
               End:{' '}
@@ -404,39 +406,39 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
               onDateChange={(date) => handlePostWorkoutDate(date, 'end')}
             />
           )}
-        </S.FlexCol>
+        </B.FlexCol>
         <View>
           {exercises.map((exercise, i) => (
             <View key={'exercise' + i}>
-              <S.FlexCol>
+              <B.FlexCol>
                 <Text> Exercise type: </Text>
-                <S.TextInput
+                <B.TextInput
                   value={exercise.exerciseType}
                   name="exerciseType"
                   onChange={(e) => handlePostExercises(e, 'exerciseType', i)}
                 />
-              </S.FlexCol>
-              <S.FlexCol>
+              </B.FlexCol>
+              <B.FlexCol>
                 <Text> Exercise {i + 1} : </Text>
                 <TouchableOpacity onPress={() => removeExercise(i)}>
                   <Text>Remove Exercise</Text>
                 </TouchableOpacity>
 
-                <S.TextInput
+                <B.TextInput
                   value={exercise.name}
                   name="name"
                   onChange={(e) => handlePostExercises(e, 'name', i)}
                 />
-              </S.FlexCol>
-              <S.FlexCol>
+              </B.FlexCol>
+              <B.FlexCol>
                 <Text> Compound: </Text>
                 <Switch
                   value={exercise.compound}
                   name="compound"
                   onValueChange={(e) => handlePostExercises(e, 'compound', i)}
                 />
-              </S.FlexCol>
-              <S.FlexCol>
+              </B.FlexCol>
+              <B.FlexCol>
                 <Text> Main Target (single): </Text>
                 <Picker
                   selectedValue={'select'}
@@ -465,8 +467,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                   )}
                 </Picker>
                 <Text> {mainMuscle[i]} </Text>
-              </S.FlexCol>
-              <S.FlexCol>
+              </B.FlexCol>
+              <B.FlexCol>
                 <Text> Secondary Targets (multiple): </Text>
                 <Picker
                   selectedValue={'select'}
@@ -502,31 +504,31 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                       </Text>
                     ))}
                 </View>
-              </S.FlexCol>
-              <S.FlexCol>
+              </B.FlexCol>
+              <B.FlexCol>
                 <Text> Duration: </Text>
-                <S.TextInput
+                <B.TextInput
                   value={exercise.duration}
                   name="duration"
                   onChange={(e) => handlePostExercises(e, 'duration', i)}
                 />
-              </S.FlexCol>
-              <S.FlexCol>
+              </B.FlexCol>
+              <B.FlexCol>
                 <Text> Calories: </Text>
-                <S.TextInput
+                <B.TextInput
                   value={exercise.calories}
                   name="calories"
                   onChange={(e) => handlePostExercises(e, 'calories', i)}
                 />
-              </S.FlexCol>
-              <S.FlexCol>
+              </B.FlexCol>
+              <B.FlexCol>
                 <Text> Tool: </Text>
-                <S.TextInput
+                <B.TextInput
                   value={exercise.tool}
                   name="tool"
                   onChange={(e) => handlePostExercises(e, 'tool', i)}
                 />
-              </S.FlexCol>
+              </B.FlexCol>
               <Text> Unilateral </Text>
               <Switch
                 value={exercise.unilateral}
@@ -538,38 +540,38 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                 exercise.sets.map((set, y) => (
                   <View key={JSON.stringify(set + String(y))}>
                     <Text> Set {y + 1} </Text>
-                    <S.FlexCol>
+                    <B.FlexCol>
                       <Text> Weight: </Text>
-                      <S.TextInput
+                      <B.TextInput
                         value={String(set.weight)}
                         name="weight"
                         onChange={(e) => handlePostSets(e, 'weight', i, y)}
                       />
-                    </S.FlexCol>
-                    <S.FlexCol>
+                    </B.FlexCol>
+                    <B.FlexCol>
                       <Text> Reps </Text>
-                      <S.TextInput
+                      <B.TextInput
                         value={String(set.reps)}
                         name="reps"
                         onChange={(e) => handlePostSets(e, 'reps', i, y)}
                       />
-                    </S.FlexCol>
-                    <S.FlexCol>
+                    </B.FlexCol>
+                    <B.FlexCol>
                       <Text> Rest </Text>
-                      <S.TextInput
+                      <B.TextInput
                         value={set.rest}
                         name="rest"
                         onChange={(e) => handlePostSets(e, 'rest', i, y)}
                       />
-                    </S.FlexCol>
-                    <S.FlexCol>
+                    </B.FlexCol>
+                    <B.FlexCol>
                       <Text> Time </Text>
-                      <S.TextInput
+                      <B.TextInput
                         value={set.time}
                         name="time"
                         onChange={(e) => handlePostSets(e, 'time', i, y)}
                       />
-                    </S.FlexCol>
+                    </B.FlexCol>
                     <TouchableOpacity onPress={() => removeSet(i, y)}>
                       <Text style={{ color: 'red', fontWeight: 'bold' }}>
                         Remove set

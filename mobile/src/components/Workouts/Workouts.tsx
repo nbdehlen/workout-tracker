@@ -20,7 +20,6 @@ export const Workouts: FunctionComponent<Props> = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   console.log(user.xAccessToken)
-  const navigation = useNavigation()
 
   useEffect(() => {
     dispatch(fetchWorkouts(user.xAccessToken))
@@ -31,7 +30,7 @@ export const Workouts: FunctionComponent<Props> = () => {
       <Query
         type={FETCH_WORKOUTS}
         errorComponent={RequestError}
-        noDataMessage={<Text>There is no entity currently.</Text>}
+        noDataMessage={<Text> No logged workouts. </Text>}
       >
         {({ data }) => <WorkoutsList workouts={data} />}
       </Query>

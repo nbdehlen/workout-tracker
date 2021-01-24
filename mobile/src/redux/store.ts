@@ -1,13 +1,5 @@
-// import { createStore } from 'redux'
-// import rootReducer from './rootReducer'
 import Reactotron from '../ReactotronConfig'
-
-// export const store = createStore(rootReducer, Reactotron.createEnhancer())
-
-// export default store
-
 import { createStore, applyMiddleware, compose } from 'redux'
-
 import authReducer from './auth/authReducer'
 import axios from 'axios'
 import { onRequest, onSuccess, onError } from './requests/interceptors'
@@ -25,10 +17,9 @@ export const configureStore = () => {
   }
   const { requestsReducer, requestsMiddleware } = handleRequests({
     driver: createDriver(
-      axios
-      // axios.create({
-      //   baseURL: constants.baseUrl,
-      // })
+      axios.create({
+        baseURL: constants.baseUrl,
+      })
     ),
     onRequest,
     onSuccess,
@@ -39,11 +30,6 @@ export const configureStore = () => {
   // (typeof window !== 'undefined' &&
   //   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   // compose
-
-  // const reducers = combineReducers({
-  //   user: authReducer,
-  //   requests: requestsReducer,
-  // })
 
   const reduxPersistReducers = persistCombineReducers(persistConfig, {
     user: authReducer,

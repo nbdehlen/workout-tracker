@@ -9,8 +9,11 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import constants from '../../api/constants'
 import { ScreenRoute } from '../../navigation/navigationConstants'
 import CustomInput from '../../components/atoms/CustomInput'
-import { Spacer } from '../../util/theme/base'
+import { BaseContainer, Spacer } from '../../util/theme/base'
 import CustomButton from '../../components/atoms/CustomButton'
+import theme from '../../util/theme'
+import GradientButton from '../../components/atoms/GradientButton'
+import { ScrollView } from 'react-native-gesture-handler'
 
 type OwnProps = {}
 
@@ -21,13 +24,11 @@ export const SignupScreen: FunctionComponent<Props> = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const route = useRoute()
   const navigation = useNavigation()
 
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        // 'http://10.0.2.2:5000/api/v1/auth/signup',
         `${constants.baseUrl}/api/v1/auth/signup`,
         {
           email,
@@ -37,10 +38,9 @@ export const SignupScreen: FunctionComponent<Props> = () => {
       )
       setUsername('')
       setPassword('')
-      console.log(loginStatus)
       dispatch(signup(loginStatus.data))
-      saveData('user', loginStatus.data)
-      //toast message
+      await saveData('user', loginStatus.data)
+      //TODO: toast message
       navigation.navigate(ScreenRoute.LOGIN)
     } catch (err) {
       console.log(err)
@@ -49,38 +49,52 @@ export const SignupScreen: FunctionComponent<Props> = () => {
   const goToLogin = () => {
     navigation.navigate(ScreenRoute.LOGIN)
   }
+
   return (
-    <S.Container style={{ padding: 16 }}>
-      <Text> Email </Text>
-      <CustomInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="john@doe.com"
-      />
-      <Spacer h={8} />
-      <Text> Username </Text>
-      <CustomInput
-        value={username}
-        onChangeText={setUsername}
-        placeholder="MacGyver75"
-      />
-      <Spacer h={8} />
-      <Text> Password </Text>
-      <CustomInput
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholder="Super secret password"
-      />
-      <Spacer h={16} />
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <CustomButton onPress={postSubmit} title="Signup" />
-        <Spacer h={16} />
-        <TouchableOpacity onPress={goToLogin}>
-          <Text style={{ color: 'red' }}>Already have an account?</Text>
-        </TouchableOpacity>
-      </View>
-    </S.Container>
+    <ScrollView style={{ backgroundColor: theme.background.color }}>
+      <BaseContainer>
+        <View style={{ alignItems: 'center', height: 240 }}></View>
+        <S.Container>
+          <CustomInput
+            icon="Email"
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="john@doe.com"
+            placeholderTextColor={theme.neutral_2}
+          />
+          <Spacer h={16} />
+          <CustomInput
+            icon="User"
+            label="Username"
+            value={username}
+            onChangeText={setUsername}
+            placeholder="MacGyver75"
+            placeholderTextColor={theme.neutral_2}
+          />
+          <Spacer h={16} />
+          <CustomInput
+            icon="Lock"
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholder="Super secret password"
+            placeholderTextColor={theme.neutral_2}
+          />
+          <Spacer h={16} />
+          <S.ButtonContainer>
+            <GradientButton onPress={postSubmit} title="Signup" width="60%" />
+            <Spacer h={16} />
+            <CustomButton
+              onPress={goToLogin}
+              variant="clear"
+              title="Already have an account? Login!"
+            />
+          </S.ButtonContainer>
+        </S.Container>
+      </BaseContainer>
+    </ScrollView>
   )
 }
 

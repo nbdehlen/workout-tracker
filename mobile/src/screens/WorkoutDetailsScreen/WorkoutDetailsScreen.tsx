@@ -9,6 +9,7 @@ import { differenceInMinutes, format, isValid } from 'date-fns'
 import { ucFirst } from '../../util/helpers'
 import { ScreenRoute } from '../../navigation/navigationConstants'
 import DataTable from '../../components/DataTable'
+import * as S from './styled'
 
 type OwnProps = CompleteWorkout
 type Props = OwnProps
@@ -17,7 +18,6 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const user = useSelector((state) => state.user)
-  console.log('route.params', route.params)
   const workout: CompleteWorkout = route.params
   const [modalVisible, setModalVisible] = useState(null)
 
@@ -44,9 +44,9 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={handleEditWorkout}>
-          <Text>EDIT</Text>
-        </TouchableOpacity>
+        <S.TouchableOpacity onPress={handleEditWorkout}>
+          <S.Text>EDIT</S.Text>
+        </S.TouchableOpacity>
       ),
     })
   }, [navigation])
@@ -113,10 +113,7 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
                     <Text>details...</Text>
                   </TouchableOpacity>
                 </FlexRow>
-
-                {/* Not sure why && isn't working here */}
               </FlexRow>
-              {/* {i === modalVisible && ( */}
               <Modal
                 visible={i === modalVisible}
                 transparent={true}

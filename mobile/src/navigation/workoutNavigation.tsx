@@ -5,6 +5,8 @@ import WorkoutAddScreen from '../screens/WorkoutAddScreen'
 import WorkoutEditScreen from '../screens/WorkoutEditScreen'
 import WorkoutDetailsScreen from '../screens/WorkoutDetailsScreen'
 import { ScreenRoute } from './navigationConstants'
+import theme from '../util/theme'
+
 type OwnProps = {}
 
 type Props = OwnProps
@@ -13,7 +15,16 @@ const Stack = createStackNavigator()
 
 export const WorkoutNavigation: FunctionComponent<Props> = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerTintColor: theme.neutral_1,
+        headerStyle: {
+          backgroundColor: theme.primary.color,
+        },
+        headerTitleStyle: { alignSelf: 'center', color: theme.gradient.start },
+      }}
+    >
       <Stack.Screen
         name={ScreenRoute.WORKOUTS}
         component={WorkoutsScreen}

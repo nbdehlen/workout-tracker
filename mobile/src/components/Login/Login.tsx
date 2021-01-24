@@ -23,7 +23,8 @@ export const Login: FunctionComponent<Props> = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
-
+  // TODO: move to LoginScreen
+  // TODO: only for dev
   const bypassLogin = () => {
     setUsername('Sergej')
     setPassword('12345678')
@@ -32,7 +33,6 @@ export const Login: FunctionComponent<Props> = () => {
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        // 'http://10.0.2.2:5000/api/v1/auth/login',
         `${constants.baseUrl}/api/v1/auth/login`,
         {
           username,
@@ -41,9 +41,8 @@ export const Login: FunctionComponent<Props> = () => {
       )
       setUsername('')
       setPassword('')
-      console.log(loginStatus)
       dispatch(login(loginStatus.data))
-      saveData('user', loginStatus.data)
+      await saveData('user', loginStatus.data)
     } catch (err) {
       console.log(err)
     }

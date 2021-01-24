@@ -12,17 +12,9 @@ const Stack = createStackNavigator()
 
 export const LoginNavigation: FunctionComponent<Props> = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true }}>
-      <Stack.Screen
-        name={ScreenRoute.LOGIN}
-        component={LoginScreen}
-        options={{ headerShown: true, title: 'Login' }}
-      />
-      <Stack.Screen
-        name={ScreenRoute.SIGNUP}
-        component={SignupScreen}
-        options={{ headerShown: true, title: 'Signup' }}
-      />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name={ScreenRoute.LOGIN} component={LoginScreen} />
+      <Stack.Screen name={ScreenRoute.SIGNUP} component={SignupScreen} />
     </Stack.Navigator>
   )
 }

@@ -31,8 +31,9 @@ export const Touchable = styled.TouchableOpacity`
 `
 export const Text = styled.Text`
   font-size: 20px;
-  color: ${({ variant }) => variant === 'outline' && theme.primary.color};
-  color: ${({ variant }) => variant === 'default' && theme.primary.onColor};
+  ${({ variant }) => variant === 'outline' && `color: ${theme.primary.color}`};
+  ${({ variant }) =>
+    variant === 'default' && `color: ${theme.primary.onColor}`};
   ${({ variant }) => variant === 'clear' && textClearStyle};
 `
 export const IconWrapper = styled.View`

@@ -12,6 +12,7 @@ export const Container = styled.View`
 export const TextInput = styled.TextInput`
   width: 100%;
   margin-left: 8px;
+  color: ${theme.neutral_1};
 `
 export const Text = styled.Text`
   margin-bottom: 8px;

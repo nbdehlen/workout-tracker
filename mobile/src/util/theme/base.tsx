@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import React, { FunctionComponent } from 'react'
 import { View } from 'react-native'
+import theme from '.'
 
 export const baseline = 8
 
@@ -41,4 +42,5 @@ export const BaseContainer = styled.View`
   flex: 1;
   padding: ${baseline * 3}px;
   padding-top: ${baseline * 4}px;
+  background-color: ${theme.background.color};
 `

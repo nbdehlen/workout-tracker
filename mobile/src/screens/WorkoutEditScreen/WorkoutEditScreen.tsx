@@ -9,7 +9,6 @@ type Props = OwnProps
 const WorkoutEditScreen: FunctionComponent<Props> = () => {
   const route = useRoute()
   const { workout } = route.params
-  console.log('route.params editScreen', route.params)
 
   return (
     <View style={{ flex: 1 }}>
