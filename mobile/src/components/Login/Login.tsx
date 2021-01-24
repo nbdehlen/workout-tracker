@@ -12,6 +12,7 @@ import { Spacer } from '../../util/theme/base'
 import CustomButton from '../atoms/CustomButton'
 import { ScreenRoute } from '../../navigation/navigationConstants'
 import GradientButton from '../atoms/GradientButton'
+import theme from '../../util/theme'
 
 type OwnProps = {}
 
@@ -53,23 +54,27 @@ export const Login: FunctionComponent<Props> = () => {
   }
 
   return (
-    <S.Container style={{ padding: 16 }}>
-      <Text> Username </Text>
+    <S.Container>
       <CustomInput
+        label="Username"
+        icon="User"
         value={username}
         onChangeText={setUsername}
         placeholder="MacGyver75"
+        placeholderTextColor={theme.neutral_2}
       />
-      <Spacer h={8} />
-      <Text> Password </Text>
+      <Spacer h={12} />
       <CustomInput
+        label="Password"
+        icon="Lock"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         placeholder="Super secret password"
+        placeholderTextColor={theme.neutral_2}
       />
       <Spacer h={16} />
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <S.ButtonContainer>
         <GradientButton
           onPress={postSubmit}
           onLongPress={bypassLogin}
@@ -79,10 +84,11 @@ export const Login: FunctionComponent<Props> = () => {
         <Spacer h={16} />
         <CustomButton
           onPress={goToSignup}
-          title="Sign Up instead?"
-          width="60%"
+          variant="clear"
+          title="Don't have an account yet? Sign up!"
+          width="80%"
         />
-      </View>
+      </S.ButtonContainer>
     </S.Container>
   )
 }
