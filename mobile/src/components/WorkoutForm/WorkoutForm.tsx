@@ -34,7 +34,6 @@ import { format } from 'date-fns'
 import { Icons } from '../../assets'
 import * as B from '../../util/theme/base'
 import { Spacer } from '../../util/theme/base'
-import CustomInput from '../atoms/CustomInput'
 import CustomButton from '../atoms/CustomButton'
 import * as S from './styled'
 import theme from '../../util/theme'
@@ -91,21 +90,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
       ]
     )
   }
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <S.RightHeaderContainer>
-          <S.SaveButton onPress={submitForm}>
-            <S.Text>SAVE</S.Text>
-          </S.SaveButton>
-          <Spacer w={24} />
-          <S.DeleteButton onPress={handleDeleteWorkout}>
-            <Icons.TrashCan fill={theme.neutral_1} />
-          </S.DeleteButton>
-        </S.RightHeaderContainer>
-      ),
-    })
-  }, [navigation])
 
   const { exercises } = postExercises
 
@@ -234,11 +218,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         ...secondaryMuscles.slice(0, i),
         [
           ...secondaryMuscles[i].slice(0, muscleIndex),
-          ...secondaryMuscles[i].slice(
-            muscleIndex + 1,
-            // secondaryMuscles[i].length
-            muscleIndex + 2
-          ),
+          ...secondaryMuscles[i].slice(muscleIndex + 1, muscleIndex + 2),
         ],
         ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
       ])
@@ -303,18 +283,31 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     if (start.length < 1) {
       fullWorkout.start = undefined
     }
-    console.log(fullWorkout)
-
     isEdit
       ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
       : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
-    dispatch(fetchWorkouts(user.xAccessToken))
     // TODO: toast saved etc
     navigation.navigate(ScreenRoute.WORKOUTS)
   }
 
   const [showStart, setShowStart] = useState(false)
   const [showEnd, setShowEnd] = useState(false)
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <S.RightHeaderContainer>
+          <S.SaveButton onPress={submitForm}>
+            <S.Text>SAVE</S.Text>
+          </S.SaveButton>
+          <Spacer w={24} />
+          <S.DeleteButton onPress={handleDeleteWorkout}>
+            <Icons.TrashCan fill={theme.neutral_1} />
+          </S.DeleteButton>
+        </S.RightHeaderContainer>
+      ),
+    })
+  }, [navigation, submitForm])
 
   return (
     <KeyboardAvoidingView>
@@ -371,7 +364,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                   ? new Date(postWorkout.start)
                   : new Date(Date.now())
               }
-              // date={new Date(postWorkout.start)}
               onDateChange={(date) => handlePostWorkoutDate(date, 'start')}
             />
           )}

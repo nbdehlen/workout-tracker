@@ -1,23 +1,17 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent } from 'react'
 import { useRoute } from '@react-navigation/native'
-import { Text, TextInput, TouchableOpacity, Button, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 type OwnProps = WorkoutData
 type Props = OwnProps
 
 export const WorkoutEdit: FunctionComponent<Props> = () => {
-  // const navigation = useNavigation()
-  const dispatch = useDispatch()
   const route = useRoute()
   console.log('route.params', route.params)
   const workout: WorkoutData = route.params
   //add screens and stack for add and edit in stack navigation
   // or navigate inside workoutDetails?
-
-  const addWorkoutHandler = () => {}
-
-  const editWorkout = () => {}
 
   return (
     <View>
