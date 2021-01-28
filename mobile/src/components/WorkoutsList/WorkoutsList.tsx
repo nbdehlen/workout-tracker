@@ -1,10 +1,14 @@
 import React, { FunctionComponent } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ucFirst } from '../../util/helpers'
 import { differenceInMinutes, format, isValid } from 'date-fns'
 import { ScreenRoute } from '../../navigation/navigationConstants'
-import { Spacer } from '../../util/theme/base'
+import { BaseContainer, Spacer } from '../../util/theme/base'
+import theme from '../../util/theme'
+import * as S from './styled'
+import WorkoutIcon from '../../screens/WorkoutsScreen/utils/WorkoutIcon'
+
 type OwnProps = {
   workouts: CompleteWorkout[]
 }
@@ -19,39 +23,56 @@ export const WorkoutsList: FunctionComponent<Props> = ({ workouts }) => {
   }
 
   return (
-    <View style={{ flex: 1, flexDirection: 'column', padding: 16 }}>
+    <BaseContainer style={{ flex: 1, flexDirection: 'column', padding: 16 }}>
       {workouts.map((workout) => (
-        <View>
-          <TouchableOpacity
-            key={workout._id}
-            style={{ flex: 1, flexDirection: 'row' }}
-            onPress={() => workoutDetails(workout)}
+        <>
+          <View
+            style={{
+              padding: 16,
+              borderRadius: 16,
+              backgroundColor: theme.primary.color,
+            }}
           >
-            {isValid(new Date(workout.start)) && (
-              <View>
-                <Text>{format(new Date(workout.start), 'do MMM')} </Text>
-              </View>
-            )}
-            <View>
-              <Text>{ucFirst(workout.type)} </Text>
-            </View>
-            {isValid(new Date(workout.end)) &&
-              isValid(new Date(workout.start)) && (
-                <View>
-                  <Text>
-                    {differenceInMinutes(
-                      new Date(workout.end),
-                      new Date(workout.start)
-                    )}
-                    min
-                  </Text>
+            <TouchableOpacity
+              key={workout._id}
+              style={{ flex: 1, flexDirection: 'column' }}
+              onPress={() => workoutDetails(workout)}
+            >
+              {isValid(new Date(workout.start)) && (
+                <View
+                  style={{
+                    width: '100%',
+                    borderColor: 'rgba(255,255,255,0.2)',
+                    borderBottomWidth: 1,
+                  }}
+                >
+                  <S.Text>{format(new Date(workout.start), 'MMMM dd')} </S.Text>
                 </View>
               )}
-          </TouchableOpacity>
+              <Spacer h={4} />
+              <View>
+                <S.Text>{ucFirst(workout.type)} </S.Text>
+
+                <WorkoutIcon workoutType={workout.type} />
+              </View>
+              {isValid(new Date(workout.end)) &&
+                isValid(new Date(workout.start)) && (
+                  <View>
+                    <S.Text>
+                      {differenceInMinutes(
+                        new Date(workout.end),
+                        new Date(workout.start)
+                      )}
+                      min
+                    </S.Text>
+                  </View>
+                )}
+            </TouchableOpacity>
+          </View>
           <Spacer h={12} />
-        </View>
+        </>
       ))}
-    </View>
+    </BaseContainer>
   )
 }
 

@@ -20,10 +20,11 @@ export const WorkoutNavigation: FunctionComponent<Props> = () => {
         headerShown: true,
         headerTintColor: theme.neutral_1,
         headerStyle: {
-          backgroundColor: theme.primary.color,
+          backgroundColor: theme.dark,
         },
         headerTitleStyle: { alignSelf: 'center', color: theme.gradient.start },
       }}
+      // TODO: hide workout log header?
     >
       <Stack.Screen
         name={ScreenRoute.WORKOUTS}

@@ -9,6 +9,7 @@
   },
   "neutral_1": "#ffffff",
   "neutral_2": "#dadada",
+  "dark": "#222222",
   "gradient": {
     "start": "#2db6a8",
     "end": "#2b90bf"

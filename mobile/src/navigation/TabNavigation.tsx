@@ -1,13 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer } from '@react-navigation/native'
 import WelcomeScreen from '../screens/WelcomeScreen'
-import { navigationRef } from '../util/navigationService'
-import LoginNavigation from './loginNavigation'
 import WorkoutNavigation from './workoutNavigation'
 import React, { FunctionComponent } from 'react'
 import SettingsScreen from '../screens/SettingsScreen'
 import { Icons } from '../assets'
-import WorkoutsScreen from '../screens/WorkoutsScreen'
 import { ScreenRoute, StackRoute } from './navigationConstants'
 import WorkoutAddScreen from '../screens/WorkoutAddScreen'
 import theme from '../util/theme'
@@ -51,8 +47,11 @@ export const TabNavigation: FunctionComponent<Props> = ({}) => {
       tabBarOptions={{
         keyboardHidesTabBar: true,
         style: {
-          backgroundColor: theme.primary.color,
+          height: 53,
+          backgroundColor: theme.dark,
           paddingTop: 6,
+          paddingBottom: 2,
+          borderTopWidth: 0,
         },
         labelStyle: {
           fontSize: 13,
