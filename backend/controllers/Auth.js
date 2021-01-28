@@ -7,6 +7,18 @@ const Role = require("../db/schema/RoleSchema")
 const postSignUp = async (req, res) => {
   const { username, email, password } = req.body
 
+  if (username.length < 3) {
+    return res
+      .status(400)
+      .json({ message: "Username needs to be at least 3 characters long" })
+  }
+
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password needs to be at least 6 characters long" })
+  }
+
   const user = new User({
     username,
     email,
@@ -25,8 +37,22 @@ const postSignUp = async (req, res) => {
 
 const postLogin = async (req, res) => {
   const { username, password } = req.body
+
+  if (username.length < 3) {
+    return res
+      .status(400)
+      .json({ message: "Username needs to be at least 3 characters long" })
+  }
+
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password needs to be at least 6 characters long" })
+  }
+
   try {
     const user = await User.findOne({ username }).populate("roles", "-__v")
+    //TODO: seems to login username: "" and pw: ""
     const passwordIsValid = bcrypt.compareSync(password, user.password)
 
     if (!passwordIsValid) {
