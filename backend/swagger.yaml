@@ -8,6 +8,7 @@ swaggerDefinition:
       name: "Bastian"
   servers:
     - "url": https://workouttracker-api.herokuapp.com/
+    - "url": http://localhost:5000/
 
   components:
     schemas:
@@ -193,11 +194,6 @@ swaggerDefinition:
             schema:
               type: string
             required: true
-          - name: userId
-            in: header
-            schema:
-              type: string
-            required: true
         requestBody:
           content:
             application/json:
@@ -236,11 +232,6 @@ swaggerDefinition:
             schema:
               type: string
             required: true
-          - name: userId
-            in: header
-            schema:
-              type: string
-            required: true
         responses:
           "200":
             description: A successful response
@@ -265,11 +256,6 @@ swaggerDefinition:
           - name: x-access-token
             in: header
             description: jwt-token
-            schema:
-              type: string
-            required: true
-          - name: userId
-            in: header
             schema:
               type: string
             required: true
