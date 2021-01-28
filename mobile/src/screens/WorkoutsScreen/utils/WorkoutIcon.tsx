@@ -25,7 +25,7 @@ const WorkoutIcon: FunctionComponent<Props> = ({ workoutType }) => {
   const Icon = workoutTypeFinder(workoutType)
   return (
     <>
-      <Icon fill={theme.primary.onColor} height={32} width={32} />
+      <Icon fill={theme.primary.onColor} height={36} width={36} />
     </>
   )
 }

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { FlexRow, Spacer } from '../../util/theme/base'
 import { differenceInMinutes, format, isValid } from 'date-fns'
-import { ucFirst } from '../../util/helpers'
+import { calculcateTotalSets, ucFirst } from '../../util/helpers'
 import { ScreenRoute } from '../../navigation/navigationConstants'
 import DataTable from '../../components/DataTable'
 import * as S from './styled'
@@ -23,14 +23,6 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
 
   const handleEditWorkout = () => {
     navigation.navigate(ScreenRoute.EDIT_WORKOUT, { workout })
-  }
-
-  const calculcateTotalSets = () => {
-    let count = 0
-    workout.exercises.forEach((exercise) => {
-      count += exercise.sets.length
-    })
-    return count
   }
 
   const handleModal = (index) => {
@@ -61,7 +53,7 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
         )}
 
         <FlexRow>
-          <Text>Sets: {calculcateTotalSets()} </Text>
+          <Text>Sets: {calculcateTotalSets(workout)} </Text>
         </FlexRow>
       </FlexRow>
 

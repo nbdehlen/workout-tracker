@@ -22,29 +22,33 @@ export const WorkoutNavigation: FunctionComponent<Props> = () => {
         headerStyle: {
           backgroundColor: theme.dark,
         },
-        headerTitleStyle: { alignSelf: 'center', color: theme.gradient.start },
+        headerTitleStyle: {
+          alignSelf: 'center',
+          color: theme.gradient.start,
+          fontSize: 16,
+        },
       }}
       // TODO: hide workout log header?
     >
       <Stack.Screen
         name={ScreenRoute.WORKOUTS}
         component={WorkoutsScreen}
-        options={{ headerShown: true, title: 'Workout log' }}
+        options={{ headerShown: true, title: 'WORKOUT LOG' }}
       />
       <Stack.Screen
         name={ScreenRoute.WORKOUT_DETAILS}
         component={WorkoutDetailsScreen}
-        options={{ headerShown: true, title: 'Workout details' }}
+        options={{ headerShown: true, title: 'WORKOUT DETAILS' }}
       />
       <Stack.Screen
         name={ScreenRoute.EDIT_WORKOUT}
         component={WorkoutEditScreen}
-        options={{ headerShown: true, title: 'Edit workout' }}
+        options={{ headerShown: true, title: 'EDIT WORKOUT' }}
       />
       <Stack.Screen
         name={ScreenRoute.ADD_WORKOUT}
         component={WorkoutAddScreen}
-        options={{ headerShown: true, title: 'Add workout' }}
+        options={{ headerShown: true, title: 'ADD WORKOUT' }}
       />
     </Stack.Navigator>
   )
