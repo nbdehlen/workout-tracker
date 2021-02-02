@@ -26,7 +26,7 @@ export const CardTouchable = styled.TouchableOpacity`
 export const DateHeaderView = styled.View`
   width: 100%;
   border-color: rgba(255, 255, 255, 0.2);
-  border-bottom-width: 1;
+  border-bottom-width: 1px;
 `
 export const CardColOne = styled.View`
   display: flex;

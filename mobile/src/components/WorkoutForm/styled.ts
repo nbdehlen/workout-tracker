@@ -1,4 +1,5 @@
 import styled from 'styled-components/native'
+import { BaseContainer as Base } from '../../util/theme/base'
 import theme from '../../util/theme'
 
 export const Container = styled.View``
@@ -27,4 +28,14 @@ export const DeleteButton = styled.TouchableOpacity`
 export const Text = styled.Text`
   color: ${theme.neutral_1};
   font-size: 16px;
+`
+export const BaseContainer = styled(Base)`
+  display: flex;
+  padding: 16px;
+`
+
+export const CardView = styled.View`
+  padding: 16px;
+  border-radius: 16px;
+  background-color: ${theme.primary.color};
 `

@@ -21,14 +21,19 @@ export const FatText = styled.Text`
   flex-direction: row;
 `
 export const TextInput = styled.TextInput`
-  background-color: #add8e6;
+  background-color: ${theme.background.color};
+  color: ${theme.neutral_1};
   border-width: 1px;
   border-style: solid;
   width: 50%;
+  font-size: 16px;
+  border-radius: 12px;
+  padding-left: 8px;
 `
-
-export const text = styled.View``
-
+export const Text = styled.Text`
+  color: ${theme.neutral_1};
+  font-size: 16px;
+`
 type Spacings = {
   h?: number
   w?: number

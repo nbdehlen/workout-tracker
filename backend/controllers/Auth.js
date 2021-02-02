@@ -52,7 +52,6 @@ const postLogin = async (req, res) => {
 
   try {
     const user = await User.findOne({ username }).populate("roles", "-__v")
-    //TODO: seems to login username: "" and pw: ""
     const passwordIsValid = bcrypt.compareSync(password, user.password)
 
     if (!passwordIsValid) {
@@ -63,7 +62,7 @@ const postLogin = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-      expiresIn: "365d",
+      expiresIn: "365 days",
     })
 
     const authorities = user.roles.map(
