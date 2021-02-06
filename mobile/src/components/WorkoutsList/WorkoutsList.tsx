@@ -25,12 +25,9 @@ export const WorkoutsList: FunctionComponent<Props> = ({ workouts }) => {
   return (
     <S.BaseContainer>
       {workouts.map((workout) => (
-        <View>
+        <View key={workout._id}>
           <S.CardView>
-            <S.CardTouchable
-              key={workout._id}
-              onPress={() => workoutDetails(workout)}
-            >
+            <S.CardTouchable onPress={() => workoutDetails(workout)}>
               {isValid(new Date(workout.start)) && (
                 <S.DateHeaderView>
                   <S.Text>{format(new Date(workout.start), 'MMMM dd')} </S.Text>

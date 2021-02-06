@@ -2,7 +2,6 @@ import React, { FunctionComponent, useLayoutEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import { Modal, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { FlexRow, Spacer } from '../../util/theme/base'
 import { differenceInMinutes, format, isValid } from 'date-fns'
@@ -17,7 +16,6 @@ type Props = OwnProps
 export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
   const navigation = useNavigation()
   const route = useRoute()
-  const user = useSelector((state) => state.user)
   const workout: CompleteWorkout = route.params
   const [modalVisible, setModalVisible] = useState(null)
 

@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { Icons } from '../../assets'
 import CustomButton from '../../components/atoms/CustomButton'
 import { logout } from '../../redux/auth/actions'
+import { MainState } from '../../redux/store'
 import { clearStorage } from '../../util/asyncStorage'
 import theme from '../../util/theme'
 import { BaseContainer, Spacer } from '../../util/theme/base'
@@ -15,7 +15,7 @@ type Props = OwnProps
 
 export const SettingsScreen: FunctionComponent<Props> = () => {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
+  const { username } = useSelector((state: MainState) => state.user)
   const handleLogout = () => {
     dispatch(logout())
     clearStorage()
@@ -31,7 +31,7 @@ export const SettingsScreen: FunctionComponent<Props> = () => {
         </S.IconContainer>
         <Spacer h={12} />
         <S.Text>
-          Logged in as<S.BoldText>{` ${user.username}`}</S.BoldText>
+          Logged in as<S.BoldText>{` ${username}`}</S.BoldText>
         </S.Text>
         <Spacer h={24} />
         <CustomButton

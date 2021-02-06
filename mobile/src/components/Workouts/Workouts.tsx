@@ -5,6 +5,7 @@ import { fetchWorkouts } from '../../redux/requests/actions'
 import { Text } from 'react-native'
 import WorkoutsList from '../WorkoutsList/WorkoutsList'
 import { getQuerySelector } from '@redux-requests/core'
+import { MainState } from '../../redux/store'
 
 type OwnProps = {}
 
@@ -17,13 +18,13 @@ const RequestError = () => (
 
 export const Workouts: FunctionComponent<Props> = () => {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
+  const { xAccessToken } = useSelector((state: MainState) => state.user)
   const { data, loading, error, pristine } = useSelector(
     getQuerySelector({ type: FETCH_WORKOUTS })
   )
 
   useEffect(() => {
-    dispatch(fetchWorkouts(user.xAccessToken))
+    dispatch(fetchWorkouts(xAccessToken))
   }, [])
 
   if (loading) {

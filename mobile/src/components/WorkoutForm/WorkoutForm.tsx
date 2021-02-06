@@ -38,6 +38,7 @@ import CustomButton from '../atoms/CustomButton'
 import * as S from './styled'
 import theme from '../../util/theme'
 import { ScreenRoute } from '../../navigation/navigationConstants'
+import { MainState } from '../../redux/store'
 
 type OwnProps = {
   workout: CompleteWorkout
@@ -51,7 +52,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   const navigation = useNavigation()
   const route = useRoute()
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
+  const { xAccessToken } = useSelector((state: MainState) => state.user)
   const [postWorkout, setPostWorkout] = useState<CompleteWorkout>({
     _id: workout._id,
     type: workout.type,
@@ -79,7 +80,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         {
           text: 'Delete workout',
           onPress: () => {
-            dispatch(deleteWorkout(workout._id, user.xAccessToken))
+            dispatch(deleteWorkout(workout._id, xAccessToken))
             navigation.navigate(ScreenRoute.WORKOUTS)
           },
         },
@@ -93,7 +94,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
 
   const { exercises } = postExercises
 
-  const Item = Picker.Item as any
+  const Item = Picker.Item
 
   const handlePostWorkout = (e, name: string) => {
     console.log(name, e?.nativeEvent?.text)
@@ -284,8 +285,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
       fullWorkout.start = undefined
     }
     isEdit
-      ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
-      : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
+      ? dispatch(editWorkout(_id, xAccessToken, fullWorkout))
+      : dispatch(postNewWorkout(xAccessToken, fullWorkout))
     // TODO: toast saved etc
     navigation.navigate(ScreenRoute.WORKOUTS)
   }
@@ -346,14 +347,11 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                 <Picker
                   selectedValue={postWorkout.grade || '5'}
                   style={{
-                    // height: 50,
-                    // width: 120,
                     color: theme.neutral_1,
                     backgroundColor: theme.background.color,
                   }}
-                  // dropdownIconColor={theme.neutral_1}
                   onValueChange={handleWorkoutGrade}
-                  // mode="dropdown"
+                  mode="dropdown"
                 >
                   {['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].map(
                     (grade) => (
@@ -361,7 +359,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                         label={grade + '/10'}
                         value={grade}
                         key={JSON.stringify(grade + 'grade')}
-                        // itemStyle={{ color: theme.neutral_1 }}
+                        // color="red"
                       />
                     )
                   )}

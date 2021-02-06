@@ -56,7 +56,7 @@ const postLogin = async (req, res) => {
 
     if (!passwordIsValid) {
       return res.status(401).json({
-        accessToken: null,
+        xAccessToken: null,
         message: "Invalid Password!",
       })
     }
@@ -73,7 +73,7 @@ const postLogin = async (req, res) => {
       username: user.username,
       email: user.email,
       roles: authorities,
-      accessToken: token,
+      xAccessToken: token,
     })
   } catch (err) {
     console.log(err)

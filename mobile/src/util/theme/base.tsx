@@ -39,9 +39,9 @@ type Spacings = {
   w?: number
 }
 
-export const Spacer: FunctionComponent<Spacings> = ({ h, w }) => {
-  return <View style={{ height: h, width: w }} />
-}
+export const Spacer: FunctionComponent<Spacings> = ({ h, w }) => (
+  <View style={{ height: h, width: w }} />
+)
 
 export const BaseContainer = styled.View`
   flex: 1;
