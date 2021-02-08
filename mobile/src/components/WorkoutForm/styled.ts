@@ -36,6 +36,7 @@ export const BaseContainer = styled(Base)`
 
 export const CardView = styled.View`
   padding: 16px;
+  padding-bottom: 0px;
   border-radius: 16px;
   background-color: ${theme.primary.color};
 `
