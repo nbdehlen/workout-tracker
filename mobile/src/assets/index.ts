@@ -10,6 +10,20 @@ import Run from './svg/Running.svg'
 import Gym from './svg/Gym.svg'
 import Sport from './svg/Sport.svg'
 import Muscle from './svg/Muscle.svg'
+import CaretLeft from './svg/CaretLeft.svg'
+import CaretLeftFill from './svg/CaretLeftFill.svg'
+import CaretRight from './svg/CaretRight.svg'
+import CaretRightFill from './svg/CaretRightFill.svg'
+import PlusCircle from './svg/PlusCircle.svg'
+import MinusCircle from './svg/MinusCircle.svg'
+import PlusSquare from './svg/PlusSquare.svg'
+import MinusSquare from './svg/MinusSquare.svg'
+import X from './svg/X.svg'
+import CaretDown from './svg/CaretDown.svg'
+import CaretDownFill from './svg/CaretDownFill.svg'
+import Collapse from './svg/Collapse.svg'
+import Dash from './svg/Dash.svg'
+import Expand from './svg/Expand.svg'
 
 export const Icons = {
   Add,
@@ -24,4 +38,18 @@ export const Icons = {
   Cycle,
   Sport,
   Muscle,
+  CaretLeft,
+  CaretLeftFill,
+  CaretRight,
+  CaretRightFill,
+  MinusCircle,
+  PlusCircle,
+  PlusSquare,
+  MinusSquare,
+  X,
+  CaretDown,
+  CaretDownFill,
+  Collapse,
+  Dash,
+  Expand,
 }
