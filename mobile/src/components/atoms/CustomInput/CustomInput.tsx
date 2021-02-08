@@ -7,6 +7,7 @@ import * as S from './styled'
 type OwnProps = {
   label?: string
   icon?: string
+  variant?: 'default' | 'underline'
 }
 
 type Props = OwnProps & ViewProps & TextInputProps
@@ -14,19 +15,24 @@ type Props = OwnProps & ViewProps & TextInputProps
 const CustomInput: FunctionComponent<Props> = ({
   label,
   icon,
+  variant = 'default',
   ...textInputProps
 }) => {
   const ChosenIcon = Icons[icon]
   return (
     <View>
-      {!!label && <S.Text> {label} </S.Text>}
-      <S.Container ViewProps>
+      {!!label && <S.Text variant={variant}> {label} </S.Text>}
+      <S.Container variant={variant} ViewProps>
         {icon && (
           <S.IconWrapper>
             <ChosenIcon fill={theme.primary.onColor} height={20} width={20} />
           </S.IconWrapper>
         )}
-        <S.TextInput {...textInputProps} />
+        <S.TextInput
+          variant={variant}
+          {...textInputProps}
+          placeholderTextColor="rgba(150,150,150,0.6)"
+        />
       </S.Container>
     </View>
   )

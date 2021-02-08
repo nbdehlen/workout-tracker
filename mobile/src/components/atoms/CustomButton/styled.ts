@@ -21,7 +21,7 @@ const textClearStyle = css`
 export const Touchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  border-width: 2px;
+  border-width: 1px;
   border-radius: 100px;
   padding: 8px 16px;
   width: ${({ width }) => width};
@@ -35,12 +35,12 @@ export const Text = styled.Text`
   ${({ variant }) =>
     variant === 'default' && `color: ${theme.primary.onColor}`};
   ${({ variant }) => variant === 'clear' && textClearStyle};
+  ${({ fontSize }) => fontSize && `font-size: ${fontSize}px`};
 `
 export const IconWrapper = styled.View`
   position: absolute;
   right: 0;
   margin-right: 12px;
-  border-width: 1px;
   border-color: ${theme.primary.onColor};
   border-radius: 100px;
 `

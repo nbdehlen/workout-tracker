@@ -9,6 +9,8 @@ type OwnProps = {
   width?: string
   icon?: string
   variant?: 'default' | 'outline' | 'clear'
+  fontSize?: number
+  iconSize?: number
 }
 
 type Props = OwnProps & ViewProps & TouchableOpacityProps
@@ -18,16 +20,24 @@ export const CustomButton: FunctionComponent<Props> = ({
   width = '100%',
   icon,
   variant = 'default',
+  fontSize,
+  iconSize,
   ...touchableProps
 }) => {
   const ChosenIcon = Icons[icon]
 
   return (
-    <S.Touchable width={width} variant={variant} {...touchableProps}>
-      <S.Text variant={variant}>{title}</S.Text>
+    <S.Touchable width={width} variant={variant} {...touchableProps} ViewProps>
+      <S.Text variant={variant} fontSize={fontSize}>
+        {title}
+      </S.Text>
       {icon && (
         <S.IconWrapper>
-          <ChosenIcon fill={theme.primary.onColor} height={20} width={20} />
+          <ChosenIcon
+            fill={theme.primary.onColor}
+            height={iconSize || 24}
+            width={iconSize || 24}
+          />
         </S.IconWrapper>
       )}
     </S.Touchable>
