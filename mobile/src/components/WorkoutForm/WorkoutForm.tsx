@@ -196,7 +196,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   }
 
   const handlePostMainMuscle = (muscle: string, i: number) => {
-    console.log(muscle)
     setMainMuscle([
       ...mainMuscle.slice(0, i),
       (mainMuscle[i] = muscle),
@@ -206,18 +205,19 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
 
   const handlePostSecondaryMuscles = (muscle: string, i: number) => {
     if (secondaryMuscles[i] && secondaryMuscles[i].includes(muscle)) {
-      console.log('in if')
       const muscleIndex = secondaryMuscles[i].indexOf(muscle)
       setSecondaryMuscles([
         ...secondaryMuscles.slice(0, i),
         [
           ...secondaryMuscles[i].slice(0, muscleIndex),
-          ...secondaryMuscles[i].slice(muscleIndex + 1, muscleIndex + 2),
+          ...secondaryMuscles[i].slice(
+            muscleIndex + 1,
+            secondaryMuscles[i].length
+          ),
         ],
         ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
       ])
     } else {
-      console.log('in else')
       setSecondaryMuscles([
         ...secondaryMuscles.slice(0, i),
         [...secondaryMuscles[i], muscle],
@@ -612,9 +612,10 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                           borderColor: theme.primary.onColor,
                         }}
                       >
-                        {secondaryMuscles[i]?.length > 1 ? (
+                        {secondaryMuscles[i].length > 0 &&
+                        arrayTextFormat(secondaryMuscles[i], 15) !== '...' ? (
                           <B.Text>
-                            {arrayTextFormat(secondaryMuscles[i], 16)}
+                            {arrayTextFormat(secondaryMuscles[i], 15)}
                           </B.Text>
                         ) : (
                           <B.Text style={{ color: theme.placeholder }}>
@@ -634,84 +635,90 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                   </B.FlexRow>
 
                   {toggleMuscle.mainMuscle === i && (
-                    <B.FlexRow style={{ flexWrap: 'wrap' }}>
-                      {bodyParts.map((muscle) => (
-                        <View key={muscle + i + 'primary'}>
-                          <TouchableOpacity
-                            onPress={() =>
-                              handlePostMainMuscle(muscle as string, i)
-                            }
-                          >
-                            <View
-                              style={{
-                                borderColor:
-                                  mainMuscle[i] === muscle
-                                    ? theme.primary.onColor
-                                    : theme.neutral_2,
-                                borderRadius: 12,
-                                borderWidth: 1,
-                                paddingHorizontal: 8,
-                                paddingVertical: 2,
-                                marginVertical: 4,
-                                marginHorizontal: 2,
-                              }}
+                    <>
+                      <Spacer h={12} />
+                      <B.FlexRow style={{ flexWrap: 'wrap' }}>
+                        {bodyParts.map((muscle) => (
+                          <View key={muscle + i + 'primary'}>
+                            <TouchableOpacity
+                              onPress={() =>
+                                handlePostMainMuscle(muscle as string, i)
+                              }
                             >
-                              <B.Text
+                              <View
                                 style={{
-                                  color:
+                                  borderColor:
                                     mainMuscle[i] === muscle
                                       ? theme.primary.onColor
                                       : theme.neutral_2,
+                                  borderRadius: 12,
+                                  borderWidth: 1,
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 2,
+                                  marginVertical: 4,
+                                  marginHorizontal: 2,
                                 }}
                               >
-                                {muscle && ucFirst(muscle)}
-                              </B.Text>
-                            </View>
-                          </TouchableOpacity>
-                          <Spacer w={8} />
-                        </View>
-                      ))}
-                    </B.FlexRow>
+                                <B.Text
+                                  style={{
+                                    color:
+                                      mainMuscle[i] === muscle
+                                        ? theme.primary.onColor
+                                        : theme.neutral_2,
+                                  }}
+                                >
+                                  {muscle && ucFirst(muscle)}
+                                </B.Text>
+                              </View>
+                            </TouchableOpacity>
+                            <Spacer w={8} />
+                          </View>
+                        ))}
+                      </B.FlexRow>
+                    </>
                   )}
                   {toggleMuscle.secondaryMuscles === i && (
-                    <B.FlexRow style={{ flexWrap: 'wrap' }}>
-                      {bodyParts.map((muscle) => (
-                        <View key={muscle + i + 'secondary'}>
-                          <TouchableOpacity
-                            onPress={() =>
-                              handlePostSecondaryMuscles(muscle as string, i)
-                            }
-                          >
-                            <View
-                              style={{
-                                borderColor: secondaryMuscles[i].includes(
-                                  muscle
-                                )
-                                  ? theme.primary.onColor
-                                  : theme.neutral_2,
-                                borderRadius: 12,
-                                borderWidth: 1,
-                                paddingHorizontal: 8,
-                                paddingVertical: 2,
-                                marginVertical: 4,
-                                marginHorizontal: 2,
-                              }}
+                    <>
+                      <Spacer h={12} />
+                      <B.FlexRow style={{ flexWrap: 'wrap' }}>
+                        {bodyParts.map((muscle) => (
+                          <View key={muscle + i + 'secondary'}>
+                            <TouchableOpacity
+                              onPress={() =>
+                                handlePostSecondaryMuscles(muscle as string, i)
+                              }
                             >
-                              <B.Text
+                              <View
                                 style={{
-                                  color: secondaryMuscles[i].includes(muscle)
+                                  borderColor: secondaryMuscles[i].includes(
+                                    muscle
+                                  )
                                     ? theme.primary.onColor
                                     : theme.neutral_2,
+                                  borderRadius: 12,
+                                  borderWidth: 1,
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 2,
+                                  marginVertical: 4,
+                                  marginHorizontal: 2,
                                 }}
                               >
-                                {muscle && ucFirst(muscle)}
-                              </B.Text>
-                            </View>
-                          </TouchableOpacity>
-                          <Spacer w={8} />
-                        </View>
-                      ))}
-                    </B.FlexRow>
+                                <B.Text
+                                  style={{
+                                    color: secondaryMuscles[i].includes(muscle)
+                                      ? theme.primary.onColor
+                                      : theme.neutral_2,
+                                  }}
+                                >
+                                  {muscle && ucFirst(muscle)}
+                                </B.Text>
+                              </View>
+                            </TouchableOpacity>
+                            <Spacer w={8} />
+                          </View>
+                        ))}
+                      </B.FlexRow>
+                    </>
                   )}
 
                   <Spacer h={40} />
