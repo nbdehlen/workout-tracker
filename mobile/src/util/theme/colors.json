@@ -13,5 +13,6 @@
   "gradient": {
     "start": "#2db6a8",
     "end": "#2b90bf"
-  }
+  },
+  "placeholder": "rgba(150,150,150,0.6)"
 }

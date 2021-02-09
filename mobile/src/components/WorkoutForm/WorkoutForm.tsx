@@ -153,7 +153,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         ...exercises.slice(i + 1, exercises.length),
       ],
     })
-    console.log(exercises[i].sets)
   }
 
   const removeSet = (i: number, y: number) => {
@@ -203,7 +202,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
       (mainMuscle[i] = muscle),
       ...mainMuscle.slice(i + 1, mainMuscle.length),
     ])
-    console.log(mainMuscle)
   }
 
   const handlePostSecondaryMuscles = (muscle: string, i: number) => {
@@ -455,7 +453,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                       />
                     </B.FlexCol>
                   </B.FlexRow>
-                  <Spacer h={16} />
+                  <Spacer h={24} />
                   <B.FlexRow>
                     <B.FlexCol>
                       <CustomInput
@@ -481,7 +479,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                       />
                     </B.FlexCol>
                   </B.FlexRow>
-                  <Spacer h={16} />
+                  <Spacer h={24} />
                   <B.FlexRow>
                     <B.FlexCol style={{ flex: 1 }}>
                       <CustomInput
@@ -549,7 +547,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                       </B.FlexRow>
                     </B.FlexCol>
                   </B.FlexRow>
-                  <Spacer h={16} />
+                  <Spacer h={24} />
                   <B.FlexRow>
                     <B.FlexCol>
                       <B.Text style={{ fontSize: 13, color: theme.neutral_2 }}>
@@ -572,9 +570,13 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                           borderColor: theme.primary.onColor,
                         }}
                       >
-                        <B.Text>
-                          {mainMuscle[i] && ucFirst(mainMuscle[i] as string)}
-                        </B.Text>
+                        {mainMuscle[i].length > 1 ? (
+                          <B.Text>{ucFirst(mainMuscle[i] as string)}</B.Text>
+                        ) : (
+                          <B.Text style={{ color: theme.placeholder }}>
+                            Upper chest
+                          </B.Text>
+                        )}
                         <View style={{}}>
                           <Icons.CaretDown
                             style={{ marginLeft: 8 }}
@@ -610,10 +612,15 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                           borderColor: theme.primary.onColor,
                         }}
                       >
-                        <B.Text>
-                          {secondaryMuscles[i].length > 1 &&
-                            arrayTextFormat(secondaryMuscles[i], 20)}
-                        </B.Text>
+                        {secondaryMuscles[i]?.length > 1 ? (
+                          <B.Text>
+                            {arrayTextFormat(secondaryMuscles[i], 16)}
+                          </B.Text>
+                        ) : (
+                          <B.Text style={{ color: theme.placeholder }}>
+                            Triceps...
+                          </B.Text>
+                        )}
                         <View style={{}}>
                           <Icons.CaretDown
                             style={{ marginLeft: 8 }}
@@ -707,81 +714,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                     </B.FlexRow>
                   )}
 
-                  {/* <B.FlexCol>
-                    <B.Text> Main Target (single): </B.Text>
-                    <Picker
-                      selectedValue={'select'}
-                      style={{
-                        height: 50,
-                        width: 100,
-                        color: theme.neutral_1,
-                      }}
-                      onValueChange={(muscle) =>
-                        handlePostMainMuscle(muscle as string, i)
-                      }
-                      // mode="dropdown"
-                    >
-                      {bodyParts.map((muscle) =>
-                        mainMuscle[i] === muscle ? (
-                          <Item
-                            label={muscle}
-                            value={muscle}
-                            key={JSON.stringify(muscle + 'mainMatch')}
-                            color="blue"
-                          />
-                        ) : (
-                          <Item
-                            label={muscle}
-                            value={muscle}
-                            key={JSON.stringify(muscle + 'main')}
-                            color="black"
-                          />
-                        )
-                      )}
-                    </Picker>
-                    <B.Text> {mainMuscle[i]} </B.Text>
-                  </B.FlexCol>
-
-                  <B.FlexCol>
-                    <B.Text> Secondary Targets (multiple): </B.Text>
-                    <Picker
-                      selectedValue={'select'}
-                      style={{ height: 50, width: 100, color: theme.neutral_1 }}
-                      onValueChange={(muscle) =>
-                        handlePostSecondaryMuscles(muscle as string, i)
-                      }
-                    >
-                      {bodyParts.map((muscle) =>
-                        secondaryMuscles[i] &&
-                        secondaryMuscles[i].includes(muscle) ? (
-                          <Item
-                            label={muscle}
-                            value={muscle}
-                            key={JSON.stringify(muscle + 'secondaryMatch')}
-                            color="blue"
-                          />
-                        ) : (
-                          <Item
-                            label={muscle}
-                            value={muscle}
-                            key={JSON.stringify(muscle + 'secondary')}
-                          />
-                        )
-                      )}
-                    </Picker>
-
-                    <View>
-                      {secondaryMuscles[i] &&
-                        secondaryMuscles[i].map((muscle: ReactText) => (
-                          <Text
-                            key={JSON.stringify(muscle + 'displaySecondary')}
-                          >
-                            {muscle}
-                          </Text>
-                        ))}
-                    </View>
-                  </B.FlexCol> */}
-                  <Spacer h={24} />
+                  <Spacer h={40} />
                   <View>
                     <B.FlexRow>
                       <Spacer w={24} />
@@ -926,7 +859,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                           <Spacer h={8} />
                         </View>
                       ))}
-                    <Spacer h={16} />
+                    <Spacer h={32} />
                     <B.FlexRow style={{ justifyContent: 'center' }}>
                       <CustomButton
                         title="Add Set"
@@ -936,10 +869,10 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                         fontSize={16}
                       />
                     </B.FlexRow>
-                    <Spacer h={8} />
+                    <Spacer h={12} />
                   </View>
                 </S.CardView>
-                <Spacer h={16} />
+                <Spacer h={24} />
               </View>
             ))}
             <B.FlexRow style={{ justifyContent: 'center' }}>
@@ -947,15 +880,14 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                 title="Add Exercise"
                 onPress={addExercise}
                 icon="PlusCircle"
-                width="100%"
                 fontSize={16}
               />
             </B.FlexRow>
-            <Spacer h={8} />
             {!isEdit && (
               <>
+                <Spacer h={24} />
                 <CustomButton title="Submit" onPress={submitForm} />
-                <Spacer h={8} />
+                <Spacer h={24} />
               </>
             )}
           </View>

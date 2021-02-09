@@ -30,8 +30,10 @@ export const TextInput = styled.TextInput`
 export const Text = styled.Text`
   color: ${theme.neutral_2};
   font-size: 13px;
+  margin-bottom: 2px;
   ${({ variant }) => variant === 'underline' && `margin-bottom: 2px`};
 `
 export const IconWrapper = styled.View`
   margin-left: 12px;
+  ${({ variant }) => variant === 'default' && `justify-content: center;`};
 `

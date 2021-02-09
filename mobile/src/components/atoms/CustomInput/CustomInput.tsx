@@ -24,7 +24,7 @@ const CustomInput: FunctionComponent<Props> = ({
       {!!label && <S.Text variant={variant}> {label} </S.Text>}
       <S.Container variant={variant} ViewProps>
         {icon && (
-          <S.IconWrapper>
+          <S.IconWrapper variant={variant}>
             <ChosenIcon fill={theme.primary.onColor} height={20} width={20} />
           </S.IconWrapper>
         )}
