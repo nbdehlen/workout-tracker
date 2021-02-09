@@ -31,7 +31,6 @@ export const Text = styled.Text`
 `
 export const BaseContainer = styled(Base)`
   display: flex;
-  padding: 16px;
 `
 
 export const CardView = styled.View`

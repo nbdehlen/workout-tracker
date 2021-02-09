@@ -45,7 +45,18 @@ export const Spacer: FunctionComponent<Spacings> = ({ h, w }) => (
 
 export const BaseContainer = styled.View`
   flex: 1;
-  padding: ${baseline * 3}px;
+  padding: ${baseline * 2}px;
   padding-top: ${baseline * 4}px;
   background-color: ${theme.background.color};
+`
+export const Label = styled.Text`
+  font-size: 12;
+  padding-bottom: 8;
+  color: ${theme.neutral_2};
+`
+
+export const CardView = styled.View`
+  padding-bottom: 0px;
+  border-radius: 16px;
+  background-color: ${theme.primary.color};
 `

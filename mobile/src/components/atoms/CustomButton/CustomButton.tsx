@@ -6,9 +6,9 @@ import * as S from './styled'
 
 type OwnProps = {
   title: string
-  width?: string
+  width?: string | number
   icon?: string
-  variant?: 'default' | 'outline' | 'clear'
+  variant?: 'default' | 'outline' | 'clear' | 'details'
   fontSize?: number
   iconSize?: number
 }

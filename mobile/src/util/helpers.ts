@@ -20,4 +20,4 @@ export const arrayTextFormat = (arr: string[], cutOff = 100): string =>
   arr
     .map((s) => ucFirst(s))
     .join(', ')
-    .slice(2, cutOff) + '...'
+    .slice(0, cutOff) + '...'

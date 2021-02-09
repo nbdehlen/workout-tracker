@@ -322,7 +322,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           >
             WORKOUT DETAILS
           </B.Text>
-          <Spacer h={8} />
+          <B.Spacer h={2} />
           <S.CardView>
             <B.FlexRow style={{ justifyContent: 'space-between' }}>
               <B.FlexCol>
@@ -428,7 +428,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                     <Icons.X width={24} height={24} fill="red" />
                   </TouchableOpacity>
                 </B.FlexRow>
-                <Spacer h={8} />
+                <Spacer h={2} />
                 <S.CardView>
                   <B.FlexRow>
                     <B.FlexCol>

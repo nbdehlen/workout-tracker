@@ -65,7 +65,7 @@ export const DateModal: FunctionComponent<Props> = ({
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'rgba(0,0,0,0.6)',
+            backgroundColor: theme.darkWeaker,
           }}
         >
           <View
