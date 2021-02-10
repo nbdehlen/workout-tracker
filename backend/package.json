@@ -6,7 +6,7 @@
   "scripts": {
     "publishToHeroku": "cd ../ && git subtree push --prefix backend workouttracker-api master || true",
     "test": "nyc mocha --recursive --exit --timeout 5000",
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",

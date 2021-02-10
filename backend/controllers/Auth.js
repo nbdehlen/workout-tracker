@@ -7,6 +7,18 @@ const Role = require("../db/schema/RoleSchema")
 const postSignUp = async (req, res) => {
   const { username, email, password } = req.body
 
+  if (username.length < 3) {
+    return res
+      .status(400)
+      .json({ message: "Username needs to be at least 3 characters long" })
+  }
+
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password needs to be at least 6 characters long" })
+  }
+
   const user = new User({
     username,
     email,
@@ -25,19 +37,32 @@ const postSignUp = async (req, res) => {
 
 const postLogin = async (req, res) => {
   const { username, password } = req.body
+
+  if (username.length < 3) {
+    return res
+      .status(400)
+      .json({ message: "Username needs to be at least 3 characters long" })
+  }
+
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password needs to be at least 6 characters long" })
+  }
+
   try {
     const user = await User.findOne({ username }).populate("roles", "-__v")
     const passwordIsValid = bcrypt.compareSync(password, user.password)
 
     if (!passwordIsValid) {
       return res.status(401).json({
-        accessToken: null,
+        xAccessToken: null,
         message: "Invalid Password!",
       })
     }
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-      expiresIn: "365d",
+      expiresIn: "365 days",
     })
 
     const authorities = user.roles.map(
@@ -48,7 +73,7 @@ const postLogin = async (req, res) => {
       username: user.username,
       email: user.email,
       roles: authorities,
-      accessToken: token,
+      xAccessToken: token,
     })
   } catch (err) {
     console.log(err)

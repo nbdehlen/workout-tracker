@@ -1,10 +1,14 @@
 import React, { FunctionComponent } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { ucFirst } from '../../util/helpers'
+import { calculcateTotalSets } from '../../util/helpers'
 import { differenceInMinutes, format, isValid } from 'date-fns'
 import { ScreenRoute } from '../../navigation/navigationConstants'
 import { Spacer } from '../../util/theme/base'
+import * as S from './styled'
+import WorkoutIcon from '../../screens/WorkoutsScreen/utils/WorkoutIcon'
+import * as B from '../../util/theme/base'
+
 type OwnProps = {
   workouts: CompleteWorkout[]
 }
@@ -19,39 +23,50 @@ export const WorkoutsList: FunctionComponent<Props> = ({ workouts }) => {
   }
 
   return (
-    <View style={{ flex: 1, flexDirection: 'column', padding: 16 }}>
+    <S.BaseContainer>
       {workouts.map((workout) => (
-        <View>
-          <TouchableOpacity
-            key={workout._id}
-            style={{ flex: 1, flexDirection: 'row' }}
-            onPress={() => workoutDetails(workout)}
-          >
-            {isValid(new Date(workout.start)) && (
-              <View>
-                <Text>{format(new Date(workout.start), 'do MMM')} </Text>
-              </View>
-            )}
-            <View>
-              <Text>{ucFirst(workout.type)} </Text>
-            </View>
-            {isValid(new Date(workout.end)) &&
-              isValid(new Date(workout.start)) && (
-                <View>
-                  <Text>
-                    {differenceInMinutes(
-                      new Date(workout.end),
-                      new Date(workout.start)
-                    )}
-                    min
-                  </Text>
-                </View>
+        <View key={workout._id}>
+          <S.CardView>
+            <S.CardTouchable onPress={() => workoutDetails(workout)}>
+              {isValid(new Date(workout.start)) && (
+                <S.DateHeaderView>
+                  <S.Text>{format(new Date(workout.start), 'MMMM dd')} </S.Text>
+                </S.DateHeaderView>
               )}
-          </TouchableOpacity>
+              <Spacer h={4} />
+              <B.FlexRow>
+                <S.CardColOne>
+                  <WorkoutIcon workoutType={workout.type} />
+                </S.CardColOne>
+                <S.CardColTwo>
+                  <S.Text>
+                    <S.HiglightText>
+                      {calculcateTotalSets(workout)}
+                    </S.HiglightText>{' '}
+                    Sets
+                  </S.Text>
+                </S.CardColTwo>
+                <S.CardColThree>
+                  {isValid(new Date(workout.end)) &&
+                    isValid(new Date(workout.start)) && (
+                      <S.Text>
+                        <S.HiglightText>
+                          {differenceInMinutes(
+                            new Date(workout.end),
+                            new Date(workout.start)
+                          )}
+                        </S.HiglightText>{' '}
+                        Min
+                      </S.Text>
+                    )}
+                </S.CardColThree>
+              </B.FlexRow>
+            </S.CardTouchable>
+          </S.CardView>
           <Spacer h={12} />
         </View>
       ))}
-    </View>
+    </S.BaseContainer>
   )
 }
 

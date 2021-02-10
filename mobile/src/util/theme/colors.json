@@ -1,0 +1,20 @@
+{
+  "primary": {
+    "color": "#2f2d41",
+    "onColor": "#2db6a8",
+    "weaker": "rgba(45,182,168, 0.4)"
+  },
+  "background": {
+    "color": "#242236",
+    "onColor": "#f4f4f4"
+  },
+  "neutral_1": "#ffffff",
+  "neutral_2": "#dadada",
+  "dark": "#222222",
+  "darkWeaker": "rgba(0,0,0,0.6)",
+  "gradient": {
+    "start": "#2db6a8",
+    "end": "#2b90bf"
+  },
+  "placeholder": "rgba(150,150,150,0.6)"
+}

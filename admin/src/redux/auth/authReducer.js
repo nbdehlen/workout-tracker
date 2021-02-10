@@ -1,25 +1,23 @@
-import { LOGIN } from './actionTypes';
+import { LOGIN } from "./actionTypes"
 
 const initialState = {
-  username: '',
+  username: "",
   isLoggedIn: false,
-  xAccessToken: '',
-};
+  xAccessToken: "",
+}
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN:
-      console.log('in LOGIN reducer');
-      console.log(action.payload);
       return {
         username: action.payload.username,
         isLoggedIn: true,
-        xAccessToken: action.payload.accessToken,
+        xAccessToken: action.payload.xAccessToken,
         roles: action.payload.roles,
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default authReducer;
+export default authReducer

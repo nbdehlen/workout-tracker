@@ -1,19 +1,14 @@
-import React, {
-  FunctionComponent,
-  ReactText,
-  useLayoutEffect,
-  useState,
-} from 'react'
+import React, { FunctionComponent, useLayoutEffect, useState } from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import {
-  Text,
   TouchableOpacity,
   View,
   KeyboardAvoidingView,
   ScrollView,
   Switch,
-  Platform,
   Alert,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -23,25 +18,31 @@ import {
   emptySet,
   populateMainMuscle,
 } from '../../api/helpers'
-import { Picker } from '@react-native-community/picker'
+import { Picker } from '@react-native-picker/picker'
 import {
   deleteWorkout,
   editWorkout,
-  fetchWorkouts,
   postNewWorkout,
 } from '../../redux/requests/actions'
-import DatePicker from 'react-native-date-picker'
 import { format } from 'date-fns'
 import { Icons } from '../../assets'
-import * as S from '../../util/theme/base'
+import * as B from '../../util/theme/base'
 import { Spacer } from '../../util/theme/base'
-import CustomInput from '../atoms/CustomInput'
 import CustomButton from '../atoms/CustomButton'
+import * as S from './styled'
+import theme from '../../util/theme'
+import { ScreenRoute } from '../../navigation/navigationConstants'
+import { MainState } from '../../redux/store'
+import CountButton from '../atoms/CountButton'
+import DateModal from '../atoms/DateModal'
+import CustomInput from '../atoms/CustomInput'
+import { arrayTextFormat, ucFirst } from '../../util/helpers'
 
 type OwnProps = {
   workout: CompleteWorkout
   isEdit: boolean
 }
+
 type Props = OwnProps
 
 type MainMuscle = String[]
@@ -50,12 +51,12 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   const navigation = useNavigation()
   const route = useRoute()
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
+  const { xAccessToken } = useSelector((state: MainState) => state.user)
   const [postWorkout, setPostWorkout] = useState<CompleteWorkout>({
     _id: workout._id,
     type: workout.type,
     start: workout.start,
-    grade: workout.grade,
+    // grade: workout.grade,
     end: workout.end,
   })
 
@@ -78,8 +79,8 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         {
           text: 'Delete workout',
           onPress: () => {
-            dispatch(deleteWorkout(workout._id, user.xAccessToken))
-            navigation.navigate('workout')
+            dispatch(deleteWorkout(workout._id, xAccessToken))
+            navigation.navigate(ScreenRoute.WORKOUTS)
           },
         },
         {
@@ -89,26 +90,10 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
       ]
     )
   }
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity onPress={submitForm}>
-            <Text>SAVE</Text>
-          </TouchableOpacity>
-          <Spacer w={24} />
-          <TouchableOpacity onPress={handleDeleteWorkout}>
-            {/* <Text>Delete</Text> */}
-            <Icons.TrashCan fill="grey" />
-          </TouchableOpacity>
-        </View>
-      ),
-    })
-  }, [navigation])
 
   const { exercises } = postExercises
 
-  const Item = Picker.Item as any
+  const Item = Picker.Item
 
   const handlePostWorkout = (e, name: string) => {
     console.log(name, e?.nativeEvent?.text)
@@ -119,7 +104,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   }
 
   const handlePostWorkoutDate = (date, key) => {
-    console.log(date)
     setPostWorkout({
       ...postWorkout,
       [key]: date,
@@ -169,7 +153,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         ...exercises.slice(i + 1, exercises.length),
       ],
     })
-    console.log(exercises[i].sets)
   }
 
   const removeSet = (i: number, y: number) => {
@@ -195,8 +178,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
   }
 
   const handlePostSets = (e, name: string, i: number, y: number) => {
-    console.log(name)
-    console.log(e?.nativeEvent?.text)
     setPostExercises({
       ...postExercises,
       exercises: [
@@ -212,22 +193,18 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
         ...exercises.slice(i + 1, exercises.length),
       ],
     })
-    console.log(postExercises.exercises[i].sets)
   }
 
   const handlePostMainMuscle = (muscle: string, i: number) => {
-    console.log(muscle)
     setMainMuscle([
       ...mainMuscle.slice(0, i),
       (mainMuscle[i] = muscle),
       ...mainMuscle.slice(i + 1, mainMuscle.length),
     ])
-    console.log(mainMuscle)
   }
 
   const handlePostSecondaryMuscles = (muscle: string, i: number) => {
     if (secondaryMuscles[i] && secondaryMuscles[i].includes(muscle)) {
-      console.log('in if')
       const muscleIndex = secondaryMuscles[i].indexOf(muscle)
       setSecondaryMuscles([
         ...secondaryMuscles.slice(0, i),
@@ -235,14 +212,12 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
           ...secondaryMuscles[i].slice(0, muscleIndex),
           ...secondaryMuscles[i].slice(
             muscleIndex + 1,
-            // secondaryMuscles[i].length
-            muscleIndex + 2
+            secondaryMuscles[i].length
           ),
         ],
         ...secondaryMuscles.slice(i + 1, secondaryMuscles.length),
       ])
     } else {
-      console.log('in else')
       setSecondaryMuscles([
         ...secondaryMuscles.slice(0, i),
         [...secondaryMuscles[i], muscle],
@@ -251,16 +226,21 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     }
   }
 
-  const handleWorkoutGrade = (grade) => {
-    console.log('grade', grade)
-    setPostWorkout({
-      ...postWorkout,
-      grade: String(grade),
-    })
-  }
+  // const handleWorkoutGrade = (grade: number) => {
+  //   if (grade >= 0 && grade <= 10) {
+  //     setPostWorkout({
+  //       ...postWorkout,
+  //       grade: String(grade),
+  //     })
+  //   }
+  // }
+
+  const [workoutGrade, setWorkoutGrade] = useState<number>(
+    Number(workout.grade) || 0
+  )
 
   const submitForm = () => {
-    const { _id, end, grade, start, type } = postWorkout
+    const { _id, end, start, type } = postWorkout
 
     const mainMuscleValidation = (mainMuscle) => {
       return mainMuscle.length > 0 ? mainMuscle : ''
@@ -273,7 +253,7 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     const fullWorkout = {
       _id,
       end,
-      grade,
+      grade: String(workoutGrade),
       start,
       type,
       exercises: postExercises.exercises.map((exercise, i) => ({
@@ -302,303 +282,622 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
     if (start.length < 1) {
       fullWorkout.start = undefined
     }
-    console.log(fullWorkout)
-
     isEdit
-      ? dispatch(editWorkout(_id, user.xAccessToken, fullWorkout))
-      : dispatch(postNewWorkout(user.xAccessToken, fullWorkout))
-    dispatch(fetchWorkouts(user.xAccessToken))
-    navigation.navigate('workout')
+      ? dispatch(editWorkout(_id, xAccessToken, fullWorkout))
+      : dispatch(postNewWorkout(xAccessToken, fullWorkout))
+    // TODO: toast saved etc
+    navigation.navigate(ScreenRoute.WORKOUTS)
   }
 
-  const [showStart, setShowStart] = useState(false)
-  const [showEnd, setShowEnd] = useState(false)
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <S.RightHeaderContainer>
+          <S.SaveButton onPress={submitForm}>
+            <S.Text>SAVE</S.Text>
+          </S.SaveButton>
+          <Spacer w={24} />
+          <S.DeleteButton onPress={handleDeleteWorkout}>
+            <Icons.TrashCan fill={theme.neutral_1} />
+          </S.DeleteButton>
+        </S.RightHeaderContainer>
+      ),
+    })
+  }, [navigation, submitForm])
+
+  const [toggleMuscle, setToggleMuscle] = useState({
+    mainMuscle: null,
+    secondaryMuscles: null,
+  })
 
   return (
     <KeyboardAvoidingView>
       <ScrollView>
-        <S.FlexCol>
-          <Text> Workout type </Text>
-          <S.TextInput
-            value={postWorkout.type}
-            name="type"
-            onChange={(e) => handlePostWorkout(e, 'type')}
-          />
-        </S.FlexCol>
-        <S.FlexCol>
-          <Text> Grade </Text>
-
-          <Picker
-            selectedValue={postWorkout?.grade || '5'}
-            style={{ height: 50, width: 120 }}
-            onValueChange={handleWorkoutGrade}
-            // mode="dropdown"
+        <S.BaseContainer>
+          <B.Text
+            style={{
+              color: theme.primary.onColor,
+              fontWeight: 'bold',
+            }}
           >
-            {['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].map(
-              (grade) => (
-                <Item
-                  label={grade + '/10'}
-                  value={grade}
-                  key={JSON.stringify(grade + 'grade')}
-                  color="black"
-                />
-              )
-            )}
-          </Picker>
-        </S.FlexCol>
-        <S.FlexCol>
-          <TouchableOpacity onPress={() => setShowStart(!showStart)}>
-            <Text>
-              Start:{' '}
-              {postWorkout.start
-                ? format(
-                    new Date(new Date(postWorkout.start)),
-                    'HH:mm do MMM yy'
-                  )
-                : format(new Date(Date.now()), 'HH:mm do MMM yy')}
-            </Text>
-          </TouchableOpacity>
-
-          {showStart && (
-            <DatePicker
-              mode="datetime"
-              minimumDate={new Date(Date.now() - 60 * 60 * 1000 * 24 * 365)}
-              maximumDate={new Date(Date.now() + 60 * 60 * 1000 * 24 * 7)}
-              date={
-                postWorkout?.start
-                  ? new Date(postWorkout.start)
-                  : new Date(Date.now())
-              }
-              // date={new Date(postWorkout.start)}
-              onDateChange={(date) => handlePostWorkoutDate(date, 'start')}
-            />
-          )}
-          {console.log(
-            'postWorkout.start',
-            postWorkout.start,
-            new Date(Date.now())
-          )}
-        </S.FlexCol>
-        <S.FlexCol>
-          <TouchableOpacity onPress={() => setShowEnd(!showEnd)}>
-            <Text>
-              End:{' '}
-              {postWorkout.end
-                ? format(new Date(new Date(postWorkout.end)), 'HH:mm do MMM yy')
-                : format(
-                    new Date(Date.now() + 60 * 60 * 1000),
-                    'HH:mm do MMM yy'
-                  )}
-            </Text>
-          </TouchableOpacity>
-          {showEnd && (
-            <DatePicker
-              mode="datetime"
-              minimumDate={new Date(Date.now() - 60 * 60 * 1000 * 24 * 365)}
-              maximumDate={new Date(Date.now() + 60 * 60 * 1000 * 24 * 7)}
-              date={
-                postWorkout?.end
-                  ? new Date(postWorkout.end)
-                  : new Date(Date.now())
-              }
-              onDateChange={(date) => handlePostWorkoutDate(date, 'end')}
-            />
-          )}
-        </S.FlexCol>
-        <View>
-          {exercises.map((exercise, i) => (
-            <View key={'exercise' + i}>
-              <S.FlexCol>
-                <Text> Exercise type: </Text>
-                <S.TextInput
-                  value={exercise.exerciseType}
-                  name="exerciseType"
-                  onChange={(e) => handlePostExercises(e, 'exerciseType', i)}
-                />
-              </S.FlexCol>
-              <S.FlexCol>
-                <Text> Exercise {i + 1} : </Text>
-                <TouchableOpacity onPress={() => removeExercise(i)}>
-                  <Text>Remove Exercise</Text>
-                </TouchableOpacity>
-
-                <S.TextInput
-                  value={exercise.name}
-                  name="name"
-                  onChange={(e) => handlePostExercises(e, 'name', i)}
-                />
-              </S.FlexCol>
-              <S.FlexCol>
-                <Text> Compound: </Text>
-                <Switch
-                  value={exercise.compound}
-                  name="compound"
-                  onValueChange={(e) => handlePostExercises(e, 'compound', i)}
-                />
-              </S.FlexCol>
-              <S.FlexCol>
-                <Text> Main Target (single): </Text>
-                <Picker
-                  selectedValue={'select'}
-                  style={{ height: 50, width: 100 }}
-                  onValueChange={(muscle) =>
-                    handlePostMainMuscle(muscle as string, i)
+            WORKOUT DETAILS
+          </B.Text>
+          <B.Spacer h={2} />
+          <S.CardView>
+            <B.FlexRow style={{ justifyContent: 'space-between' }}>
+              <B.FlexCol>
+                <CustomInput
+                  label="Workout type"
+                  variant="underline"
+                  placeholder="Gym"
+                  value={postWorkout.type}
+                  // name="type"
+                  onChange={(e: React.ChangeEvent) =>
+                    handlePostWorkout(e, 'type')
                   }
-                  // mode="dropdown"
-                >
-                  {bodyParts.map((muscle) =>
-                    mainMuscle[i] === muscle ? (
-                      <Item
-                        label={muscle}
-                        value={muscle}
-                        key={JSON.stringify(muscle + 'mainMatch')}
-                        color="blue"
-                      />
-                    ) : (
-                      <Item
-                        label={muscle}
-                        value={muscle}
-                        key={JSON.stringify(muscle + 'main')}
-                        color="black"
-                      />
-                    )
-                  )}
-                </Picker>
-                <Text> {mainMuscle[i]} </Text>
-              </S.FlexCol>
-              <S.FlexCol>
-                <Text> Secondary Targets (multiple): </Text>
-                <Picker
-                  selectedValue={'select'}
-                  style={{ height: 50, width: 100 }}
-                  onValueChange={(muscle) =>
-                    handlePostSecondaryMuscles(muscle as string, i)
+                  style={{
+                    width: '100%',
+                  }}
+                />
+              </B.FlexCol>
+              <Spacer w={40} />
+              <B.FlexCol
+                style={
+                  {
+                    // alignItems: 'center',
                   }
+                }
+              >
+                <B.Text
+                  style={{
+                    fontSize: 12,
+                    paddingBottom: 4,
+                    color: theme.neutral_2,
+                  }}
                 >
-                  {bodyParts.map((muscle) =>
-                    secondaryMuscles[i] &&
-                    secondaryMuscles[i].includes(muscle) ? (
-                      <Item
-                        label={muscle}
-                        value={muscle}
-                        key={JSON.stringify(muscle + 'secondaryMatch')}
-                        color="blue"
+                  Grade
+                </B.Text>
+                <CountButton
+                  counterMin={0}
+                  counterMax={10}
+                  count={workoutGrade}
+                  setCount={setWorkoutGrade}
+                  suffix="/10"
+                />
+              </B.FlexCol>
+            </B.FlexRow>
+            <Spacer h={16} />
+            <B.FlexRow>
+              <B.FlexCol>
+                <DateModal
+                  label="Start"
+                  title={
+                    postWorkout?.start
+                      ? format(new Date(postWorkout.start), 'dd MMM HH:mm')
+                      : format(Date.now(), 'dd MMM HH:mm')
+                  }
+                  stateKey="start"
+                  date={
+                    postWorkout?.start
+                      ? new Date(postWorkout.start)
+                      : new Date(Date.now())
+                  }
+                  state={postWorkout}
+                  setState={setPostWorkout}
+                />
+              </B.FlexCol>
+              <Spacer w={40} />
+              <B.FlexCol>
+                <DateModal
+                  label="End"
+                  title={
+                    postWorkout?.end
+                      ? format(
+                          new Date(new Date(postWorkout.end)),
+                          'dd MMM HH:mm'
+                        )
+                      : format(new Date(Date.now()), 'dd MMM HH:mm')
+                  }
+                  stateKey="end"
+                  date={
+                    postWorkout?.end
+                      ? new Date(postWorkout.end)
+                      : new Date(Date.now())
+                  }
+                  state={postWorkout}
+                  setState={setPostWorkout}
+                />
+              </B.FlexCol>
+            </B.FlexRow>
+            <Spacer h={16} />
+          </S.CardView>
+          <Spacer h={32} />
+          <View>
+            {exercises.map((exercise, i) => (
+              <View key={'exercise' + i}>
+                <B.FlexRow>
+                  <B.Text
+                    style={{
+                      color: theme.primary.onColor,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    EXERCISE {i + 1}
+                  </B.Text>
+                  <TouchableOpacity onPress={() => removeExercise(i)}>
+                    <Icons.X width={24} height={24} fill="red" />
+                  </TouchableOpacity>
+                </B.FlexRow>
+                <Spacer h={2} />
+                <S.CardView>
+                  <B.FlexRow>
+                    <B.FlexCol>
+                      <CustomInput
+                        value={exercise.tool}
+                        // name="tool"
+                        onChange={(e) => handlePostExercises(e, 'tool', i)}
+                        variant="underline"
+                        label="Tool"
+                        placeholder="Barbell"
                       />
-                    ) : (
-                      <Item
-                        label={muscle}
-                        value={muscle}
-                        key={JSON.stringify(muscle + 'secondary')}
+                    </B.FlexCol>
+                    <Spacer w={40} />
+                    <B.FlexCol>
+                      <CustomInput
+                        value={exercise.name}
+                        // name="name"
+                        onChange={(e) => handlePostExercises(e, 'name', i)}
+                        variant="underline"
+                        label="Movement"
+                        placeholder="Row"
                       />
-                    )
+                    </B.FlexCol>
+                  </B.FlexRow>
+                  <Spacer h={24} />
+                  <B.FlexRow>
+                    <B.FlexCol>
+                      <CustomInput
+                        value={exercise.exerciseType}
+                        // name="exerciseType"
+                        onChange={(e) =>
+                          handlePostExercises(e, 'exerciseType', i)
+                        }
+                        variant="underline"
+                        label="Exercise type"
+                        placeholder="Strength"
+                      />
+                    </B.FlexCol>
+                    <Spacer w={40} />
+                    <B.FlexCol style={{ flex: 1 }}>
+                      <CustomInput
+                        label="Duration"
+                        variant="underline"
+                        placeholder="120s  s/m"
+                        value={exercise.duration}
+                        // name="duration"
+                        onChange={(e) => handlePostExercises(e, 'duration', i)}
+                      />
+                    </B.FlexCol>
+                  </B.FlexRow>
+                  <Spacer h={24} />
+                  <B.FlexRow>
+                    <B.FlexCol style={{ flex: 1 }}>
+                      <CustomInput
+                        label="Calories"
+                        variant="underline"
+                        placeholder="134"
+                        value={exercise.calories}
+                        // name="calories"
+                        onChange={(
+                          e: NativeSyntheticEvent<TextInputChangeEventData>
+                        ) => handlePostExercises(e, 'calories', i)}
+                      />
+                    </B.FlexCol>
+                    <Spacer w={40} />
+                    <B.FlexCol>
+                      <B.FlexRow
+                        style={{
+                          alignItems: 'flex-end',
+                          justifyContent: 'flex-end',
+                          // justifyContent: 'space-between',
+                        }}
+                      >
+                        <B.Text
+                          style={{
+                            fontSize: 13,
+                            paddingBottom: 4,
+                            color: theme.neutral_2,
+                            width: 67,
+                          }}
+                        >
+                          Compound
+                        </B.Text>
+                        <Switch
+                          value={exercise.compound}
+                          // name="compound"
+                          onValueChange={(e: boolean) =>
+                            handlePostExercises(e, 'compound', i)
+                          }
+                        />
+                      </B.FlexRow>
+                      <B.FlexRow
+                        style={{
+                          alignItems: 'flex-end',
+                          justifyContent: 'flex-end',
+                        }}
+                      >
+                        <B.Text
+                          style={{
+                            fontSize: 13,
+                            paddingBottom: 4,
+                            color: theme.neutral_2,
+                            width: 67,
+                          }}
+                        >
+                          Unilateral
+                        </B.Text>
+                        <Switch
+                          value={exercise.unilateral}
+                          // name="unilateral"
+                          onValueChange={(e: boolean) =>
+                            handlePostExercises(e, 'unilateral', i)
+                          }
+                        />
+                      </B.FlexRow>
+                    </B.FlexCol>
+                  </B.FlexRow>
+                  <Spacer h={24} />
+                  <B.FlexRow>
+                    <B.FlexCol>
+                      <B.Text style={{ fontSize: 13, color: theme.neutral_2 }}>
+                        Main muscle
+                      </B.Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          let toggle = toggleMuscle.mainMuscle === i ? null : i
+                          setToggleMuscle({
+                            mainMuscle: toggle,
+                            secondaryMuscles: null,
+                          })
+                        }}
+                        style={{
+                          flexDirection: 'row',
+                          borderBottomWidth: 2,
+                          paddingLeft: 4,
+                          paddingBottom: 2,
+                          marginTop: 8,
+                          borderColor: theme.primary.onColor,
+                        }}
+                      >
+                        {mainMuscle[i].length > 1 ? (
+                          <B.Text>{ucFirst(mainMuscle[i] as string)}</B.Text>
+                        ) : (
+                          <B.Text style={{ color: theme.placeholder }}>
+                            Upper chest
+                          </B.Text>
+                        )}
+                        <View style={{}}>
+                          <Icons.CaretDown
+                            style={{ marginLeft: 8 }}
+                            width={24}
+                            height={24}
+                            fill={theme.primary.onColor}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </B.FlexCol>
+
+                    <Spacer w={40} />
+
+                    <B.FlexCol>
+                      <B.Text style={{ fontSize: 13, color: theme.neutral_2 }}>
+                        Secondary muscles
+                      </B.Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          let toggle =
+                            toggleMuscle.secondaryMuscles === i ? null : i
+                          setToggleMuscle({
+                            mainMuscle: null,
+                            secondaryMuscles: toggle,
+                          })
+                        }}
+                        style={{
+                          flexDirection: 'row',
+                          borderBottomWidth: 2,
+                          paddingLeft: 4,
+                          paddingBottom: 2,
+                          marginTop: 8,
+                          borderColor: theme.primary.onColor,
+                        }}
+                      >
+                        {secondaryMuscles[i].length > 0 &&
+                        arrayTextFormat(secondaryMuscles[i], 15) !== '...' ? (
+                          <B.Text>
+                            {arrayTextFormat(secondaryMuscles[i], 15)}
+                          </B.Text>
+                        ) : (
+                          <B.Text style={{ color: theme.placeholder }}>
+                            Triceps...
+                          </B.Text>
+                        )}
+                        <View style={{}}>
+                          <Icons.CaretDown
+                            style={{ marginLeft: 8 }}
+                            width={24}
+                            height={24}
+                            fill={theme.primary.onColor}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </B.FlexCol>
+                  </B.FlexRow>
+
+                  {toggleMuscle.mainMuscle === i && (
+                    <>
+                      <Spacer h={12} />
+                      <B.FlexRow style={{ flexWrap: 'wrap' }}>
+                        {bodyParts.map((muscle) => (
+                          <View key={muscle + i + 'primary'}>
+                            <TouchableOpacity
+                              onPress={() =>
+                                handlePostMainMuscle(muscle as string, i)
+                              }
+                            >
+                              <View
+                                style={{
+                                  borderColor:
+                                    mainMuscle[i] === muscle
+                                      ? theme.primary.onColor
+                                      : theme.neutral_2,
+                                  borderRadius: 12,
+                                  borderWidth: 1,
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 2,
+                                  marginVertical: 4,
+                                  marginHorizontal: 2,
+                                }}
+                              >
+                                <B.Text
+                                  style={{
+                                    color:
+                                      mainMuscle[i] === muscle
+                                        ? theme.primary.onColor
+                                        : theme.neutral_2,
+                                  }}
+                                >
+                                  {muscle && ucFirst(muscle)}
+                                </B.Text>
+                              </View>
+                            </TouchableOpacity>
+                            <Spacer w={8} />
+                          </View>
+                        ))}
+                      </B.FlexRow>
+                    </>
                   )}
-                </Picker>
+                  {toggleMuscle.secondaryMuscles === i && (
+                    <>
+                      <Spacer h={12} />
+                      <B.FlexRow style={{ flexWrap: 'wrap' }}>
+                        {bodyParts.map((muscle) => (
+                          <View key={muscle + i + 'secondary'}>
+                            <TouchableOpacity
+                              onPress={() =>
+                                handlePostSecondaryMuscles(muscle as string, i)
+                              }
+                            >
+                              <View
+                                style={{
+                                  borderColor: secondaryMuscles[i].includes(
+                                    muscle
+                                  )
+                                    ? theme.primary.onColor
+                                    : theme.neutral_2,
+                                  borderRadius: 12,
+                                  borderWidth: 1,
+                                  paddingHorizontal: 8,
+                                  paddingVertical: 2,
+                                  marginVertical: 4,
+                                  marginHorizontal: 2,
+                                }}
+                              >
+                                <B.Text
+                                  style={{
+                                    color: secondaryMuscles[i].includes(muscle)
+                                      ? theme.primary.onColor
+                                      : theme.neutral_2,
+                                  }}
+                                >
+                                  {muscle && ucFirst(muscle)}
+                                </B.Text>
+                              </View>
+                            </TouchableOpacity>
+                            <Spacer w={8} />
+                          </View>
+                        ))}
+                      </B.FlexRow>
+                    </>
+                  )}
 
-                <View>
-                  {secondaryMuscles[i] &&
-                    secondaryMuscles[i].map((muscle: ReactText) => (
-                      <Text key={JSON.stringify(muscle + 'displaySecondary')}>
-                        {muscle}
-                      </Text>
-                    ))}
-                </View>
-              </S.FlexCol>
-              <S.FlexCol>
-                <Text> Duration: </Text>
-                <S.TextInput
-                  value={exercise.duration}
-                  name="duration"
-                  onChange={(e) => handlePostExercises(e, 'duration', i)}
-                />
-              </S.FlexCol>
-              <S.FlexCol>
-                <Text> Calories: </Text>
-                <S.TextInput
-                  value={exercise.calories}
-                  name="calories"
-                  onChange={(e) => handlePostExercises(e, 'calories', i)}
-                />
-              </S.FlexCol>
-              <S.FlexCol>
-                <Text> Tool: </Text>
-                <S.TextInput
-                  value={exercise.tool}
-                  name="tool"
-                  onChange={(e) => handlePostExercises(e, 'tool', i)}
-                />
-              </S.FlexCol>
-              <Text> Unilateral </Text>
-              <Switch
-                value={exercise.unilateral}
-                name="unilateral"
-                onValueChange={(e) => handlePostExercises(e, 'unilateral', i)}
-              />
+                  <Spacer h={40} />
+                  <View>
+                    <B.FlexRow>
+                      <Spacer w={24} />
+                      <B.FlexCol />
+                      <B.FlexCol style={{ alignItems: 'center' }}>
+                        <B.Text
+                          style={{
+                            flex: 1,
+                            fontSize: 13,
+                            color: theme.neutral_2,
+                          }}
+                        >
+                          WEIGHT
+                        </B.Text>
+                      </B.FlexCol>
+                      <Spacer w={8} />
+                      <B.FlexCol style={{ alignItems: 'center' }}>
+                        <B.Text
+                          style={{
+                            flex: 1,
+                            fontSize: 13,
+                            color: theme.neutral_2,
+                          }}
+                        >
+                          REPS
+                        </B.Text>
+                      </B.FlexCol>
 
-              {exercise.sets &&
-                exercise.sets.map((set, y) => (
-                  <View key={JSON.stringify(set + String(y))}>
-                    <Text> Set {y + 1} </Text>
-                    <S.FlexCol>
-                      <Text> Weight: </Text>
-                      <S.TextInput
-                        value={String(set.weight)}
-                        name="weight"
-                        onChange={(e) => handlePostSets(e, 'weight', i, y)}
+                      <Spacer w={8} />
+                      <B.FlexCol style={{ alignItems: 'center' }}>
+                        <B.Text
+                          style={{
+                            flex: 1,
+                            fontSize: 13,
+                            color: theme.neutral_2,
+                          }}
+                        >
+                          REST
+                        </B.Text>
+                      </B.FlexCol>
+                      <Spacer w={8} />
+                      <B.FlexCol style={{ alignItems: 'center' }}>
+                        <B.Text
+                          style={{
+                            flex: 1,
+                            fontSize: 13,
+                            color: theme.neutral_2,
+                          }}
+                        >
+                          TIME
+                        </B.Text>
+                      </B.FlexCol>
+                      <Spacer w={8} />
+                    </B.FlexRow>
+                    {exercise.sets &&
+                      exercise.sets.map((set, y) => (
+                        <View key={JSON.stringify(set + String(y))}>
+                          <B.FlexRow>
+                            <TouchableOpacity
+                              onPress={() => removeSet(i, y)}
+                              style={{
+                                width: 24,
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <Icons.Dash width={24} height={24} fill="red" />
+                            </TouchableOpacity>
+                            <Spacer w={8} />
+                            <B.FlexCol
+                              style={{
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <B.Text
+                                style={{
+                                  color: theme.neutral_2,
+                                  // fontWeight: 'bold',
+                                  fontSize: 13,
+                                }}
+                              >
+                                SET {y + 1}:
+                              </B.Text>
+                            </B.FlexCol>
+                            <B.FlexCol>
+                              <CustomInput
+                                variant="underline"
+                                value={String(set.weight)}
+                                // name="weight"
+                                onChange={(
+                                  e: NativeSyntheticEvent<
+                                    TextInputChangeEventData
+                                  >
+                                ) => handlePostSets(e, 'weight', i, y)}
+                                style={{
+                                  flex: 1,
+                                }}
+                              />
+                            </B.FlexCol>
+                            <Spacer w={8} />
+                            <B.FlexCol>
+                              <CustomInput
+                                variant="underline"
+                                value={String(set.reps)}
+                                // name="reps"
+                                onChange={(e) =>
+                                  handlePostSets(e, 'reps', i, y)
+                                }
+                                style={{
+                                  flex: 1,
+                                }}
+                              />
+                            </B.FlexCol>
+                            <Spacer w={8} />
+                            <B.FlexCol>
+                              <CustomInput
+                                variant="underline"
+                                value={set.rest}
+                                // name="rest"
+                                onChange={(e) =>
+                                  handlePostSets(e, 'rest', i, y)
+                                }
+                                style={{
+                                  flex: 1,
+                                }}
+                              />
+                            </B.FlexCol>
+                            <Spacer w={8} />
+                            <B.FlexCol>
+                              <CustomInput
+                                variant="underline"
+                                value={set.time}
+                                // name="time"
+                                onChange={(e) =>
+                                  handlePostSets(e, 'time', i, y)
+                                }
+                                style={{
+                                  flex: 1,
+                                }}
+                              />
+                            </B.FlexCol>
+                          </B.FlexRow>
+                          <Spacer h={8} />
+                        </View>
+                      ))}
+                    <Spacer h={32} />
+                    <B.FlexRow style={{ justifyContent: 'center' }}>
+                      <CustomButton
+                        title="Add Set"
+                        onPress={() => addSet(i)}
+                        icon="PlusCircle"
+                        width="55%"
+                        fontSize={16}
                       />
-                    </S.FlexCol>
-                    <S.FlexCol>
-                      <Text> Reps </Text>
-                      <S.TextInput
-                        value={String(set.reps)}
-                        name="reps"
-                        onChange={(e) => handlePostSets(e, 'reps', i, y)}
-                      />
-                    </S.FlexCol>
-                    <S.FlexCol>
-                      <Text> Rest </Text>
-                      <S.TextInput
-                        value={set.rest}
-                        name="rest"
-                        onChange={(e) => handlePostSets(e, 'rest', i, y)}
-                      />
-                    </S.FlexCol>
-                    <S.FlexCol>
-                      <Text> Time </Text>
-                      <S.TextInput
-                        value={set.time}
-                        name="time"
-                        onChange={(e) => handlePostSets(e, 'time', i, y)}
-                      />
-                    </S.FlexCol>
-                    <TouchableOpacity onPress={() => removeSet(i, y)}>
-                      <Text style={{ color: 'red', fontWeight: 'bold' }}>
-                        Remove set
-                      </Text>
-                    </TouchableOpacity>
-                    <Spacer h={8} />
+                    </B.FlexRow>
+                    <Spacer h={12} />
                   </View>
-                ))}
-
-              <View>
-                <TouchableOpacity onPress={() => addSet(i)}>
-                  <Text style={{ color: 'blue', fontWeight: 'bold' }}>
-                    Add set
-                  </Text>
-                </TouchableOpacity>
+                </S.CardView>
+                <Spacer h={24} />
               </View>
-            </View>
-          ))}
-          <TouchableOpacity onPress={addExercise}>
-            <Text style={{ color: 'blue', fontWeight: 'bold' }}>
-              Add Exercise
-            </Text>
-          </TouchableOpacity>
-          <Spacer h={8} />
-          <View style={{ alignItems: 'center' }}>
-            <CustomButton title="Submit" onPress={submitForm} />
+            ))}
+            <B.FlexRow style={{ justifyContent: 'center' }}>
+              <CustomButton
+                title="Add Exercise"
+                onPress={addExercise}
+                icon="PlusCircle"
+                fontSize={16}
+              />
+            </B.FlexRow>
+            {!isEdit && (
+              <>
+                <Spacer h={24} />
+                <CustomButton title="Submit" onPress={submitForm} />
+                <Spacer h={24} />
+              </>
+            )}
           </View>
-          <Spacer h={8} />
-        </View>
+        </S.BaseContainer>
       </ScrollView>
     </KeyboardAvoidingView>
   )

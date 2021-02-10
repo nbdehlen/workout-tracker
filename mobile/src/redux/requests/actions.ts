@@ -1,4 +1,3 @@
-import constants from '../../api/constants'
 import {
   FETCH_WORKOUTS,
   POST_WORKOUT,
@@ -6,46 +5,40 @@ import {
   DELETE_WORKOUT,
 } from './actionTypes'
 
-//had issues setting baseURL, will try something different later
-//304 not modified every fkn time
-export const fetchWorkouts = (token) => ({
+export const fetchWorkouts = (xAccessToken) => ({
   type: FETCH_WORKOUTS,
-  // headers: { 'x-access-token': token },
   request: {
-    url: `${constants.baseUrl}/api/v1/user/workouts`,
+    url: '/api/v1/user/workouts',
     method: 'GET',
-    headers: { 'x-access-token': token },
+    headers: { 'x-access-token': xAccessToken },
   },
 })
 
 export const postNewWorkout = (token, workout) => ({
   type: POST_WORKOUT,
   request: {
-    url: `${constants.baseUrl}/api/v1/user/workout`,
+    url: '/api/v1/user/workout',
     method: 'POST',
     headers: { 'x-access-token': token },
     data: workout,
   },
 })
 
-export const editWorkout = (id, token, workout) => {
-  console.log(workout)
-  return {
-    type: EDIT_WORKOUT,
-    request: {
-      url: `${constants.baseUrl}/api/v1/user/workout/${id}`,
-      method: 'PATCH',
-      headers: { 'x-access-token': token },
-      data: workout,
-    },
-  }
-}
+export const editWorkout = (id, xAccessToken, workout) => ({
+  type: EDIT_WORKOUT,
+  request: {
+    url: `/api/v1/user/workout/${id}`,
+    method: 'PATCH',
+    headers: { 'x-access-token': xAccessToken },
+    data: workout,
+  },
+})
 
-export const deleteWorkout = (id, token) => ({
+export const deleteWorkout = (id, xAccessToken) => ({
   type: DELETE_WORKOUT,
   request: {
-    url: `${constants.baseUrl}/api/v1/user/workout/${id}`,
+    url: `/api/v1/user/workout/${id}`,
     method: 'DELETE',
-    headers: { 'x-access-token': token },
+    headers: { 'x-access-token': xAccessToken },
   },
 })

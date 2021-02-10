@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/auth/actions'
 import axios from 'axios'
@@ -11,6 +11,8 @@ import CustomInput from '../atoms/CustomInput'
 import { Spacer } from '../../util/theme/base'
 import CustomButton from '../atoms/CustomButton'
 import { ScreenRoute } from '../../navigation/navigationConstants'
+import GradientButton from '../atoms/GradientButton'
+import theme from '../../util/theme'
 
 type OwnProps = {}
 
@@ -21,7 +23,8 @@ export const Login: FunctionComponent<Props> = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
-
+  // TODO: move to LoginScreen
+  // TODO: only for dev
   const bypassLogin = () => {
     setUsername('Sergej')
     setPassword('12345678')
@@ -30,7 +33,6 @@ export const Login: FunctionComponent<Props> = () => {
   const postSubmit = async () => {
     try {
       const loginStatus = await axios.post(
-        // 'http://10.0.2.2:5000/api/v1/auth/login',
         `${constants.baseUrl}/api/v1/auth/login`,
         {
           username,
@@ -39,10 +41,8 @@ export const Login: FunctionComponent<Props> = () => {
       )
       setUsername('')
       setPassword('')
-      console.log(loginStatus)
       dispatch(login(loginStatus.data))
-      saveData('user', loginStatus.data)
-      //Redirect to somewhere
+      await saveData('user', loginStatus.data)
     } catch (err) {
       console.log(err)
     }
@@ -53,33 +53,41 @@ export const Login: FunctionComponent<Props> = () => {
   }
 
   return (
-    <S.Container style={{ padding: 16 }}>
-      <Text> Username </Text>
+    <S.Container>
       <CustomInput
+        label="Username"
+        icon="User"
         value={username}
         onChangeText={setUsername}
         placeholder="MacGyver75"
+        placeholderTextColor={theme.neutral_2}
       />
-      <Spacer h={8} />
-      <Text> Password </Text>
+      <Spacer h={12} />
       <CustomInput
+        label="Password"
+        icon="Lock"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         placeholder="Super secret password"
+        placeholderTextColor={theme.neutral_2}
       />
       <Spacer h={16} />
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <CustomButton
+      <S.ButtonContainer>
+        <GradientButton
           onPress={postSubmit}
           onLongPress={bypassLogin}
           title="Login"
+          width="60%"
         />
         <Spacer h={16} />
-        <TouchableOpacity onPress={goToSignup}>
-          <Text style={{ color: 'red' }}>Create an account</Text>
-        </TouchableOpacity>
-      </View>
+        <CustomButton
+          onPress={goToSignup}
+          variant="clear"
+          title="Don't have an account yet? Sign up!"
+          width="80%"
+        />
+      </S.ButtonContainer>
     </S.Container>
   )
 }
