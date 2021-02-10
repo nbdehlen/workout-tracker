@@ -6,7 +6,7 @@
   "scripts": {
     "publishToHeroku": "cd ../ && git subtree push --prefix backend workouttracker-api master || true",
     "test": "nyc mocha --recursive --exit --timeout 5000",
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -31,7 +31,6 @@
     "eslint-plugin-import": "^2.21.1",
     "mocha": "^8.0.1",
     "mongodb-memory-server": "^6.6.1",
-    "nodemon": "^2.0.4",
     "nyc": "^15.1.0",
     "supertest": "^4.0.2"
   }
