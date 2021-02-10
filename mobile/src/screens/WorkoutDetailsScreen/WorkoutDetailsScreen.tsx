@@ -12,6 +12,7 @@ import * as S from './styled'
 import theme from '../../util/theme'
 import ExerciseTable from './ExerciseTable'
 import CustomButton from '../../components/atoms/CustomButton'
+import { Icons } from '../../assets'
 
 type OwnProps = CompleteWorkout
 type Props = OwnProps
@@ -179,41 +180,78 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
                   >
                     <View
                       style={{
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
                         width: 300,
                         height: 200,
                         borderRadius: 8,
                         padding: 16,
-                        backgroundColor: theme.primary.color,
+                        backgroundColor: theme.background.color,
+                        borderWidth: 1,
+                        borderColor: theme.primary.weaker,
                         elevation: 5,
                       }}
                     >
-                      <B.Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        {ucFirst(exercise.tool)} {exercise.name} details
+                      <B.Text
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: 14,
+                          color: theme.primary.onColor,
+                        }}
+                      >
+                        {exercise.tool.toUpperCase()}{' '}
+                        {exercise.name.toUpperCase()} DETAILS{' '}
                       </B.Text>
+                      <B.Spacer h={16} />
                       {exercise.exerciseType ? (
-                        <View style={{ flexDirection: 'row' }}>
-                          <B.Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            borderBottomWidth: 1,
+                            borderColor: theme.primary.weaker,
+                          }}
+                        >
+                          <B.Text
+                            style={{ fontSize: 14, color: theme.neutral_2 }}
+                          >
                             Focus: {ucFirst(exercise.exerciseType)}{' '}
                           </B.Text>
                         </View>
                       ) : null}
 
+                      <B.Spacer h={4} />
                       {exercise.duration ? (
-                        <B.Text>Duration: {exercise.duration} min</B.Text>
+                        <B.Text
+                          style={{ fontSize: 14, color: theme.neutral_2 }}
+                        >
+                          Duration: {exercise.duration} min
+                        </B.Text>
                       ) : null}
 
                       {exercise.calories ? (
-                        <B.Text>Calories burned: {exercise.calories} </B.Text>
+                        <B.Text
+                          style={{ fontSize: 14, color: theme.neutral_2 }}
+                        >
+                          Calories burned: {exercise.calories}{' '}
+                        </B.Text>
                       ) : null}
-                      <View style={{ flexDirection: 'row' }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          borderBottomWidth: 1,
+                          borderColor: theme.primary.weaker,
+                        }}
+                      >
                         {(exercise.secondaryMuscles[0].length > 0 ||
                           exercise.mainMuscle.length > 0) && (
-                          <B.Text>Muscles: </B.Text>
+                          <B.Text
+                            style={{ fontSize: 14, color: theme.neutral_2 }}
+                          >
+                            Muscles:{' '}
+                          </B.Text>
                         )}
                         {exercise.mainMuscle.length > 0 ? (
-                          <B.Text>
+                          <B.Text
+                            style={{ fontSize: 14, color: theme.neutral_2 }}
+                          >
                             {ucFirst(String(exercise.mainMuscle))}
                             {exercise.secondaryMuscles && ','}
                           </B.Text>
@@ -222,7 +260,9 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
                         {exercise.secondaryMuscles[0].length > 0 &&
                           exercise.secondaryMuscles.map((muscle, y) => (
                             <View key={JSON.stringify(muscle + String(y))}>
-                              <B.Text>
+                              <B.Text
+                                style={{ fontSize: 14, color: theme.neutral_2 }}
+                              >
                                 {' '}
                                 {ucFirst(String(muscle))}
                                 {exercise.secondaryMuscles.length - 1 > y
@@ -232,15 +272,54 @@ export const WorkoutDetailsScreen: FunctionComponent<Props> = () => {
                             </View>
                           ))}
                       </View>
-
-                      {exercise.compound && <B.Text>Compound movement</B.Text>}
+                      <B.Spacer h={4} />
+                      {exercise.compound && (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            borderBottomWidth: 1,
+                            borderColor: theme.primary.weaker,
+                          }}
+                        >
+                          <B.Text
+                            style={{ fontSize: 14, color: theme.neutral_2 }}
+                          >
+                            Compound movement:{' '}
+                          </B.Text>
+                          <Icons.Check
+                            width={20}
+                            height={20}
+                            fill={theme.primary.onColor}
+                          />
+                        </View>
+                      )}
+                      <B.Spacer h={4} />
                       {exercise.unilateral && (
-                        <B.Text>Unilateral movement</B.Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            borderBottomWidth: 1,
+                            borderColor: theme.primary.weaker,
+                          }}
+                        >
+                          <B.Text
+                            style={{
+                              fontSize: 14,
+                              color: theme.neutral_2,
+                            }}
+                          >
+                            Unilateral movement:{' '}
+                          </B.Text>
+                          <Icons.Check
+                            width={20}
+                            height={20}
+                            fill={theme.primary.onColor}
+                          />
+                        </View>
                       )}
                     </View>
                   </TouchableOpacity>
                 </Modal>
-                {/* <DataTable data={exercise.sets} /> */}
                 <ExerciseTable
                   data={exercise.sets}
                   headers={['WEIGHT', 'REPS', 'REST', 'TIME']}

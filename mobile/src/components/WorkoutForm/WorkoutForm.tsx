@@ -524,7 +524,6 @@ export const WorkoutForm: FunctionComponent<Props> = ({ workout, isEdit }) => {
                         style={{
                           alignItems: 'flex-end',
                           justifyContent: 'flex-end',
-                          // justifyContent: 'space-between',
                         }}
                       >
                         <B.Text

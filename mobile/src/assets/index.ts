@@ -24,6 +24,8 @@ import CaretDownFill from './svg/CaretDownFill.svg'
 import Collapse from './svg/Collapse.svg'
 import Dash from './svg/Dash.svg'
 import Expand from './svg/Expand.svg'
+import Check from './svg/Check.svg'
+import CheckTwo from './svg/CheckTwo.svg'
 
 export const Icons = {
   Add,
@@ -52,4 +54,6 @@ export const Icons = {
   Collapse,
   Dash,
   Expand,
+  Check,
+  CheckTwo,
 }
