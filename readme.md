@@ -12,7 +12,8 @@ https://workouttracker-api.herokuapp.com/api-docs
 **Admin Dashboard**  
 https://workouttracker-dashboard.herokuapp.com
 
-**Run locally**  
+## Run locally
+
 Branch: [develop](https://github.com/nbdehlen/workout-tracker/tree/develop)
 
 Mobile:  
@@ -49,3 +50,7 @@ but I couldn't find one with the level of customization I wanted and with the op
 ## Target group
 
 This app is for anyone who require a high level of detail in their workout log and the ability to log workouts from both their mobile and desktop.
+
+## Personas
+
+https://github.com/nbdehlen/workout-tracker/tree/master/assets/personas
