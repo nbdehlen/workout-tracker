@@ -2,35 +2,32 @@
 
 Highly detailed workout tracking. Available as a mobile app and Rest-API.
 
-## Instructions
+**Android App**  
+Download:
+https://github.com/nbdehlen/workout-tracker/blob/master/mobile/app-release.apk
 
-### Android App
+**Rest-API**  
+https://workouttracker-api.herokuapp.com/api-docs
 
-Download app.release-apk:
-https://github.com/nbdehlen/workout-tracker/tree/master/mobile
+**Admin Dashboard**  
+https://workouttracker-dashboard.herokuapp.com
 
-### Rest-API
+**Run locally**  
+Branch: [develop](https://github.com/nbdehlen/workout-tracker/tree/develop)
 
-https://workouttracker-api.herokuapp.com/api-docs/#/
+Mobile:  
+Android studios with android emulator API version 29.  
+cmd <code>npx react-native run-android</code> and <code>npm start</code>
 
-### Admin Dashboard
+**Dashboard**  
+cmd <code>npm run start</code>
 
-https://workouttracker-dashboard.herokuapp.com/
-
-### Run locally
-
-Branch: develop
-
-Mobile:
-Android studios with android emulator API version 29.
-command: npx react-native run-android
-
-Dashboard:
-command: npm start
+**Backend**  
+cmd <code>npm start</code>
 
 ## Tech stack
 
-Mobile: React Native, TypeScript, styled-components
+Mobile: React Native, TypeScript, styled-components  
 Backend: Express, MongoDB
 
 ## Idea
@@ -46,10 +43,9 @@ To be able to log a wide variety of workouts with a high level of detail on both
 
 ## Purpose
 
-I started looking into the available workout apps on android. There were certainly a lot of workout apps
-but none with the level of customization I wanted and with the option to log workouts on a desktop or access to the API.
+I started looking into the available workout apps on android. There were certainly a lot of them
+but I couldn't find one with the level of customization I wanted and with the option to log workouts on a desktop or access to the API.
 
 ## Target group
 
-This app is for anyone who require a high level of detail in their workout log and the ability to access the data from both their
-mobile and desktop.
+This app is for anyone who require a high level of detail in their workout log and the ability to log workouts from both their mobile and desktop.
