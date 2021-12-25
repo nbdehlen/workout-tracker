@@ -39,27 +39,3 @@ cmd <code>npm start</code>
 
 Mobile: React Native, TypeScript, styled-components  
 Backend: Express, MongoDB
-
-## Idea
-
-Throughout the years I have typically saved my workout logs in excel files or text files on a desktop.
-For me this came with some drawbacks:
-No ability to log workouts on the go and resorting to taking temporary notes during workouts
-in order to later input them into my desktop workout log.
-
-## Goal
-
-To be able to log a wide variety of workouts with a high level of detail on both android and desktop (Rest-API currently).
-
-## Purpose
-
-I started looking into the available workout apps on android. There were certainly a lot of them
-but I couldn't find one with the level of customization I wanted and with the option to log workouts on a desktop or access to the API.
-
-## Target group
-
-This app is for anyone who require a high level of detail in their workout log and the ability to log workouts from both their mobile and desktop.
-
-## Personas
-
-https://github.com/nbdehlen/workout-tracker/tree/master/assets/personas
