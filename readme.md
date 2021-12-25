@@ -1,6 +1,6 @@
 # Workout tracker
 
-Highly detailed workout tracking. Available as a mobile app and Rest-API.
+High detail workout tracking focusing on strength training.
 \
 \
 **Rest-API**  
